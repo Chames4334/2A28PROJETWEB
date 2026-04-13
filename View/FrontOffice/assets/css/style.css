@@ -1,0 +1,153 @@
+html{
+    scroll-behavior: smooth;
+}
+
+body{
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    color: #2E2E2E;
+    background-color: whitesmoke;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.animated-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background: radial-gradient(circle at 20% 30%, #6FAF4C, #A67C52, #F2F2F2, #6FAF4C);
+    background-size: 300% 300%;
+    animation: radialShift 14s ease infinite alternate;
+}
+
+@keyframes radialShift {
+    0% { background-position: 0% 0%; background-size: 300% 300%; }
+    50% { background-position: 100% 100%; background-size: 400% 400%; }
+    100% { background-position: 50% 50%; background-size: 300% 300%; }
+}
+
+.floating-shape {
+    position: fixed;
+    background: rgba(111, 175, 76, 0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1;
+    animation: floatComplex 20s infinite alternate ease-in-out;
+}
+
+.shape1 { width: 350px; height: 350px; top: -120px; left: -100px; background: radial-gradient(circle, rgba(111,175,76,0.3), rgba(166,124,82,0.2)); animation-duration: 24s; }
+.shape2 { width: 480px; height: 480px; bottom: -180px; right: -140px; background: radial-gradient(circle, rgba(166,124,82,0.3), rgba(111,175,76,0.2)); animation-duration: 28s; animation-direction: alternate-reverse; }
+.shape3 { width: 220px; height: 220px; top: 35%; right: 2%; background: rgba(242,242,242,0.25); border-radius: 40% 60% 60% 40% / 40% 50% 50% 60%; animation: morphing 12s infinite alternate, floatComplex 18s infinite; }
+.shape4 { width: 170px; height: 170px; bottom: 12%; left: 2%; background: rgba(111,175,76,0.2); border-radius: 30% 70% 70% 30% / 30% 40% 60% 70%; animation: morphing 15s infinite alternate-reverse, floatComplex 22s infinite; }
+.shape5 { width: 120px; height: 120px; top: 15%; left: 20%; background: rgba(166,124,82,0.25); border-radius: 50%; animation: pulseRotate 10s infinite alternate; }
+
+@keyframes floatComplex {
+    0% { transform: translateY(0) rotate(0deg) scale(1); }
+    50% { transform: translateY(-50px) rotate(12deg) scale(1.08); }
+    100% { transform: translateY(30px) rotate(-8deg) scale(0.95); }
+}
+@keyframes morphing {
+    0% { border-radius: 40% 60% 60% 40% / 40% 50% 50% 60%; }
+    100% { border-radius: 60% 40% 40% 60% / 50% 40% 60% 50%; }
+}
+@keyframes pulseRotate {
+    0% { transform: scale(1) rotate(0deg); opacity: 0.6; }
+    100% { transform: scale(1.3) rotate(360deg); opacity: 0.2; }
+}
+/* Border Style*/
+.bord{
+    background: rgba(242, 242, 242, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 0 0 30px 30px;
+    padding: 15px 30px;
+ 
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+ 
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.bord a{
+    color: olivedrab;
+    margin: 0px;
+}
+.bord h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    line-height: 1;
+}
+.bord button{
+    color: white;
+    background-color: olivedrab;
+    font-size: large;
+    padding: 5px 15px;
+    border-color: whitesmoke;
+    border-radius: 10px;
+}
+.slogon{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-right: auto;
+}
+/*choix D'offre*/
+.choix{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 40px 30px;
+    justify-content: center;
+    align-items: stretch;
+}
+.choix .card {
+    flex: 1;
+    max-width: 380px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 24px;
+    color: #2E2E2E;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.choix .card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover; 
+    border-radius: 12px;
+}
+.choix h1{
+    width: 100%;
+    text-align: center;
+}
+/*Contacts*/
+.contacts{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: small;
+    background-color: black;
+    color: whitesmoke;
+    border-top: 3px solid olivedrab;
+    padding: 10px 20px;
+
+    position: sticky;
+    width: 100%;
+    z-index: 100;
+}
+.contacts p {
+    padding: 16px 30px;
+    line-height: 1.6;
+}
