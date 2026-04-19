@@ -23,7 +23,7 @@ body{
 }
 .sidebar {
     width: 250px;
-    background: #1f2937;
+    background: rgb(66, 24, 24);
     color: white;
     padding: 20px;
 }
@@ -96,7 +96,7 @@ body{
 .card {
     background: white;
     padding: 25px;
-    width: 1000px;
+    width: 1100px;
     border-radius: 10px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.05);
 }
@@ -129,11 +129,43 @@ button {
     border-radius: 6px;
     cursor: pointer;
 }
+.row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.row label{
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.row input {
+    width: 320px;
+    padding: 8px 12px;
+    font-size: 1rem;
+}
+
+.row button {
+    margin-top: 0;
+    padding: 6px 14px;
+    width: auto;
+    background-color: olivedrab;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
 
 button:hover {
     background: rgb(82, 110, 27);
 }
-
+.btn-primary{
+    color: olivedrab;
+    margin-left: 12px;
+}
 .link-btn{
     background: rgba(111, 143, 216, 0.1);
     border: 1px solid rgba(126, 159, 228, 0.12);
@@ -149,4 +181,23 @@ button:hover {
 .link-btn.is-selected {
   border-color: rgba(92, 41, 26, 0.12);
   box-shadow: 0 10px 24px rgba(92, 41, 26, 0.12)
+}
+.validation-msg {
+    display: block;
+    font-size: 0.82rem;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+.msg-error {
+    color: #c0392b;
+    background: #fdecea;
+    border-left: 3px solid #e74c3c;
+}
+.msg-success {
+    color: #1e7e34;
+    background: #eafaf1;
+    border-left: 3px solid #27ae60;
 }

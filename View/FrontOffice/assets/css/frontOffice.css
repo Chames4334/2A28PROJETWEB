@@ -1,0 +1,389 @@
+html{
+    scroll-behavior: smooth;
+}
+
+body{
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    color: #2E2E2E;
+    background-color: whitesmoke;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.animated-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background: radial-gradient(circle at 20% 30%, #6FAF4C, #A67C52, #F2F2F2, #6FAF4C);
+    background-size: 300% 300%;
+    animation: radialShift 14s ease infinite alternate;
+}
+
+@keyframes radialShift {
+    0% { background-position: 0% 0%; background-size: 300% 300%; }
+    50% { background-position: 100% 100%; background-size: 400% 400%; }
+    100% { background-position: 50% 50%; background-size: 300% 300%; }
+}
+
+.floating-shape {
+    position: fixed;
+    background: rgba(111, 175, 76, 0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1;
+    animation: floatComplex 20s infinite alternate ease-in-out;
+}
+
+.shape1 { width: 350px; height: 350px; top: -120px; left: -100px; background: radial-gradient(circle, rgba(111,175,76,0.3), rgba(166,124,82,0.2)); animation-duration: 24s; }
+.shape2 { width: 480px; height: 480px; bottom: -180px; right: -140px; background: radial-gradient(circle, rgba(166,124,82,0.3), rgba(111,175,76,0.2)); animation-duration: 28s; animation-direction: alternate-reverse; }
+.shape3 { width: 220px; height: 220px; top: 35%; right: 2%; background: rgba(242,242,242,0.25); border-radius: 40% 60% 60% 40% / 40% 50% 50% 60%; animation: morphing 12s infinite alternate, floatComplex 18s infinite; }
+.shape4 { width: 170px; height: 170px; bottom: 12%; left: 2%; background: rgba(111,175,76,0.2); border-radius: 30% 70% 70% 30% / 30% 40% 60% 70%; animation: morphing 15s infinite alternate-reverse, floatComplex 22s infinite; }
+.shape5 { width: 120px; height: 120px; top: 15%; left: 20%; background: rgba(166,124,82,0.25); border-radius: 50%; animation: pulseRotate 10s infinite alternate; }
+
+@keyframes floatComplex {
+    0% { transform: translateY(0) rotate(0deg) scale(1); }
+    50% { transform: translateY(-50px) rotate(12deg) scale(1.08); }
+    100% { transform: translateY(30px) rotate(-8deg) scale(0.95); }
+}
+@keyframes morphing {
+    0% { border-radius: 40% 60% 60% 40% / 40% 50% 50% 60%; }
+    100% { border-radius: 60% 40% 40% 60% / 50% 40% 60% 50%; }
+}
+@keyframes pulseRotate {
+    0% { transform: scale(1) rotate(0deg); opacity: 0.6; }
+    100% { transform: scale(1.3) rotate(360deg); opacity: 0.2; }
+}
+/* Border Style*/
+.bord{
+    background: rgba(242, 242, 242, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 0 0 30px 30px;
+    padding: 15px 30px;
+ 
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+ 
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.bord a{
+    color: olivedrab;
+    margin: 0px;
+}
+.bord h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    line-height: 1;
+}
+.bord button{
+    color: white;
+    background-color: olivedrab;
+    font-size: large;
+    padding: 5px 15px;
+    border-color: whitesmoke;
+    border-radius: 10px;
+}
+.slogon{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-right: auto;
+}
+/*choix D'offre*/
+.choix{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 40px 30px;
+    justify-content: center;
+    align-items: flex-start;
+}
+.choix .card {
+    flex: 1 1 calc(33.333% - 16px);
+    max-width: 380px;
+    min-width: 260px;
+    height: 520px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 0;
+    color: #2E2E2E;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.choix .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+}
+.choix .card h2{
+    padding: 16px 24px 4px 24px;
+    flex-shrink: 0
+}
+.choix .card p {
+    padding: 0 24px 24px 24px;
+    flex: 1;
+    overflow: hidden;
+    display: -webkit-box;
+}
+.choix .card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover; 
+    border-radius: 0px;
+}
+.choix h1{
+    width: 100%;
+    text-align: center;
+}
+.offre h1{
+    width: 100%;
+    text-align: center;
+    font-size: 60px;
+}
+.offre{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 40px 30px;
+    justify-content: center;
+    align-items: flex-start;
+}
+.offre .card{
+    flex: 1 1 calc(33.333% - 16px);
+    max-width: 380px;
+    min-width: 260px;
+    overflow: hidden;
+    height: 520px;
+    background: white;
+    border-radius: 20px;
+    padding: 0;
+    color: #2E2E2E;
+    display: flex;
+    flex-direction: column;
+    
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.offre .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+}
+.card-content {
+    padding: 0 24px 24px 24px;
+}
+.line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+
+    font-size: 20px;
+}
+.line:last-child {
+    border-bottom: none;
+}
+.line .label {
+    color: #666;
+    font-weight: 500;
+}
+
+.line .value {
+    font-weight: 700;
+    color: #2E2E2E;
+}
+
+.card-header {
+    background: var(--card-color);
+    padding: 25px 20px;
+    color: white;
+}
+
+.card-header h2 {
+    margin: 0;
+}
+
+.card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-top: 5px;
+}
+
+.offre h2{
+    padding-bottom: 10px;
+    margin: 15px 20px;
+}
+.offre .card p{
+    padding: 0 24px 24px 24px;
+    flex: 1;
+    overflow: hidden;
+    display: -webkit-box;
+}
+.inscri{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+}
+.inscri .card{
+    background: rgba(255, 255, 255, 0.15);
+    padding: 2rem 2.5rem;
+    width: 100%;
+    max-width: 560px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+.inscri h1{
+    padding-bottom: 10px;
+    margin: 15px 20px;
+}
+.inscri label{
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.inscri input {
+    width: 320px;
+    padding: 8px 12px;
+    font-size: 1rem;
+}
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 32px;
+    align-items: center;
+    width: 100%;
+}
+
+.form select {
+    grid-column: 1 / -1;   /* select spans full width */
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+}
+
+.form label {
+    text-align: right;
+    color: white;
+    font-size: 14px;
+}
+
+.form input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.4);
+    font-size: 14px;
+}
+.form button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    background: olivedrab;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+#variables-container {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 32px;
+    align-items: center;
+    width: 100%;
+}
+
+#variables-container label {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: right;
+    padding-right: 8px;
+}
+
+#variables-container input,
+#variables-container select {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.9);
+    font-size: 14px;
+}
+input, select {
+    border: 2px solid #ccc;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+/* invalid */
+.input-error {
+    border: 2px solid red !important;
+}
+
+.input-success {
+    border: 2px solid green !important;
+}
+
+input.input-error,
+select.input-error,
+textarea.input-error {
+    border: 2px solid red !important;
+}
+
+input.input-success,
+select.input-success,
+textarea.input-success {
+    border: 2px solid green !important;
+}
+#form-message {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+#form-message.success {
+    color: green;
+}
+
+#form-message.error {
+    color: red;
+}
+/*Contacts*/
+.contacts{
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: small;
+    background-color: black;
+    color: whitesmoke;
+    border-top: 3px solid olivedrab;
+    padding: 10px 20px;
+
+    position: sticky;
+    width: 100%;
+    z-index: 100;
+}
+.contacts p {
+    padding: 16px 30px;
+    line-height: 1.6;
+}

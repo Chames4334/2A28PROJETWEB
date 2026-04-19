@@ -11,9 +11,8 @@
             new DateTime ($_POST['Date_Fin']),
             $_POST['Status'],
         );
-        if(!empty($_POST['OffreID'])){
+        if(!empty($_POST['OffreID']))
             $of->updateOffre($offre,$_POST['OffreID']);
-        }
         else
             $of->addOffre($offre);
         header("Location: addOffre.php");
@@ -21,17 +20,28 @@
     if (isset($_GET['delete'])) {
         $of->deleteOffre($_GET['delete']);
     }
-    
-    $offre=$of->listeOffre();
 
+    $offre=$of->listeOffre();
+    $types  = $of->listeTypes();
+
+    $o_edit = null;
+    if (isset($_GET['OffreID'])) {
+        foreach($offre as $o) {
+            if($o['OffreID'] == $_GET['OffreID']) {
+                $o_edit = $o;
+                break;
+            }
+        }
+    }
     $action = $_GET['action'] ?? 'list';
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>Offres</title>
-        <link rel="stylesheet" href="./assets/css/font.css">
+        <link rel="stylesheet" href="./assets/css/style.css">
+        <script src="./assets/js/script.js"></script>
     </head>
     <body>
         <div class="layout">
@@ -40,21 +50,24 @@
                 <h2>GreenSecure</h2>
                 <a href="#">Dashboard</a>
                 <a href="#">Offres</a>
-                <a href="#">Utilisateurs</a>
-                <a href="#">Paramètres</a>
+                <a href="./addType.php">Assurance Types</a>
+                <a href="./Subscription.php">subscriptions</a>
             </div>
             <div class="main">
                 <div class="topbar" style="font-size: larger;">
                     <h1>Offres</h1>
-                    <?php if ($action == 'list') { ?>
-                    <a href="addOffre.php?action=add" class="btn-primary">
-                        + Add Offer
-                    </a>
-                    <?php } else { ?>
-                        <a href="addOffre.php" class="btn-primary">
-                            ← Back
+                    <div  style="text-align: right;">
+                        <?php if ($action == 'list') { ?>
+                        <a href="addOffre.php?action=add" class="btn-primary">
+                            + Add Offer
                         </a>
-                    <?php } ?>
+                        <?php } else { ?>
+                            <a href="addOffre.php" class="btn-primary">
+                                ← Back
+                            </a>
+                        <?php } ?>
+                        <a class="btn-primary" href="../FrontOffice/Finance.php">FrontOffice</a>
+                    </div>
                 </div>
                 <div class="content">
                     <?php if ($action == 'list') { ?>
@@ -102,20 +115,24 @@
                     <?php if ($action == 'add') { ?>
                         <div class="card">
                         <h1>Ajouter un Offre</h1>
-                            <form method="post" class="form">
+                            <form method="post" class="form" onsubmit="return validerFormulaire()" novalidate>
                                 <label>Choisir le type d'offre:</label>
-                                <select name="Type">
-                                    <option>Assurance de voiture</option>
-                                    <option>Assurance de vie</option>
-                                    <option>Assurance d'habitation</option>
+                                <select id="Type" name="Type">
+                                    <option value="">--Veuillez choisir une option--</option>
+                                    <?php foreach($types as $t){ ?>
+                                        <option value="<?= htmlspecialchars($t['Type']) ?>">
+                                            <?= ($o_edit && $o_edit['Type'] == $t['Type']) ? 'selected' : '' ?>
+                                            <?= htmlspecialchars($t['Type']) ?>
+                                        </option>
+                                    <?php } ?>
                                 </select>
                                 <input type="hidden" name="OffreID" value="<?= $_GET['OffreID'] ?? '' ?>">
                                 <br><br>
                                 <label>Title:</label>
-                                <input type="text" name="Title" placeholder="donner votre title">
+                                <input type="text" id="Title" name="Title" placeholder="donner votre title">
                                 <br><br>
                                 <label>Prix mensuel:</label>
-                                <input type="text" placeholder="donner votre prix mensuel" name="Prix_mensuel">
+                                <input type="text" placeholder="donner votre prix mensuel" id="Prix_mensuel" name="Prix_mensuel">
                                 <br><br>
                                 <label>Date début:</label>
                                 <input type="date" name="Date_Debut">
@@ -130,7 +147,7 @@
                                     <option>archived</option>
                                 </select>
                                 <br><br>
-                                <button type="submit">Submit</button>
+                                <button type="submit" value="Add Offre">Submit</button>
                             </form>
                         </div>
                     <?php } ?>

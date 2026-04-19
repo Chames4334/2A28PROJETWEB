@@ -1,6 +1,6 @@
 <?php
     include "C:/xampp/htdocs/GreenSecure/Model/Offre.php";
-    include "C:/xampp/htdocs/GreenSecure/config.php";
+    include_once "C:/xampp/htdocs/GreenSecure/config.php";
     class controlOffre{
         public function listeOffre(){
             $db=config::getConnexion();
@@ -54,6 +54,15 @@
                     'Status' =>$offre->getStatus()
                 ]);
             } catch (Exception $e) {
+                die('Erreur: '.$e->getMessage());
+            }
+        }
+        public function listeTypes(){
+            $db = config::getConnexion();
+            try{
+                $req = $db->query('SELECT DISTINCT titre AS Type FROM type_offre');
+                return $req;
+            } catch(Exception $e){
                 die('Erreur: '.$e->getMessage());
             }
         }
