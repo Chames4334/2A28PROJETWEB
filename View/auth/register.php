@@ -4,7 +4,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-
 if (isset($_SESSION['user_id'])) {
     header('Location: ../backoffice/liste.php');
     exit;
@@ -41,8 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (empty($errors)) {
         if ($ctrl->register($nom, $prenom, $email, $password)) {
-            $ctrl->login($email, $password);
-            header('Location: ../backoffice/liste.php');
+            header('Location: login.php?registered=1');
             exit;
         }
     } else {

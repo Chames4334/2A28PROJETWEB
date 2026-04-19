@@ -126,6 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label><i class="fas fa-shield-alt"></i> Rôles</label>
             <div class="roles-grid">
                 <?php foreach($roles as $role): ?>
+                    <?php if($role['nom'] === 'admin') continue; ?>
                     <label class="role-checkbox">
                         <input type="checkbox" name="roles[]" value="<?= $role['id'] ?>" <?= in_array($role['id'], $old['roles'] ?? []) ? 'checked' : '' ?>>
                         <span><?= ucfirst($role['nom']) ?></span>
