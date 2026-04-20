@@ -49,12 +49,6 @@
                     <option value="refusé" <?php echo ($conge['statut'] === 'refusé') ? 'selected' : ''; ?>>Refusé</option>
                 </select>
 
-                <label for="date_demande">Date de la demande (AAAA-MM-JJ)</label>
-                <input type="text" id="date_demande" name="date_demande" value="<?php echo htmlspecialchars($_POST['date_demande'] ?? $conge['date_demande']); ?>">
-
-                <label for="id_employe">ID employé</label>
-                <input type="text" id="id_employe" name="id_employe" value="<?php echo htmlspecialchars($_POST['id_employe'] ?? $conge['id_employe']); ?>">
-
                 <button class="button button-primary" type="submit">Enregistrer</button>
             </form>
         </section>

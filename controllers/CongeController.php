@@ -39,7 +39,10 @@ class CongeController {
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $model->setData($_POST);
+            $data = $_POST;
+            $data['date_demande'] = $conge['date_demande'];
+            $data['id_employe'] = $conge['id_employe'];
+            $model->setData($data);
             $model->setId((int)$id);
             $errors = $model->validate();
 

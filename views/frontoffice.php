@@ -2,10 +2,36 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Front Office - Gestion des Congés</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+    <div class="floating-shape shape1"></div>
+    <div class="floating-shape shape2"></div>
+    <div class="floating-shape shape3"></div>
+    <div class="floating-shape shape4"></div>
+    <div class="floating-shape shape5"></div>
+
+    <!-- Header with Logo -->
+    <div class="bord">
+        <div class="logo_area">
+            <img src="assets/images/logo.png" alt="GreenSecure Logo" height="100" width="150">
+        </div>
+        <div class="slogon">
+            <h1>GreenSecure</h1>
+            <p>Gestion des Congés</p>
+        </div>
+        <div class="links_area">
+            <a href="?page=frontoffice">Accueil</a>
+            <a href="?action=index">Mes Congés</a>
+            <a href="?action=traitementIndex">Traitements</a>
+        </div>
+        <a href="?page=home" class="header-btn">Déconnexion</a>
+    </div>
+
     <div class="app-shell">
         <header class="app-header">
             <div>
@@ -33,8 +59,12 @@
                 <a class="mini-link" href="?action=index">Voir mes congés</a>
                 <a class="mini-link" href="?action=create">Nouvelle demande</a>
             </article>
-            <article class="summary-card">
-                <h3>Mes Réclamations</h3>
+            <article class="summary-card">                <h3>Suivi des Demandes</h3>
+                <p>Consultez le traitement de vos demandes.</p>
+                <a class="mini-link" href="?action=traitementIndex">Voir le traitement</a>
+                <a class="mini-link" href="?action=traitementCreate">Ajouter un traitement</a>
+            </article>
+            <article class="summary-card">                <h3>Mes Réclamations</h3>
                 <p>Suivez l’avancement de vos demandes de réclamation.</p>
             </article>
         </section>

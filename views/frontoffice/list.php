@@ -23,26 +23,24 @@
             <table class="table-list">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Date début</th>
                         <th>Date fin</th>
                         <th>Type</th>
+                        <th>Motif</th>
                         <th>Statut</th>
-                        <th>Employé</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($conges)): ?>
-                        <tr><td colspan="6">Aucun congé trouvé.</td></tr>
+                        <tr><td colspan="5">Aucun congé trouvé.</td></tr>
                     <?php else: ?>
                         <?php foreach ($conges as $conge): ?>
                             <tr>
-                                <td><?php echo $conge['id_conge']; ?></td>
                                 <td><?php echo $conge['date_debut']; ?></td>
                                 <td><?php echo $conge['date_fin']; ?></td>
                                 <td><?php echo htmlspecialchars($conge['type_conge']); ?></td>
+                                <td><?php echo htmlspecialchars(substr($conge['motif'], 0, 50)); ?></td>
                                 <td><?php echo htmlspecialchars($conge['statut']); ?></td>
-                                <td><?php echo $conge['id_employe']; ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>

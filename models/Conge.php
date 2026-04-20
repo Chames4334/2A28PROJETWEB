@@ -22,8 +22,8 @@ class Conge {
         $this->type_conge = trim($data['type_conge'] ?? '');
         $this->motif = trim($data['motif'] ?? '');
         $this->statut = trim($data['statut'] ?? 'en_attente');
-        $this->date_demande = trim($data['date_demande'] ?? date('Y-m-d'));
-        $this->id_employe = trim($data['id_employe'] ?? '');
+        $this->date_demande = trim($data['date_demande'] ?? $this->date_demande ?? date('Y-m-d'));
+        $this->id_employe = trim($data['id_employe'] ?? $this->id_employe ?? '1');
     }
 
     public function validate() {
@@ -53,10 +53,6 @@ class Conge {
 
         if ($this->motif === '') {
             $errors[] = 'Le motif est requis.';
-        }
-
-        if ($this->id_employe === '' || !ctype_digit($this->id_employe)) {
-            $errors[] = 'L\'ID employé est requis et doit être un nombre.';
         }
 
         return $errors;

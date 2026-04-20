@@ -2,10 +2,36 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Back Office - Gestion des Congés</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+    <div class="floating-shape shape1"></div>
+    <div class="floating-shape shape2"></div>
+    <div class="floating-shape shape3"></div>
+    <div class="floating-shape shape4"></div>
+    <div class="floating-shape shape5"></div>
+
+    <!-- Header with Logo -->
+    <div class="bord">
+        <div class="logo_area">
+            <img src="assets/images/logo.png" alt="GreenSecure Logo" height="100" width="150">
+        </div>
+        <div class="slogon">
+            <h1>GreenSecure</h1>
+            <p>Panel Administrateur</p>
+        </div>
+        <div class="links_area">
+            <a href="?page=backoffice">Tableau de bord</a>
+            <a href="?action=adminIndex">Congés</a>
+            <a href="?action=traitementAdminIndex">Traitements</a>
+        </div>
+        <a href="?page=home" class="header-btn">Déconnexion</a>
+    </div>
+
     <div class="app-shell">
         <header class="app-header admin-header">
             <div>
@@ -53,7 +79,13 @@
             </div>
 
             <div class="panel panel-light">
-                <h3>Gestion des Offres</h3>
+                <h3>Traitement des Congés</h3>
+                <p>Approuvez ou refusez les demandes.</p>
+                <a class="mini-link" href="?action=traitementAdminIndex">Voir les traitements</a>
+                <a class="mini-link" href="?action=traitementCreate">Ajouter un traitement</a>
+            </div>
+
+            <div class="panel panel-light">
                 <div class="offer-list admin-list">
                     <div>
                         <span>Assurance Santé</span>
