@@ -6,14 +6,15 @@ class PostController
 {
     public function __construct(
         private Post $postModel,
-        private Reply $replyModel
+        private Reply $replyModel,
+        private Reaction $reactionModel
     ) {
     }
 
     public function index(): void
     {
         $posts = $this->postModel->getAllActiveWithMeta();
-        view('post/index', [
+        view('front_office/post/index', [
             'pageTitle' => 'Forum — sujets récents',
             'posts'     => $posts,
         ]);
@@ -24,25 +25,28 @@ class PostController
         $post = $this->postModel->findActiveById($id);
         if ($post === null) {
             http_response_code(404);
-            view('post/not_found', ['pageTitle' => 'Sujet introuvable']);
+            view('front_office/post/not_found', ['pageTitle' => 'Sujet introuvable']);
             return;
         }
 
         $replies = $this->replyModel->getActiveTopLevelByPostId($id);
         $uid = current_user_id();
+        $replyIds = array_map(static fn (array $r): int => (int) $r['id'], $replies);
+        $reactionSummary = $this->reactionModel->summarizeForPostPage($id, $uid, $replyIds);
 
-        view('post/show', [
-            'pageTitle' => $post['titre'],
-            'post'      => $post,
-            'replies'   => $replies,
-            'canEdit'   => $uid !== null && (int) $post['user_id'] === $uid,
+        view('front_office/post/show', [
+            'pageTitle'         => $post['titre'],
+            'post'              => $post,
+            'replies'           => $replies,
+            'canEdit'           => $uid !== null && (int) $post['user_id'] === $uid,
+            'reactionSummary'   => $reactionSummary,
         ]);
     }
 
     public function create(): void
     {
         $this->requireAuth();
-        view('post/create', [
+        view('front_office/post/create', [
             'pageTitle' => 'Nouveau sujet',
             'errors'    => [],
             'old'       => ['titre' => '', 'contenu' => ''],
@@ -58,7 +62,7 @@ class PostController
         }
 
         if (!csrf_verify($_POST['_csrf'] ?? null)) {
-            view('post/create', [
+            view('front_office/post/create', [
                 'pageTitle' => 'Nouveau sujet',
                 'errors'    => ['Session expirée. Réessayez.'],
                 'old'       => $_POST,
@@ -78,7 +82,7 @@ class PostController
         }
 
         if ($errors !== []) {
-            view('post/create', [
+            view('front_office/post/create', [
                 'pageTitle' => 'Nouveau sujet',
                 'errors'    => $errors,
                 'old'       => ['titre' => $titre, 'contenu' => $contenu],
@@ -97,7 +101,7 @@ class PostController
         $this->requireAuth();
         $userId = (int) current_user_id();
         $posts = $this->postModel->getActiveByUserId($userId);
-        view('post/mine', [
+        view('front_office/post/mine', [
             'pageTitle' => 'Mes sujets',
             'posts'     => $posts,
         ]);
@@ -114,7 +118,7 @@ class PostController
             redirect('index.php');
         }
 
-        view('post/edit', [
+        view('front_office/post/edit', [
             'pageTitle' => 'Modifier le sujet',
             'post'      => $post,
             'errors'    => [],
@@ -153,7 +157,7 @@ class PostController
         }
 
         if ($errors !== []) {
-            view('post/edit', [
+            view('front_office/post/edit', [
                 'pageTitle' => 'Modifier le sujet',
                 'post'      => array_merge($post, ['titre' => $titre, 'contenu' => $contenu]),
                 'errors'    => $errors,

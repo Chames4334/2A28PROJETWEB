@@ -66,6 +66,11 @@ require_once $forumRoot . '/core/app.php';
 
 /** Utilisateur connecté (ligne users) pour l’en-tête, ou null */
 $currentForumUser = null;
+$currentUserIsAdmin = false;
 if (($__uid = current_user_id()) !== null) {
-    $currentForumUser = (new User($pdo))->findById($__uid);
+    $__u = new User($pdo);
+    $currentForumUser = $__u->findById($__uid);
+    if ($currentForumUser !== null) {
+        $currentUserIsAdmin = $__u->hasAdminRole($__uid);
+    }
 }

@@ -64,4 +64,21 @@ class User
         $stmt->execute(['email' => $email]);
         return (bool) $stmt->fetchColumn();
     }
+
+    /**
+     * Rôle administrateur : role_id = 1 dans user_roles (table roles : admin en premier).
+     */
+    public function hasAdminRole(int $userId): bool
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT 1 FROM user_roles WHERE user_id = :uid AND role_id = 1 LIMIT 1'
+        );
+        $stmt->execute(['uid' => $userId]);
+        return (bool) $stmt->fetchColumn();
+    }
+
+    public function countAll(): int
+    {
+        return (int) $this->pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
+    }
 }

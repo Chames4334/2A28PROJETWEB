@@ -31,6 +31,16 @@ php -S localhost:8080
 
 Puis ouvrez `http://localhost:8080/index.php`.
 
+## Rôle administrateur (back office)
+
+L’accès à `admin_dashboard.php` et aux pages `admin_*.php` est autorisé uniquement si l’utilisateur connecté a une ligne dans **`user_roles`** avec **`role_id = 1`** (rôle *admin* inséré en premier dans `insurance_db.sql`).
+
+Exemple (remplacer `1` par l’`id` utilisateur réel) :
+
+```sql
+INSERT INTO user_roles (user_id, role_id) VALUES (1, 1);
+```
+
 ## Compte utilisateur
 
 - **Inscription** : page `register.php` — crée une ligne dans `users` avec `password_hash` et `status = active`.
@@ -42,10 +52,10 @@ Puis ouvrez `http://localhost:8080/index.php`.
 ```
 forum/
   config/       database.php, app.php
-  controllers/  AuthController, PostController, ReplyController
+  controllers/  AuthController, PostController, ReplyController, AdminController, ReactionController
   core/         bootstrap.php, helpers.php, app.php
-  models/       User, Post, Reply
-  views/        scripts d’entrée (*.php), layout/, post/, auth/
+  models/       User, Post, Reply, Reaction
+  views/        scripts d’entrée (*.php), layout/, post/, auth/, admin/, reply/
   public/       css/, js/ uniquement (assets)
 ```
 
@@ -64,8 +74,13 @@ forum/
 | `reply_store.php`  | Nouvelle réponse (POST)       |
 | `reply_delete.php` | Retrait d’une réponse — `masque` |
 | `login.php` / `register.php` / `logout.php` | Authentification |
+| `reaction_store.php` | Like / dislike (POST, connecté) |
+| `reply_edit.php` / `reply_update.php` | Édition de sa propre réponse |
+| `admin_dashboard.php` | Tableau de bord admin |
+| `admin_posts.php` / `admin_post_edit.php` / `admin_post_update.php` / `admin_post_delete.php` | Gestion des sujets |
+| `admin_replies.php` / `admin_reply_edit.php` / `admin_reply_update.php` / `admin_reply_delete.php` | Gestion des réponses |
 
-Les gabarits HTML sont dans `views/layout/`, `views/post/`, `views/auth/` et sont inclus par le contrôleur via `view()`.
+Les gabarits HTML sont dans `views/front_office/` (layout, post, auth, reply) et `views/back_office/admin/`, inclus par le contrôleur via `view()` (chemins `front_office/...` et `back_office/...`).
 
 ## Règles métier rappelées
 

@@ -65,4 +65,71 @@ class Reply
         $row = $stmt->fetch();
         return $row ?: null;
     }
+
+    public function updateContentByAuthor(int $replyId, int $userId, string $contenu): bool
+    {
+        $stmt = $this->pdo->prepare(
+            'UPDATE reply SET contenu = :contenu
+             WHERE id = :id AND user_id = :user_id AND statut = \'actif\''
+        );
+        $stmt->execute(['contenu' => $contenu, 'id' => $replyId, 'user_id' => $userId]);
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function getAllForAdmin(): array
+    {
+        $sql = 'SELECT r.*, u.nom AS auteur_nom, u.prenom AS auteur_prenom,
+                       p.titre AS post_titre, p.id AS post_ref_id
+                FROM reply r
+                INNER JOIN users u ON u.id = r.user_id
+                INNER JOIN post p ON p.id = r.post_id
+                ORDER BY r.created_at DESC';
+        return $this->pdo->query($sql)->fetchAll();
+    }
+
+    public function findByIdForAdmin(int $id): ?array
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT r.*, u.nom AS auteur_nom, u.prenom AS auteur_prenom,
+                    p.titre AS post_titre, p.id AS post_ref_id
+             FROM reply r
+             INNER JOIN users u ON u.id = r.user_id
+             INNER JOIN post p ON p.id = r.post_id
+             WHERE r.id = :id LIMIT 1'
+        );
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+        return $row ?: null;
+    }
+
+    public function adminUpdateContent(int $replyId, string $contenu): bool
+    {
+        $stmt = $this->pdo->prepare('UPDATE reply SET contenu = :contenu WHERE id = :id');
+        $stmt->execute(['contenu' => $contenu, 'id' => $replyId]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function adminSoftDelete(int $replyId): bool
+    {
+        $stmt = $this->pdo->prepare(
+            'UPDATE reply SET statut = \'masque\' WHERE id = :id AND statut <> \'masque\''
+        );
+        $stmt->execute(['id' => $replyId]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function countAll(): int
+    {
+        return (int) $this->pdo->query('SELECT COUNT(*) FROM reply')->fetchColumn();
+    }
+
+    public function countByStatut(string $statut): int
+    {
+        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM reply WHERE statut = :statut');
+        $stmt->execute(['statut' => $statut]);
+        return (int) $stmt->fetchColumn();
+    }
 }

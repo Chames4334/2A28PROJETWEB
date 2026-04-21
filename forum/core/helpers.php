@@ -72,13 +72,16 @@ function excerpt(string $htmlOrText, int $maxLen = 180): string
 }
 
 /**
- * Affiche une vue dans views/ (chemins avec slash : post/index).
+ * Affiche une vue dans views/ (chemins avec slash : front_office/post/index, back_office/admin/dashboard).
  *
  * @param array<string, mixed> $data
  */
 function view(string $relativePath, array $data = []): void
 {
-    global $currentForumUser;
+    global $currentForumUser, $currentUserIsAdmin;
+    if (!array_key_exists('layoutMainClass', $data)) {
+        $data['layoutMainClass'] = '';
+    }
     extract($data, EXTR_SKIP);
     /* Chemin depuis ce fichier (core/) — ne dépend pas de la constante FORUM_VIEWS */
     $path = dirname(__DIR__) . '/views/' . $relativePath . '.php';

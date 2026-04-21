@@ -14,7 +14,7 @@ class AuthController
         if (current_user_id() !== null) {
             redirect('index.php');
         }
-        view('auth/login', [
+        view('front_office/auth/login', [
             'pageTitle' => 'Connexion',
             'error'     => null,
         ]);
@@ -31,7 +31,7 @@ class AuthController
         }
 
         if (!csrf_verify($_POST['_csrf'] ?? null)) {
-            view('auth/login', [
+            view('front_office/auth/login', [
                 'pageTitle' => 'Connexion',
                 'error'     => 'Session expirée. Réessayez.',
             ]);
@@ -42,7 +42,7 @@ class AuthController
         $password = (string) ($_POST['password'] ?? '');
 
         if ($email === '' || $password === '') {
-            view('auth/login', [
+            view('front_office/auth/login', [
                 'pageTitle' => 'Connexion',
                 'error'     => 'Email et mot de passe obligatoires.',
             ]);
@@ -51,7 +51,7 @@ class AuthController
 
         $user = $this->userModel->findByEmail($email);
         if ($user === null || !password_verify($password, (string) $user['password_hash'])) {
-            view('auth/login', [
+            view('front_office/auth/login', [
                 'pageTitle' => 'Connexion',
                 'error'     => 'Identifiants incorrects.',
             ]);
@@ -59,7 +59,7 @@ class AuthController
         }
 
         if (($user['status'] ?? '') !== 'active') {
-            view('auth/login', [
+            view('front_office/auth/login', [
                 'pageTitle' => 'Connexion',
                 'error'     => 'Ce compte n’est pas autorisé à se connecter.',
             ]);
@@ -76,7 +76,7 @@ class AuthController
         if (current_user_id() !== null) {
             redirect('index.php');
         }
-        view('auth/register', [
+        view('front_office/auth/register', [
             'pageTitle' => 'Inscription',
             'errors'    => [],
             'old'       => ['nom' => '', 'prenom' => '', 'email' => ''],
@@ -94,7 +94,7 @@ class AuthController
         }
 
         if (!csrf_verify($_POST['_csrf'] ?? null)) {
-            view('auth/register', [
+            view('front_office/auth/register', [
                 'pageTitle' => 'Inscription',
                 'errors'    => ['Session expirée. Réessayez.'],
                 'old'       => $_POST,
@@ -130,7 +130,7 @@ class AuthController
         }
 
         if ($errors !== []) {
-            view('auth/register', [
+            view('front_office/auth/register', [
                 'pageTitle' => 'Inscription',
                 'errors'    => $errors,
                 'old'       => [

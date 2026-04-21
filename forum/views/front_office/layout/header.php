@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-$forumRoot = dirname(__DIR__, 2);
+$forumRoot = dirname(__DIR__, 3);
 if (!function_exists('flash_get')) {
     require_once $forumRoot . '/core/helpers.php';
 }
@@ -13,7 +13,7 @@ if (!class_exists('User', false)) {
 }
 
 /** @var string $pageTitle */
-global $currentForumUser;
+global $currentForumUser, $currentUserIsAdmin;
 $flash = flash_get();
 ?>
 <!DOCTYPE html>
@@ -33,6 +33,9 @@ $flash = flash_get();
             <?php if ($currentForumUser !== null) : ?>
                 <a href="create.php">Nouveau sujet</a>
                 <a href="mine.php">Mes sujets</a>
+                <?php if (!empty($currentUserIsAdmin ?? false)) : ?>
+                    <a href="admin_dashboard.php">Admin</a>
+                <?php endif; ?>
             <?php endif; ?>
         </nav>
         <div class="site-auth">
@@ -51,4 +54,4 @@ $flash = flash_get();
     <div class="flash flash--<?= h($flash['type']) ?>" role="status"><?= h($flash['message']) ?></div>
 <?php endif; ?>
 
-<main class="main-content">
+<main class="main-content<?= ($layoutMainClass ?? '') !== '' ? ' ' . h((string) $layoutMainClass) : '' ?>">

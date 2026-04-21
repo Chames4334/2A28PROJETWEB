@@ -113,4 +113,59 @@ class Post
         $stmt->execute(['id' => $postId, 'user_id' => $userId]);
         return (bool) $stmt->fetchColumn();
     }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function getAllForAdmin(): array
+    {
+        $sql = 'SELECT p.*, u.nom AS auteur_nom, u.prenom AS auteur_prenom
+                FROM post p
+                INNER JOIN users u ON u.id = p.user_id
+                ORDER BY p.created_at DESC';
+        return $this->pdo->query($sql)->fetchAll();
+    }
+
+    public function findByIdForAdmin(int $id): ?array
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT p.*, u.nom AS auteur_nom, u.prenom AS auteur_prenom
+             FROM post p
+             INNER JOIN users u ON u.id = p.user_id
+             WHERE p.id = :id LIMIT 1'
+        );
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+        return $row ?: null;
+    }
+
+    public function adminUpdate(int $postId, string $titre, string $contenu): bool
+    {
+        $stmt = $this->pdo->prepare(
+            'UPDATE post SET titre = :titre, contenu = :contenu WHERE id = :id'
+        );
+        $stmt->execute(['titre' => $titre, 'contenu' => $contenu, 'id' => $postId]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function adminSoftDelete(int $postId): bool
+    {
+        $stmt = $this->pdo->prepare(
+            'UPDATE post SET statut = \'masque\' WHERE id = :id AND statut <> \'masque\''
+        );
+        $stmt->execute(['id' => $postId]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function countAll(): int
+    {
+        return (int) $this->pdo->query('SELECT COUNT(*) FROM post')->fetchColumn();
+    }
+
+    public function countByStatut(string $statut): int
+    {
+        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM post WHERE statut = :statut');
+        $stmt->execute(['statut' => $statut]);
+        return (int) $stmt->fetchColumn();
+    }
 }
