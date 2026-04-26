@@ -2,13 +2,19 @@
     include "C:/xampp/htdocs/GreenSecure/Model/Offre.php";
     include_once "C:/xampp/htdocs/GreenSecure/config.php";
     class controlOffre{
-        public function listeOffre(){
-            $db=config::getConnexion();
+        public function listeOffre($txt){
+            $db = config::getConnexion();
             try{
-                $liste=$db->query('SELECT * FROM offre');
-                return $liste;
-            }catch(Exception $e){
-                die('Erreur:'.$e->getMessage());
+                if(empty($txt)){
+                    $liste=$db->query('SELECT * FROM offre');
+                    return $liste;
+                }
+                $req = $db->prepare('SELECT * FROM offre WHERE Title LIKE :search OR Type LIKE :search OR CAST(Prix_mensuel AS CHAR) LIKE :search OR CAST(Date_Fin AS CHAR) LIKE :search');
+                $req->bindValue(':search',"%$txt%");
+                $req->execute();
+                return $req->fetchAll(PDO::FETCH_ASSOC);
+            } catch(Exception $e){
+                die('Erreur: '.$e->getMessage());
             }
         }
         public function addOffre($offre){
@@ -67,5 +73,4 @@
             }
         }
     }
-
 ?>

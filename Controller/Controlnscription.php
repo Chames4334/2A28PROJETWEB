@@ -14,11 +14,17 @@
                     return "VARCHAR(255)";
             }
         }*/
-        public function listeInscription(){
+        public function listeInscription($txt){
             $db=config::getConnexion();
             try{
-                $liste=$db->query('SELECT * FROM inscription');
-                return $liste;
+                if(empty($txt)){
+                    $liste=$db->query('SELECT * FROM inscription');
+                    return $liste;
+                }
+                $req = $db->prepare('SELECT * FROM inscription WHERE Choix LIKE :search OR CAST(date_souscription AS CHAR) LIKE :search OR Payment_status LIKE :search OR Payment_method LIKE :search');
+                $req->bindValue(':search',"%$txt%");
+                $req->execute();
+                return $req->fetchAll(PDO::FETCH_ASSOC);
             }catch(Exception $e){
                 die('Erreur:'.$e->getMessage());
             }

@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 
                 <div class="var-field-row">
                     <label>Numéro de carte:</label>
-                    <input type="number" name="cardNumber">
+                    <input type="number" name="cardNumber" placeholder="XXXX-XXXX-XXXX-XXXX">
                 </div>
 
                 <div class="var-field-row">
@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <option value="Manouba">Manouba</option>
                         <option value="Nabeul">Nabeul</option>
                         <option value="Bizerte">Bizert</option>
+                        <option value="Sfax">Sfax</option>
                         <option value="Tataouine">Tataouine</option>
                     </select>
                 </div>
@@ -139,10 +140,11 @@ function validerFormulaire(){
     }
     var montant = document.getElementById("Montant_paye")
     var montantValue = montant.value
+    //var prixMensuel = document.getElementById("")
 
     resetState(montant)
 
-    if (!montantValue || montantValue <= 0) {
+    if (!montantValue || montantValue <= 100) {
         setError(montant)
         isValid = false
     }/*else if(montantValue >=){

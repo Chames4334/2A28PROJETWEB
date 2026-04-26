@@ -1,3 +1,59 @@
+var timer;
+ 
+var rechercheInput = document.getElementById("recherche");
+var triSelect      = document.getElementById("tri");
+ 
+function fetchRows() {
+    var query = encodeURIComponent(rechercheInput.value);
+    fetch("addType.php?ajax=1&recherche=" + query)
+        .then(function(res) { return res.text(); })
+        .then(function(html) {
+            var tbody = document.querySelector(".table tbody");
+            if (tbody) {
+                tbody.innerHTML = html;
+                if (triSelect && triSelect.value) {
+                    sortTable(triSelect.value);
+                }
+            }
+        });
+}
+if (rechercheInput) {
+    rechercheInput.addEventListener("keyup", function() {
+        clearTimeout(timer);
+        timer = setTimeout(fetchRows, 300);
+    });
+}
+function sortTable(criterion) {
+    var tbody = document.querySelector(".table tbody");
+    if (!tbody) return;
+ 
+    var rows = Array.from(tbody.querySelectorAll("tr"));
+ 
+    rows.sort(function(a, b) {
+        var aTitle = a.cells[1] ? a.cells[1].textContent.trim() : '';
+        var bTitle = b.cells[1] ? b.cells[1].textContent.trim() : '';
+        var aDate  = a.cells[4] ? new Date(a.cells[4].textContent.trim()) : 0;
+        var bDate  = b.cells[4] ? new Date(b.cells[4].textContent.trim()) : 0;
+ 
+        if (criterion === 'az')   return aTitre.localeCompare(bTitre);
+        if (criterion === 'za')   return bTitre.localeCompare(aTitre);
+        if (criterion === 'date') return aDate - bDate;
+        return 0;
+    });
+ 
+    rows.forEach(function(row, i) {
+        var numCell = row.querySelector(".row-number");
+        if (numCell) numCell.textContent = i + 1;
+        tbody.appendChild(row);
+    });
+}
+ 
+if (triSelect) {
+    triSelect.addEventListener("change", function() {
+        sortTable(this.value);
+    });
+}
+
 const imageInput = document.getElementById("imageUpload")
 const preview = document.getElementById("preview")
 

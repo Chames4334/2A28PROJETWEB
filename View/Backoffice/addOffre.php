@@ -2,6 +2,38 @@
     include 'C:/xampp/htdocs/GreenSecure/Controller/ControlOffre.php';
 
     $of=new controlOffre();
+    $types=$of->listeTypes();
+    if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
+        $search = strtolower(trim($_GET['recherche'] ?? ''));
+        $offre=$of->listeOffre($search);
+        $i = 1;
+        foreach ($offre as $o) { ?>
+            <tr>
+                <td class="row-number"><?= $i++ ?></td>
+                <td><?= htmlspecialchars($o['Title']) ?></td>
+                <td><?= htmlspecialchars($o['Type']) ?></td>
+                <td><?= htmlspecialchars($o['Prix_mensuel']) ?> <label>DT</label></td>
+                <td><?= htmlspecialchars($o['Date_Debut']) ?></td>
+                <td><?= htmlspecialchars($o['Date_Fin']) ?></td>
+                <td>
+                    <span class="status <?= htmlspecialchars($o['Status']) ?>">
+                        <?= htmlspecialchars($o['Status']) ?>
+                    </span>
+                </td>
+                <td>
+                    <a class="link-btn"
+                    href="addOffre.php?action=add&OffreID=<?= $o['OffreID'] ?>">Edit</a>
+                </td>
+                <td>
+                    <a class="link-btn"
+                    href="addOffre.php?delete=<?= $o['OffreID'] ?>"
+                    onclick="return confirm('Delete this offre?')">Delete</a>
+                </td>
+            </tr>
+        <?php }
+        exit;
+    }
+
     if(isset($_POST['Title'])){
         $offre=new Offre(
             $_POST['Title'],
@@ -16,13 +48,13 @@
         else
             $of->addOffre($offre);
         header("Location: addOffre.php");
+        exit;
     }
     if (isset($_GET['delete'])) {
         $of->deleteOffre($_GET['delete']);
     }
 
-    $offre=$of->listeOffre();
-    $types  = $of->listeTypes();
+    $offre=$of->listeOffre('');
 
     $o_edit = null;
     if (isset($_GET['OffreID'])) {
@@ -40,8 +72,8 @@
     <head>
         <meta charset="UTF-8">
         <title>Offres</title>
-        <link rel="stylesheet" href="./assets/css/style.css">
-        <script src="./assets/js/script.js"></script>
+        <link rel="stylesheet" href="./assets/css/font.css">
+        <script src="./assets/js/scripting.js" defer></script>
     </head>
     <body>
         <div class="layout">
@@ -66,12 +98,22 @@
                                 ← Back
                             </a>
                         <?php } ?>
+                        <a class="btn-primary">Statestique</a>
                         <a class="btn-primary" href="../FrontOffice/Finance.php">FrontOffice</a>
                     </div>
                 </div>
                 <div class="content">
                     <?php if ($action == 'list') { ?>
                         <div class="card">
+                            <div class="filter">
+                                <input type="text" id="recherche" name="recherche" placeholder="🔍rech..." autocomplete="off">
+                                <select id="tri" name="tri">
+                                    <option value="az">A-Z</option>
+                                    <option value="za">Z-A</option>
+                                    <option value="date">D'apres la date</option>
+                                    <option value="prix">D'apres le prix</option>
+                                </select>
+                            </div>
                             <table class="table">
                                 <thead>
                                     <tr>

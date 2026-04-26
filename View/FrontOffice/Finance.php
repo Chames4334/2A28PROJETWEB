@@ -41,7 +41,7 @@
             <h1>Choisir le type d'assurance</h1>
             <?php if (!empty($Finance)) { ?>
                 <?php foreach($Finance as $f){  ?>
-                    <a class="card" href="http://localhost/GreenSecure/View/FrontOffice/InscriptionPage.php?TypeID=<?= $f['TypeID'] ?>">
+                    <a class="card" href="http://localhost/GreenSecure/View/FrontOffice/InscriptionPage.php?TypeID=<?= urlencode($f['Titre']) ?>">
                         <img src="../Backoffice/images/<?= $f['Image'] ?>" alt="image">
                         <h2><?= htmlspecialchars($f['Titre']) ?></h2>
                         <p><?= htmlspecialchars($f['Description']) ?></p>

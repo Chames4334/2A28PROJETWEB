@@ -3,6 +3,33 @@
     include "C:/xampp/htdocs/GreenSecure/Controller/ControlOffre.php";
 
     $CntrlInscri=new Controlnscription();
+    if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
+        $search = strtolower(trim($_GET['recherche'] ?? ''));
+        $inscri=$CntrlInscri->listeInscription($search);
+        $i = 1;
+        foreach ($inscri as $s) { ?>
+            <tr>
+                <td class="row-number"><?= $i++ ?></td>
+                <td><?= htmlspecialchars($s['Choix']) ?></td>
+                <td><?= htmlspecialchars($s['Payment_status']) ?></td>
+                <td><?= htmlspecialchars($s['Payment_method']) ?></td>
+                <td><?= htmlspecialchars($s['Montant_paye']) ?></td>
+                <td><?= htmlspecialchars($s['date_souscription']) ?></td>
+                <td><?= htmlspecialchars($s['date_expiration']) ?></td>
+                <td><?= htmlspecialchars($s['Created_AT']) ?></td>
+                <td>
+                    <a class="link-btn"
+                    href="Subscription.php?action=add&InscriptionID=<?= $s['InscriptionID'] ?>">Edit</a>
+                </td>
+                <td>
+                    <a class="link-btn"
+                    href="Subscription.php?delete=<?= $s['InscriptionID'] ?>"
+                    onclick="return confirm('Delete this subscription?')">Delete</a>
+                </td>
+            </tr>
+        <?php }
+        exit;
+    }
     if(isset($_POST['Payment_status'])){
         $inscri= new Inscription(
             new DateTime($_POST['date_souscription']),
@@ -24,9 +51,9 @@
         $CntrlInscri->deleteInscription($_GET['delete']);
     }
     $controlOffre=new controlOffre();
-    $offre=$controlOffre->listeOffre();
+    $offre=$controlOffre->listeOffre('');
 
-    $subscription=$CntrlInscri->listeInscription();
+    $subscription=$CntrlInscri->listeInscription('');
     $action = $_GET['action'] ?? 'list';
 
 ?>
@@ -35,8 +62,8 @@
     <head>
         <meta charset="UTF-8">
         <title>Subscription</title>
-        <link rel="stylesheet" href="./assets/css/style.css">
-        <script src="./assets/js/inscription.js"></script>
+        <link rel="stylesheet" href="./assets/css/font.css">
+        <script src="./assets/js/inscri.js"></script>
     </head>
     <body>
         <div class="layout">
@@ -46,7 +73,7 @@
                 <a href="#">Dashboard</a>
                 <a href="./addOffre.php">Offres</a>
                 <a href="./addType.php">Assurance Types</a>
-                <a href="#">subscriptions</a>
+                <a href="./Subscription.php">subscriptions</a>
             </div>
             <div class="main">
                 <div class="topbar" style="font-size: larger;">
@@ -69,16 +96,24 @@
                 <div class="content">
                     <?php if ($action == 'list') { ?>
                         <div class="card">
+                            <div class="filter">
+                                <input type="text" id="recherche" name="recherche" placeholder="🔍rech..." autocomplete="off">
+                                <select id="tri" name="tri">
+                                    <option value="az">A-Z</option>
+                                    <option value="za">Z-A</option>
+                                    <option value="date">D'apres la date</option>
+                                </select>
+                            </div>
                             <table class="table">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Date souscription</th>
-                                        <th>Date expiration</th>
+                                        <th>Choix d'offre</th>
                                         <th>Payment status</th>
                                         <th>Payment method</th>
                                         <th>Montant paye</th>
-                                        <th>Choix d'offre</th>
+                                        <th>Date souscription</th>
+                                        <th>Date expiration</th>
                                         <th>Created At</th>
                                     </tr>
                                 </thead>
@@ -88,12 +123,12 @@
                                         <tr>
                                             <td class="row-number"><?= $i++ ?></td>
 
-                                            <td><?= $s['date_souscription'] ?></td>
-                                            <td><?= $s['date_expiration'] ?></td>
+                                            <td><?= $s['Choix'] ?></td>
                                             <td><?= $s['Payment_status'] ?></td>
                                             <td><?= $s['Payment_method'] ?></td>
-                                            <td><?= $s['Montant_paye'] ?></td>
-                                            <td><?= $s['Choix'] ?></td>
+                                            <td><?= $s['Montant_paye'] ?><p> DT</p></td>
+                                            <td><?= $s['date_souscription'] ?></td>
+                                            <td><?= $s['date_expiration'] ?></td>
                                             <td><?= $s['Created_AT'] ?></td>
                                             <td>
                                                 <a class="link-btn" href="Subscription.php?action=add&InscriptionID=<?= $s['InscriptionID'] ?>" onclick="return confirm('Update this offre?')">Edit</a>
@@ -114,7 +149,7 @@
                                 <input type="hidden" name="InscriptionID" value="<?= $_GET['InscriptionID'] ?? '' ?>">
                                 <label>methode de payment:</label>
                                 <select id="Payment_method" name="Payment_method">
-                                    <option>--Veuillez choisir la methode de payment--</option>
+                                    <option value="">--Veuillez choisir la methode de payment--</option>
                                     <option value="Carte">Carte</option>
                                     <option>Virement</option>
                                     <option>Cheque</option>
@@ -135,7 +170,7 @@
                                 <input type="number" id="Montant_paye" name="Montant_paye">
                                 <label>Choisir un offre</label>
                                 <select id="Choix" name="Choix">
-                                    <option>--Veuillez choisir une offre--</option>
+                                    <option value="">--Veuillez choisir une offre--</option>
                                     <?php foreach($offre as $o){ ?>
                                         <option value="<?= htmlspecialchars($o['Title']) ?>">
                                             <?= htmlspecialchars($o['Title']) ?>

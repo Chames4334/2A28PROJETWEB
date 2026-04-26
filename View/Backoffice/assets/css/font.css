@@ -67,6 +67,21 @@ body{
     display: flex;
     justify-content: center;
 }
+.filter {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.filter input {
+    width: 200px;
+}
+
+.filter select {
+    width: 150px;
+}
 
 .table {
     width: 100%;

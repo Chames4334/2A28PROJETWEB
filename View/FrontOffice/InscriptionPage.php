@@ -1,9 +1,13 @@
 <?php
+    include "C:/xampp/htdocs/GreenSecure/Controller/ControlTypes.php";
     include "C:/xampp/htdocs/GreenSecure/Controller/ControlOffre.php";
     include "C:/xampp/htdocs/GreenSecure/Controller/Controlnscription.php";
 
     $CntrlOffre=new controlOffre();
     $offre=$CntrlOffre->listeOffre();
+
+    $CntrlType=new ControlTypes();
+    $type=$CntrlType->listeType();
 
     $ControlInscri=new Controlnscription();
     if($_SERVER["REQUEST_METHOD"]=="POST"){
@@ -42,7 +46,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Inscription</title>
         <link rel="stylesheet" href="./assets/css/frontOffice.css">
-        <script src="./assets/js/pageInscri.js" defer></script>
+        <script src="./assets/js/inscri.js" defer></script>
     </head>
     
     <body>
@@ -72,10 +76,11 @@
         <div class="offre">
             <?php if($action=='list'){?>
                 <h1>Choisir un Offre</h1>
-                <?php if(!empty($offre)){
+                <?php $selectedType = $_GET['TypeID'] ?? null;
+                if(!empty($offre)){
                     foreach($offre as $o){ 
-                        if($o['Status']!=='inactive'){?>
-                            <a class="card" href="InscriptionPage.php?action=add&OffreID=<?= urlencode($o['Title'])?>">
+                        if($o['Status']!=='inactive' && ($selectedType === null || $o['Type'] == $selectedType)){?>
+                            <a class="card" href="InscriptionPage.php?action=add&OffreID=<?= urlencode($o['Title']) ?>&TypeID=<?= urlencode($selectedType ?? '') ?>">
                                 <div class="card-header"><h2><?= htmlspecialchars($o['Title']) ?></h2></div>
                                 <div class="card-body">
                                     <div class="line">
@@ -97,7 +102,7 @@
                         <?php } ?>
                     <?php }?>
                 <?php } else{?>
-                    <p>Aucun offre d'assurance disponible pour le moment.</p>
+                    <div class="card"><p>Aucun offre d'assurance disponible pour le moment.</p></div>
                 <?php } ?>
             <?php } ?>
         </div>

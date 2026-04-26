@@ -3,6 +3,29 @@
 
     $defaultImage="./images/default.png";
     $Cntrlt=new ControlTypes();
+    if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
+        $search = strtolower(trim($_GET['recherche'] ?? ''));
+        $type=$Cntrlt->listeType($search);
+        $i = 1;
+        foreach ($type as $t) { ?>
+            <tr>
+                <td class="row-number"><?= $i++ ?></td>
+                <td><?= htmlspecialchars($t['Titre']) ?></td>
+                <td><?= htmlspecialchars($t['Description']) ?></td>
+                <td><?= htmlspecialchars($t['Published_AT']) ?></td>
+                <td>
+                    <a class="link-btn"
+                    href="addType.php?action=add&TypeID=<?= $t['TypeID'] ?>">Edit</a>
+                </td>
+                <td>
+                    <a class="link-btn"
+                    href="addType.php?delete=<?= $t['TypeID'] ?>"
+                    onclick="return confirm('Delete this type?')">Delete</a>
+                </td>
+            </tr>
+        <?php }
+        exit;
+    }
     if(isset($_POST['Titre'])){
         if(isset($_FILES['image']) && $_FILES['image']['error'] === 0){
             $imageName = time() . '_' . $_FILES['image']['name'];
@@ -28,7 +51,7 @@
         $Cntrlt->deleteType($_GET['delete']);
     }
 
-    $type=$Cntrlt->listeType();
+    $type=$Cntrlt->listeType('');
 
     $action = $_GET['action'] ?? 'list';
 
@@ -51,8 +74,8 @@
     <head>
         <meta charset="UTF-8">
         <title>Types</title>
-        <link rel="stylesheet" href="./assets/css/style.css">
-        <script defer src="./assets/js/type.js"></script>
+        <link rel="stylesheet" href="./assets/css/font.css">
+        <script defer src="./assets/js/ScriptType.js"></script>
         <style>
             .var-field-row {
                 display: flex;
@@ -110,12 +133,21 @@
                                 ← Back
                             </a>
                         <?php } ?>
+                        <a class="btn-primary">Statestique</a>
                         <a class="btn-primary" href="../../View/FrontOffice/Finance.php">FrontOffice</a>
                     </div>
                 </div>
                 <div class="content">
                     <?php if ($action == 'list') { ?>
                         <div class="card">
+                            <div class="filter">
+                                <input type="text" id="recherche" name="recherche" placeholder="🔍rech..." autocomplete="off">
+                                <select id="tri" name="tri">
+                                    <option value="az">A-Z</option>
+                                    <option value="za">Z-A</option>
+                                    <option value="date">D'apres la date</option>
+                                </select>
+                            </div>
                             <table class="table">
                                 <thead>
                                     <tr>

@@ -4,11 +4,17 @@
 
 
     class ControlTypes{
-        public function listeType(){
+        public function listeType($txt){
             $db=config::getConnexion();
             try{
-                $liste=$db->query('SELECT * FROM type_offre');
-                return $liste;
+                if(empty($txt)){
+                    $liste=$db->query('SELECT * FROM type_offre');
+                    return $liste;
+                }
+                $req = $db->prepare('SELECT * FROM type_offre WHERE Titre LIKE :search OR CAST(Published_AT AS CHAR) LIKE :search');
+                $req->bindValue(':search',"%$txt%");
+                $req->execute();
+                return $req->fetchAll(PDO::FETCH_ASSOC);
             }catch(Exception $e){
                 die('Erreur:'.$e->getMessage());
             }
