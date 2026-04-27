@@ -7,10 +7,8 @@ function addFieldError(fieldId, errorMessage) {
     const field = document.getElementById(fieldId);
     if (!field) return;
     
-    // Ajouter classe d'erreur au champ
     field.classList.add('input-error');
     
-    // Créer et insérer le message d'erreur
     const errorDiv = document.createElement('div');
     errorDiv.className = 'field-error';
     errorDiv.textContent = '✗ ' + errorMessage;
@@ -21,10 +19,10 @@ function addFieldError(fieldId, errorMessage) {
 function validateCongeForm() {
     clearFieldErrors();
     
-    var dateDebut = document.getElementById('date_debut').value.trim();
-    var dateFin = document.getElementById('date_fin').value.trim();
-    var typeConge = document.getElementById('type_conge').value.trim();
-    var motif = document.getElementById('motif').value.trim();
+    var dateDebut = document.getElementById('date_debut').value;
+    var dateFin = document.getElementById('date_fin').value;
+    var typeConge = document.getElementById('type_conge').value;
+    var motif = document.getElementById('motif').value;
     var hasErrors = false;
 
     if (dateDebut === '') {
@@ -38,12 +36,9 @@ function validateCongeForm() {
     }
 
     if (dateDebut !== '' && dateFin !== '') {
-        var start = Date.parse(dateDebut);
-        var end = Date.parse(dateFin);
-        if (isNaN(start) || isNaN(end)) {
-            addFieldError('date_debut', 'Les dates doivent être au format AAAA-MM-JJ.');
-            hasErrors = true;
-        } else if (start > end) {
+        var start = new Date(dateDebut);
+        var end = new Date(dateFin);
+        if (start > end) {
             addFieldError('date_fin', 'La date de fin doit être après la date de début.');
             hasErrors = true;
         }
@@ -65,9 +60,9 @@ function validateCongeForm() {
 function validateTraitementForm() {
     clearFieldErrors();
     
-    var dateTraitement = document.getElementById('date_traitement').value.trim();
-    var decision = document.getElementById('decision').value.trim();
-    var idConge = document.getElementById('id_conge').value.trim();
+    var dateTraitement = document.getElementById('date_traitement').value;
+    var decision = document.getElementById('decision').value;
+    var idConge = document.getElementById('id_conge').value;
     var hasErrors = false;
 
     if (idConge === '') {
@@ -78,12 +73,6 @@ function validateTraitementForm() {
     if (dateTraitement === '') {
         addFieldError('date_traitement', 'La date de traitement est requise.');
         hasErrors = true;
-    } else {
-        var timestamp = Date.parse(dateTraitement);
-        if (isNaN(timestamp)) {
-            addFieldError('date_traitement', 'Format invalide (utilisez AAAA-MM-JJ).');
-            hasErrors = true;
-        }
     }
 
     if (decision === '') {

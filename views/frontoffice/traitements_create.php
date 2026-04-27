@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Front Office - Nouveau traitement</title>
+    <title>Nouveau traitement</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="assets/js/validation.js"></script>
 </head>
@@ -13,7 +13,7 @@
                 <img src="assets/images/logo.png" alt="GreenSecure Logo" height="50" width="75">
             </div>
             <div>
-                <p class="breadcrumb">Front Office</p>
+                <p class="breadcrumb">Espace</p>
                 <h1>Nouveau traitement de congé</h1>
             </div>
             <div class="header-actions">
@@ -38,7 +38,7 @@
                     <option value="">-- Sélectionner un congé --</option>
                     <?php foreach ($conges as $conge): ?>
                         <option value="<?php echo $conge['id_conge']; ?>" <?php echo (isset($_POST['id_conge']) && $_POST['id_conge'] == $conge['id_conge']) ? 'selected' : ''; ?>>
-                            Congé #<?php echo $conge['id_conge']; ?> - <?php echo $conge['date_debut']; ?> à <?php echo $conge['date_fin']; ?>
+                            Congé du <?php echo $conge['date_debut']; ?> au <?php echo $conge['date_fin']; ?>
                         </option>
                     <?php endforeach; ?>
                 </select>

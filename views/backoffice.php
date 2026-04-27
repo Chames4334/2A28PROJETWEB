@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Back Office - Gestion des Congés</title>
+    <title>Gestion des Congés</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -36,7 +36,7 @@
         <header class="app-header admin-header">
             <div>
                 <p class="breadcrumb">Panel Administrateur</p>
-                <h2>Back Office</h2>
+                <h2>Espace</h2>
             </div>
             <div class="admin-stats-overview">
                 <div>
@@ -148,7 +148,7 @@
         </section>
 
         <footer class="app-footer">
-            <a class="footer-link" href="?page=frontoffice">Retour au Front Office</a>
+            <a class="footer-link" href="?page=frontoffice">Retour à l'autre espace</a>
         </footer>
     </div>
 </body>

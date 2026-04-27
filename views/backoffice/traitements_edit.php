@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Back Office - Modifier traitement</title>
+    <title>Modifier traitement</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <script src="assets/js/validation.js"></script>
 </head>
@@ -10,7 +10,7 @@
     <div class="page-shell">
         <header class="page-header">
             <div>
-                <p class="breadcrumb">Back Office</p>
+                <p class="breadcrumb">Espace</p>
                 <h1>Modifier le traitement de congé</h1>
             </div>
             <div class="header-actions">
@@ -35,7 +35,7 @@
                     <option value="">-- Sélectionner un congé --</option>
                     <?php foreach ($conges as $conge): ?>
                         <option value="<?php echo $conge['id_conge']; ?>" <?php echo (($_POST['id_conge'] ?? $traitement['id_conge']) == $conge['id_conge']) ? 'selected' : ''; ?>>
-                            Congé #<?php echo $conge['id_conge']; ?> - <?php echo $conge['date_debut']; ?> à <?php echo $conge['date_fin']; ?>
+                            Congé du <?php echo $conge['date_debut']; ?> au <?php echo $conge['date_fin']; ?>
                         </option>
                     <?php endforeach; ?>
                 </select>

@@ -25,8 +25,8 @@
             <p>Gestion Moderne des Congés</p>
         </div>
         <div class="links_area">
-            <a href="#services">Services</a>
-            <a href="#features">Fonctionnalités</a>
+            <a href="?action=index#conges">Congé</a>
+            <a href="?action=index#traitements">Traitement de congé</a>
             <a href="#contact">Contact</a>
         </div>
         <a href="?action=index" class="header-btn">Connexion</a>
@@ -36,10 +36,9 @@
     <main class="landing-page" style="position: relative; z-index: 5; margin-top: 40px;">
         <section class="hero-card">
             <h1>Bienvenue dans la gestion des congés</h1>
-            <p>Accédez au Front Office ou au Back Office pour visualiser vos demandes et gérer les utilisateurs.</p>
+            <p>Accédez à l'espace de gestion pour visualiser vos demandes et gérer les traitements.</p>
             <div class="hero-actions">
-                <a class="hero-button hero-button-primary" href="?action=index">Front Office</a>
-                <a class="hero-button hero-button-secondary" href="?action=adminIndex">Back Office</a>
+                <a class="hero-button hero-button-primary" href="?action=index">Accéder à l'espace</a>
             </div>
         </section>
     </main>

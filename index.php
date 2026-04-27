@@ -7,7 +7,7 @@ $page = $_GET['page'] ?? null;
 
 if ($action) {
     // Routes pour Conge
-    if (in_array($action, ['index', 'create', 'edit', 'delete', 'adminIndex'])) {
+    if (in_array($action, ['index', 'create', 'edit', 'delete', 'adminIndex', 'congePdf'])) {
         $controller = new CongeController();
 
         switch ($action) {
@@ -36,10 +36,13 @@ if ($action) {
             case 'adminIndex':
                 $controller->adminIndex();
                 break;
+            case 'congePdf':
+                $controller->exportPdf();
+                break;
         }
     }
     // Routes pour TraitementConge
-    elseif (in_array($action, ['traitementIndex', 'traitementCreate', 'traitementEdit', 'traitementDelete', 'traitementAdminIndex'])) {
+    elseif (in_array($action, ['traitementIndex', 'traitementCreate', 'traitementEdit', 'traitementDelete', 'traitementAdminIndex', 'traitementPdf'])) {
         $controller = new TraitementCongeController();
 
         switch ($action) {
@@ -67,6 +70,9 @@ if ($action) {
                 break;
             case 'traitementAdminIndex':
                 $controller->adminIndex();
+                break;
+            case 'traitementPdf':
+                $controller->exportPdf();
                 break;
         }
     } else {

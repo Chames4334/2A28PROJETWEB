@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Front Office - Gestion des Congés</title>
+    <title>Gestion des Congés</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -36,7 +36,7 @@
         <header class="app-header">
             <div>
                 <p class="breadcrumb">Transformation Numérique</p>
-                <h2>Front Office</h2>
+                <h2>Espace</h2>
             </div>
             <div class="user-panel">
                 <span>Bonjour Sophie !</span>
@@ -126,7 +126,7 @@
         </section>
 
         <footer class="app-footer">
-            <a class="footer-link" href="?page=backoffice">Passer au Back Office</a>
+            <a class="footer-link" href="?page=backoffice">Passer à l'autre espace</a>
         </footer>
     </div>
 </body>
