@@ -5,9 +5,23 @@ include_once __DIR__ . '/../model/Post.php';
 
 class ControlPost {
 
-    public function listePosts() {
+    private function getOrderBy($sort = 'date', $direction = 'desc') {
+        $sortMap = [
+            'date'        => 'p.created_at',
+            'reply_count' => 'nb_replies',
+            'count'       => '(nb_likes + nb_dislikes)',
+        ];
+
+        $sortColumn = $sortMap[$sort] ?? $sortMap['date'];
+        $direction = strtolower($direction) === 'asc' ? 'ASC' : 'DESC';
+
+        return "p.is_pinned DESC, $sortColumn $direction";
+    }
+
+    public function listePosts($sort = 'date', $direction = 'desc') {
         $db = config::getConnexion();
         try {
+            $orderBy = $this->getOrderBy($sort, $direction);
             $sql = "
                 SELECT p.*,
                        u.nom, u.prenom,
@@ -17,15 +31,16 @@ class ControlPost {
                 FROM post p
                 LEFT JOIN users u ON u.id = p.user_id
                 WHERE p.statut != 'supprime'
-                ORDER BY p.is_pinned DESC, p.created_at DESC
+                ORDER BY $orderBy
             ";
             return $db->query($sql);
         } catch (Exception $e) { die('Erreur: ' . $e->getMessage()); }
     }
 
-    public function searchPosts($query) {
+    public function searchPosts($query, $sort = 'date', $direction = 'desc') {
         $db = config::getConnexion();
         try {
+            $orderBy = $this->getOrderBy($sort, $direction);
             $sql = "
                 SELECT p.*,
                        u.nom, u.prenom,
@@ -36,7 +51,7 @@ class ControlPost {
                 LEFT JOIN users u ON u.id = p.user_id
                 WHERE p.statut != 'supprime'
                 AND (p.titre LIKE ? OR p.contenu LIKE ?)
-                ORDER BY p.is_pinned DESC, p.created_at DESC
+                ORDER BY $orderBy
             ";
             $stmt = $db->prepare($sql);
             $stmt->execute(['%' . $query . '%', '%' . $query . '%']);

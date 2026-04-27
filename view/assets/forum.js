@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    document.querySelectorAll('.sort-select').forEach(function (select) {
+        select.addEventListener('change', function () {
+            if (select.form) select.form.submit();
+        });
+    });
+
     // ── CHAR COUNTER ───────────────────────────────────────────
     document.querySelectorAll('[data-maxlength]').forEach(function (el) {
         const max = parseInt(el.getAttribute('data-maxlength'));

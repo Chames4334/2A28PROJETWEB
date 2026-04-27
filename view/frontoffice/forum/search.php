@@ -6,7 +6,11 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
 $ctrl = new ControlPost();
 $q = trim($_GET['q'] ?? '');
-$posts = $q ? $ctrl->searchPosts($q) : [];
+$sort = $_GET['sort'] ?? 'date';
+$direction = $_GET['direction'] ?? 'desc';
+if (!in_array($sort, ['date', 'reply_count', 'count'], true)) $sort = 'date';
+if (!in_array($direction, ['asc', 'desc'], true)) $direction = 'desc';
+$posts = $q ? $ctrl->searchPosts($q, $sort, $direction) : [];
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -36,10 +40,22 @@ $posts = $q ? $ctrl->searchPosts($q) : [];
 
     <!-- SEARCH -->
     <div class="search-wrap">
-        <form action="/view/frontoffice/forum/search.php" method="GET" style="display: flex; align-items: center;">
+        <form action="/view/frontoffice/forum/search.php" method="GET" class="search-form">
             <i class="fas fa-search"></i>
             <input type="text" name="q" id="forumSearch" placeholder="Rechercher un sujet, un mot-clé..." value="<?= htmlspecialchars($q) ?>">
             <button type="submit" style="display: none;"></button>
+        </form>
+        <form action="/view/frontoffice/forum/search.php" method="GET" class="sort-form">
+            <input type="hidden" name="q" value="<?= htmlspecialchars($q) ?>">
+            <select name="sort" class="sort-select" aria-label="Trier par">
+                <option value="date" <?= $sort === 'date' ? 'selected' : '' ?>>Date</option>
+                <option value="reply_count" <?= $sort === 'reply_count' ? 'selected' : '' ?>>Réponses</option>
+                <option value="count" <?= $sort === 'count' ? 'selected' : '' ?>>Réactions</option>
+            </select>
+            <select name="direction" class="sort-select" aria-label="Ordre">
+                <option value="desc" <?= $direction === 'desc' ? 'selected' : '' ?>>Descendant</option>
+                <option value="asc" <?= $direction === 'asc' ? 'selected' : '' ?>>Ascendant</option>
+            </select>
         </form>
     </div>
 
