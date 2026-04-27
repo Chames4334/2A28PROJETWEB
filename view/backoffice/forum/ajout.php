@@ -1,0 +1,101 @@
+<?php
+// view/backoffice/forum/ajout.php
+include_once __DIR__ . '/../../../controller/ControlPost.php';
+include_once __DIR__ . '/../../assets/forum_nav.php';
+if (session_status() === PHP_SESSION_NONE) session_start();
+if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] ?? '') !== 'admin') {
+    header('Location: ../../auth/login.php'); exit;
+}
+
+$errors = [];
+$old    = [];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $titre     = trim($_POST['titre']   ?? '');
+    $contenu   = trim($_POST['contenu'] ?? '');
+    $is_pinned = isset($_POST['is_pinned']) ? 1 : 0;
+    $statut    = in_array($_POST['statut'] ?? '', ['actif','masque','supprime']) ? $_POST['statut'] : 'actif';
+    $user_id   = $_SESSION['user_id'];
+
+    // SERVER-SIDE validation
+    if (strlen($titre) < 5)       $errors['titre']   = "Minimum 5 caractères.";
+    elseif (strlen($titre) > 200) $errors['titre']   = "Maximum 200 caractères.";
+    if (strlen($contenu) < 10)    $errors['contenu'] = "Minimum 10 caractères.";
+
+    if (empty($errors)) {
+        $ctrl = new ControlPost();
+        $post = new Post($user_id, $titre, $contenu, $is_pinned, $statut);
+        $ctrl->addPost($post);
+        $_SESSION['success'] = "Post créé avec succès.";
+        header('Location: liste.php'); exit;
+    } else {
+        $old = compact('titre', 'contenu', 'is_pinned', 'statut');
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Créer Post - Back Office Green Assurance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/forum.css">
+</head>
+<body>
+<div class="bo-layout">
+    <?php forumNav('back', 'ajout'); ?>
+    <div class="bo-main">
+        <div class="back-nav" style="margin-bottom:20px;background:transparent;padding:0">
+            <a href="liste.php"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
+        </div>
+        <div class="form-card" style="max-width:820px">
+            <h2><i class="fas fa-plus-circle"></i> Créer un Post</h2>
+            <form method="POST" action="" id="postForm" novalidate>
+                <div class="form-group <?= isset($errors['titre']) ? 'has-error' : '' ?>">
+                    <label><i class="fas fa-heading"></i> Titre *</label>
+                    <input type="text" name="titre" id="titre"
+                           value="<?= htmlspecialchars($old['titre'] ?? '') ?>"
+                           placeholder="Titre du post" data-maxlength="200">
+                    <div class="char-count" id="titre_count"></div>
+                    <?php if (isset($errors['titre'])): ?>
+                        <span class="error-msg"><?= $errors['titre'] ?></span>
+                    <?php endif; ?>
+                </div>
+                <div class="form-group <?= isset($errors['contenu']) ? 'has-error' : '' ?>">
+                    <label><i class="fas fa-align-left"></i> Contenu *</label>
+                    <textarea name="contenu" id="contenu" rows="10"
+                              class="auto-resize" data-maxlength="5000"><?= htmlspecialchars($old['contenu'] ?? '') ?></textarea>
+                    <div class="char-count" id="contenu_count"></div>
+                    <?php if (isset($errors['contenu'])): ?>
+                        <span class="error-msg"><?= $errors['contenu'] ?></span>
+                    <?php endif; ?>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-toggle-on"></i> Statut</label>
+                        <select name="statut">
+                            <option value="actif"    <?= ($old['statut']??'actif')==='actif'    ? 'selected':'' ?>>Actif</option>
+                            <option value="masque"   <?= ($old['statut']??'')==='masque'        ? 'selected':'' ?>>Masqué</option>
+                            <option value="supprime" <?= ($old['statut']??'')==='supprime'      ? 'selected':'' ?>>Supprimé</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-thumbtack"></i> Options</label>
+                        <label style="display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer;font-weight:500">
+                            <input type="checkbox" name="is_pinned" value="1"
+                                   <?= !empty($old['is_pinned']) ? 'checked' : '' ?>>
+                            Épingler ce post en haut du forum
+                        </label>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <a href="liste.php" class="btn btn-secondary"><i class="fas fa-times"></i> Annuler</a>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Publier le post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="../../assets/forum.js"></script>
+</body>
+</html>
