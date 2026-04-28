@@ -20,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
     $confirm = $_POST['confirm_password'] ?? '';
     
-    // Validation
     if (empty($nom)) $errors['nom'] = "Nom obligatoire";
     elseif (strlen($nom) < 2) $errors['nom'] = "Minimum 2 caractères";
     
@@ -39,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($password !== $confirm) $errors['confirm_password'] = "Les mots de passe ne correspondent pas";
     
     if (empty($errors)) {
-        if ($ctrl->register($nom, $prenom, $email, $password)) {
+        if ($ctrl->registerWithVerification($nom, $prenom, $email, $password)) {
             header('Location: login.php?registered=1');
             exit;
         }
@@ -57,8 +56,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../assets/style.css">
+    <style>
+        .navbar {
+            background: rgba(255,255,255,0.95);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar .logo-nav { display: flex; align-items: center; gap: 10px; }
+        .navbar .logo-nav img { height: 40px; }
+        .navbar .logo-nav h1 { font-size: 1.3rem; color: olivedrab; }
+        .navbar .nav-links a {
+            text-decoration: none;
+            color: #333;
+            margin-left: 25px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .navbar .nav-links a:hover { color: olivedrab; }
+        .navbar .nav-links .btn-accueil {
+            background: olivedrab;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+        }
+        .navbar .nav-links .btn-connexion {
+            background: transparent;
+            border: 2px solid olivedrab;
+            color: olivedrab;
+            padding: 8px 20px;
+            border-radius: 25px;
+        }
+        .info-email {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
+
+<div class="navbar">
+    <div class="logo-nav">
+        <img src="../assets/logo.png" alt="Green Assurance">
+        <h1>🌿 Green Assurance</h1>
+    </div>
+    <div class="nav-links">
+        <a href="../frontoffice/accueil.php" class="btn-accueil"><i class="fas fa-home"></i> Accueil</a>
+        <a href="login.php" class="btn-connexion"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+    </div>
+</div>
 
 <div class="animated-bg"></div>
 <div class="floating-shape shape1"></div>
@@ -114,6 +167,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <i class="fas fa-user-plus"></i> S'inscrire
             </button>
         </form>
+        
+        <div class="info-email">
+            <i class="fas fa-envelope"></i> Un email de vérification vous sera envoyé
+        </div>
         
         <div class="auth-links">
             <p>Déjà inscrit ? <a href="login.php">Se connecter</a></p>

@@ -8,7 +8,10 @@ class User {
     private $password;
     private $phone;
     private $address;
+    private $profile_photo;
     private $status;
+    private $email_verified;
+    private $verification_token;
     
     public function __construct($nom, $prenom, $email, $password, $phone = null, $address = null, $status = 'pending') {
         $this->nom = $nom;
@@ -18,6 +21,8 @@ class User {
         $this->phone = $phone;
         $this->address = $address;
         $this->status = $status;
+        $this->email_verified = 0;
+        $this->verification_token = bin2hex(random_bytes(32));
     }
     
     // Getters
@@ -28,7 +33,10 @@ class User {
     public function getPassword() { return $this->password; }
     public function getPhone() { return $this->phone; }
     public function getAddress() { return $this->address; }
+    public function getProfilePhoto() { return $this->profile_photo; }
     public function getStatus() { return $this->status; }
+    public function getEmailVerified() { return $this->email_verified; }
+    public function getVerificationToken() { return $this->verification_token; }
     
     // Setters
     public function setId($id) { $this->id = $id; }
@@ -38,5 +46,7 @@ class User {
     public function setPassword($password) { $this->password = $password; }
     public function setPhone($phone) { $this->phone = $phone; }
     public function setAddress($address) { $this->address = $address; }
+    public function setProfilePhoto($photo) { $this->profile_photo = $photo; }
     public function setStatus($status) { $this->status = $status; }
+    public function setEmailVerified($verified) { $this->email_verified = $verified; }
 }

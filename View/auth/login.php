@@ -10,19 +10,30 @@ if (isset($_SESSION['user_id'])) {
 }
 
 $error = '';
+$captcha_question = '';
+$email = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ctrl = new ControlUser();
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
+    $captcha = $_POST['captcha'] ?? '';
     
-    if ($ctrl->login($email, $password)) {
-        header('Location: ../backoffice/liste.php');
-        exit;
+    if (!$ctrl->verifyCaptcha($captcha)) {
+        $error = "Code CAPTCHA incorrect";
     } else {
-        $error = "Email ou mot de passe incorrect";
+        $result = $ctrl->loginWithAttempts($email, $password);
+        if ($result['success']) {
+            header('Location: ../backoffice/liste.php');
+            exit;
+        } else {
+            $error = $result['error'];
+        }
     }
 }
+
+$ctrl = new ControlUser();
+$captcha_question = $ctrl->generateCaptcha();
 ?>
 
 <!DOCTYPE html>
@@ -42,6 +53,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body {
             background-color: olive;
             background: linear-gradient(to right, white, olive);
+        }
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar .logo-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .navbar .logo-nav img {
+            height: 40px;
+        }
+        .navbar .logo-nav h1 {
+            font-size: 1.3rem;
+            color: olivedrab;
+        }
+        .navbar .nav-links a {
+            text-decoration: none;
+            color: #333;
+            margin-left: 25px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .navbar .nav-links a:hover {
+            color: olivedrab;
+        }
+        .navbar .nav-links .btn-accueil {
+            background: olivedrab;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+        }
+        .navbar .nav-links .btn-accueil:hover {
+            background: #5a7a26;
+            color: white;
         }
         .container {
             background: white;
@@ -105,17 +156,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: green;
             font-size: 15px;
         }
+        .captcha-box {
+            background: #f0f0f0;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
         .recover {
             text-align: right;
-            font-size: 1rem;
+            font-size: 0.9rem;
             margin-bottom: 1rem;
         }
         .recover a {
             text-decoration: none;
-            color: rgb(125, 235, 131);
+            color: olivedrab;
         }
         .recover a:hover {
-            color: green;
             text-decoration: underline;
         }
         .btn {
@@ -138,28 +197,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-top: 0.5rem;
             text-align: center;
         }
-        .icons {
-            text-align: center;
-        }
-        .icons i {
-            color: green;
-            padding: 0.8rem 1.5rem;
-            border-radius: 9px;
-            font-size: 1rem;
-            cursor: pointer;
-            border: 2px solid #dfe9f5;
-            margin: 0 15px;
-            transition: 1s;
-        }
-        .icons i:hover {
-            background: #07001f;
-            font-size: 1.6rem;
-            border: 2px solid green;
-        }
         .links {
             display: flex;
             justify-content: space-around;
-            padding: 0 4rem;
+            padding: 0 2rem;
             margin-top: 0.9rem;
             font-weight: bold;
         }
@@ -190,9 +231,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom: 1rem;
             font-size: 0.9rem;
         }
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 0.7rem 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 0.7rem 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
+
+<div class="navbar">
+    <div class="logo-nav">
+        <img src="../assets/logo.png" alt="Green Assurance">
+        <h1>🌿 Green Assurance</h1>
+    </div>
+    <div class="nav-links">
+        <a href="../frontoffice/accueil.php" class="btn-accueil"><i class="fas fa-home"></i> Accueil</a>
+        <a href="register.php"><i class="fas fa-user-plus"></i> Inscription</a>
+        <a href="forgot_password.php"><i class="fas fa-key"></i> Mot de passe oublié</a>
+    </div>
+</div>
 
 <div class="container">
     <img src="../assets/logo.png" alt="Green Assurance" class="logo">
@@ -205,13 +274,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <?php if (isset($_GET['registered'])): ?>
-            <div class="alert-success"><i class="fas fa-check-circle"></i> Inscription réussie ! Vous pouvez maintenant vous connecter.</div>
+            <div class="alert-success"><i class="fas fa-check-circle"></i> Inscription réussie ! Un email de vérification vous a été envoyé.</div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['verified'])): ?>
+            <div class="alert-success"><i class="fas fa-check-circle"></i> Email vérifié ! Vous pouvez maintenant vous connecter.</div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['reset'])): ?>
+            <div class="alert-success"><i class="fas fa-check-circle"></i> Mot de passe réinitialisé ! Connectez-vous.</div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['deactivated'])): ?>
+            <div class="alert-warning"><i class="fas fa-info-circle"></i> Votre compte a été désactivé. Contactez l'administrateur pour le réactiver.</div>
+        <?php endif; ?>
+
+        <?php if (isset($_GET['deleted'])): ?>
+            <div class="alert-info"><i class="fas fa-info-circle"></i> Votre compte a été supprimé. Merci d'avoir utilisé Green Assurance.</div>
         <?php endif; ?>
 
         <form method="POST" action="" novalidate>
             <div class="input-group">
                 <i class="fas fa-envelope"></i>
-                <input type="text" name="email" id="email" placeholder="Email" required>
+                <input type="text" name="email" id="email" placeholder="Email" value="<?= htmlspecialchars($email) ?>" required>
                 <label for="email">Email</label>
             </div>
 
@@ -221,18 +306,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="password">Mot de passe</label>
             </div>
 
+            <div class="captcha-box">
+                <?= $captcha_question ?>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-calculator"></i>
+                <input type="number" name="captcha" id="captcha" placeholder="Résultat" required>
+                <label for="captcha">Résultat du calcul</label>
+            </div>
+
             <div class="recover">
-                <a href="#">Mot de passe oublié ?</a>
+                <a href="forgot_password.php">Mot de passe oublié ?</a>
             </div>
 
             <input type="submit" class="btn" value="Se connecter">
         </form>
 
         <p class="or">------ ou ------</p>
-        <div class="icons">
-            <i class="fab fa-google"></i>
-            <i class="fab fa-facebook"></i>
-        </div>
 
         <div class="links">
             <p>Pas de compte ?</p>
