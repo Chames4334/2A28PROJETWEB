@@ -20,6 +20,69 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    const reportModal = document.getElementById('reportModal');
+    const reportForm = document.getElementById('reportForm');
+    const otherReasonWrap = document.getElementById('otherReasonWrap');
+    const otherReason = document.getElementById('otherReason');
+    const reportError = document.getElementById('reportError');
+
+    function closeReportModal() {
+        if (reportModal) reportModal.style.display = 'none';
+    }
+
+    document.querySelectorAll('.btn-report').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            if (!reportModal || !reportForm) return;
+            reportForm.reset();
+            if (reportError) reportError.style.display = 'none';
+            if (otherReasonWrap) otherReasonWrap.style.display = 'none';
+            document.getElementById('reportTargetType').value = btn.getAttribute('data-report-type');
+            document.getElementById('reportTargetId').value = btn.getAttribute('data-report-id');
+            document.getElementById('reportPostId').value = btn.getAttribute('data-report-post');
+            reportModal.style.display = 'flex';
+        });
+    });
+
+    document.querySelectorAll('[name="reason"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            if (otherReasonWrap) otherReasonWrap.style.display = radio.value === 'Autre' ? 'block' : 'none';
+        });
+    });
+
+    ['reportModalClose', 'reportCancel'].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', closeReportModal);
+    });
+
+    if (reportModal) {
+        reportModal.addEventListener('click', function (e) {
+            if (e.target === reportModal) closeReportModal();
+        });
+    }
+
+    if (reportForm) {
+        reportForm.addEventListener('submit', function (e) {
+            const selected = reportForm.querySelector('[name="reason"]:checked');
+            let message = '';
+
+            if (!selected) {
+                message = 'Choisissez une raison.';
+            } else if (selected.value === 'Autre' && (!otherReason || otherReason.value.trim().length < 5)) {
+                message = 'Decrivez la raison en au moins 5 caracteres.';
+            } else if (otherReason && otherReason.value.length > 500) {
+                message = 'La precision ne peut pas depasser 500 caracteres.';
+            }
+
+            if (message) {
+                e.preventDefault();
+                if (reportError) {
+                    reportError.textContent = message;
+                    reportError.style.display = 'block';
+                }
+            }
+        });
+    }
+
     // ── CHAR COUNTER ───────────────────────────────────────────
     document.querySelectorAll('[data-maxlength]').forEach(function (el) {
         const max = parseInt(el.getAttribute('data-maxlength'));

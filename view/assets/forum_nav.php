@@ -80,6 +80,9 @@ function forumNav(string $side, string $active = '') {
                 <a href="liste.php?tab=reactions" class="<?= ($active==='liste'&&$tab==='reactions') ? 'active' : '' ?>">
                     <i class="fas fa-heart"></i> Réactions
                 </a>
+                <a href="reports.php" class="<?= $active==='reports' ? 'active' : '' ?>">
+                    <i class="fas fa-flag"></i> Signalements
+                </a>
                 <a href="ajout.php" class="<?= $active==='ajout' ? 'active' : '' ?>">
                     <i class="fas fa-plus-circle"></i> Nouveau Post
                 </a>

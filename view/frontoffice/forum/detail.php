@@ -130,6 +130,15 @@ foreach ($replies as $r) {
                 </button>
             </form>
 
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <button type="button" class="reply-mini-btn btn-report"
+                        data-report-type="post"
+                        data-report-id="<?= $post['id'] ?>"
+                        data-report-post="<?= $post['id'] ?>">
+                    <i class="fas fa-flag"></i> Signaler
+                </button>
+            <?php endif; ?>
+
             <!-- Owner actions -->
             <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $post['user_id']): ?>
                 <a href="/view/frontoffice/forum/modifier.php?id=<?= $post['id'] ?>" class="btn btn-secondary btn-sm" style="margin-left:auto">
@@ -199,6 +208,12 @@ foreach ($replies as $r) {
                             data-target="reply-form-<?= $r['id'] ?>">
                         <i class="fas fa-reply"></i> Répondre
                     </button>
+                    <button type="button" class="reply-mini-btn btn-report"
+                            data-report-type="reply"
+                            data-report-id="<?= $r['id'] ?>"
+                            data-report-post="<?= $id ?>">
+                        <i class="fas fa-flag"></i> Signaler
+                    </button>
                 <?php endif; ?>
 
                 <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $r['user_id']): ?>
@@ -242,8 +257,15 @@ foreach ($replies as $r) {
                         <span class="reply-date"><?= date('d/m/Y H:i', strtotime($nr['created_at'])) ?></span>
                     </div>
                     <div class="reply-text"><?= htmlspecialchars($nr['contenu']) ?></div>
-                    <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $nr['user_id']): ?>
+                    <?php if (isset($_SESSION['user_id'])): ?>
                     <div class="reply-actions">
+                        <button type="button" class="reply-mini-btn btn-report"
+                                data-report-type="reply"
+                                data-report-id="<?= $nr['id'] ?>"
+                                data-report-post="<?= $id ?>">
+                            <i class="fas fa-flag"></i> Signaler
+                        </button>
+                        <?php if ($_SESSION['user_id'] == $nr['user_id']): ?>
                         <a href="/view/frontoffice/forum/modifier_reply.php?id=<?= $nr['id'] ?>&post_id=<?= $id ?>"
                            class="reply-mini-btn"><i class="fas fa-edit"></i></a>
                         <a href="/view/frontoffice/forum/supprimer_reply.php?id=<?= $nr['id'] ?>&post_id=<?= $id ?>"
@@ -251,6 +273,7 @@ foreach ($replies as $r) {
                            data-confirm="Supprimer cette réponse ?">
                             <i class="fas fa-trash"></i>
                         </a>
+                        <?php endif; ?>
                     </div>
                     <?php endif; ?>
                 </div>
@@ -294,6 +317,42 @@ foreach ($replies as $r) {
     </div>
 
 </div>
+
+<?php if (isset($_SESSION['user_id'])): ?>
+<div class="modal-overlay" id="reportModal" style="display:none">
+    <div class="modal-box">
+        <button type="button" class="modal-close" id="reportModalClose" aria-label="Fermer">
+            <i class="fas fa-times"></i>
+        </button>
+        <h2><i class="fas fa-flag"></i> Signaler ce contenu</h2>
+        <form action="/view/frontoffice/forum/report.php" method="POST" id="reportForm">
+            <input type="hidden" name="target_type" id="reportTargetType">
+            <input type="hidden" name="target_id" id="reportTargetId">
+            <input type="hidden" name="post_id" id="reportPostId">
+
+            <div class="report-reasons">
+                <label><input type="radio" name="reason" value="Spam"> Spam</label>
+                <label><input type="radio" name="reason" value="Harcelement"> Harcelement</label>
+                <label><input type="radio" name="reason" value="Contenu inapproprie"> Contenu inapproprie</label>
+                <label><input type="radio" name="reason" value="Fausse information"> Fausse information</label>
+                <label><input type="radio" name="reason" value="Informations personnelles"> Informations personnelles</label>
+                <label><input type="radio" name="reason" value="Autre"> Autre</label>
+            </div>
+
+            <div class="form-group other-reason-wrap" id="otherReasonWrap" style="display:none">
+                <label for="otherReason">Precision</label>
+                <textarea name="other_reason" id="otherReason" placeholder="Decrivez le probleme..."></textarea>
+            </div>
+            <span class="error-msg js-report-error" id="reportError" style="display:none"></span>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="reportCancel">Annuler</button>
+                <button type="submit" class="btn btn-danger"><i class="fas fa-flag"></i> Envoyer</button>
+            </div>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
 
 <script src="/view/assets/forum.js"></script>
 </body>
