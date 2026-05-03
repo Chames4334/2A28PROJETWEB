@@ -100,4 +100,19 @@ class ControlReaction {
         $req->execute(['t' => $type]);
         return $req->fetchColumn();
     }
+
+    public function getDailyReactionCounts($days = 14) {
+        $db = config::getConnexion();
+        $days = max(1, min(90, (int)$days));
+        try {
+            $sql = "
+                SELECT DATE(created_at) AS jour, type_reaction, COUNT(*) AS total
+                FROM reaction
+                WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL " . ($days - 1) . " DAY)
+                GROUP BY DATE(created_at), type_reaction
+                ORDER BY jour ASC
+            ";
+            return $db->query($sql)->fetchAll();
+        } catch (Exception $e) { die('Erreur: ' . $e->getMessage()); }
+    }
 }

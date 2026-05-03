@@ -10,6 +10,8 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] ?? '') !== 'admin') 
 $ctrl = new ControlPost();
 $id   = intval($_GET['id'] ?? 0);
 $post = $ctrl->getPostById($id);
+$tagsEnabled = $ctrl->tagSystemReady();
+$tags = $tagsEnabled ? $ctrl->getAllTags() : [];
 if (!$post) { header('Location: liste.php'); exit; }
 
 $errors = [];
@@ -19,14 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contenu   = trim($_POST['contenu'] ?? '');
     $is_pinned = isset($_POST['is_pinned']) ? 1 : 0;
     $statut    = in_array($_POST['statut'] ?? '', ['actif','masque','supprime']) ? $_POST['statut'] : 'actif';
+    $tag_id    = $tagsEnabled && ($_POST['tag_id'] ?? '') !== '' ? intval($_POST['tag_id']) : null;
 
     // SERVER-SIDE validation
     if (strlen($titre) < 5)       $errors['titre']   = "Minimum 5 caractères.";
     elseif (strlen($titre) > 200) $errors['titre']   = "Maximum 200 caractères.";
     if (strlen($contenu) < 10)    $errors['contenu'] = "Minimum 10 caractères.";
+    if ($tagsEnabled && !$ctrl->tagExists($tag_id)) $errors['tag_id'] = "Tag invalide.";
 
     if (empty($errors)) {
-        $updated = new Post($post['user_id'], $titre, $contenu, $is_pinned, $statut);
+        $updated = new Post($post['user_id'], $titre, $contenu, $is_pinned, $statut, $tag_id);
         $ctrl->updatePost($updated, $id);
         $_SESSION['success'] = "Post modifié avec succès.";
         header('Location: liste.php'); exit;
@@ -95,6 +99,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </label>
                     </div>
                 </div>
+                <?php if ($tagsEnabled): ?>
+                <div class="form-group <?= isset($errors['tag_id']) ? 'has-error' : '' ?>">
+                    <label><i class="fas fa-tag"></i> Tag</label>
+                    <select name="tag_id">
+                        <option value="">Sans tag</option>
+                        <?php foreach ($tags as $tag): ?>
+                            <option value="<?= $tag['id'] ?>"
+                                <?= (string)($_POST['tag_id'] ?? $post['tag_id'] ?? '') === (string)$tag['id'] ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($tag['name'] . (!empty($tag['color']) ? ' (' . $tag['color'] . ')' : '')) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php if (isset($errors['tag_id'])): ?>
+                        <span class="error-msg"><?= $errors['tag_id'] ?></span>
+                    <?php endif; ?>
+                </div>
+                <?php endif; ?>
                 <div class="form-actions">
                     <a href="liste.php" class="btn btn-secondary"><i class="fas fa-times"></i> Annuler</a>
                     <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Enregistrer</button>

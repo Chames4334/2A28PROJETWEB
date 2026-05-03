@@ -102,7 +102,7 @@ $stats = [
             <table>
                 <thead>
                     <tr>
-                        <th>#</th><th>Titre</th><th>Auteur</th>
+                        <th>#</th><th>Titre</th><th>Tag</th><th>Auteur</th>
                         <th>Réponses</th><th>Réactions</th><th>Signalements</th>
                         <th>Statut</th><th>Date</th><th>Actions</th>
                     </tr>
@@ -120,6 +120,17 @@ $stats = [
                            title="Voir dans le front office">
                             <?= htmlspecialchars(mb_substr($p['titre'],0,45)) ?><?= mb_strlen($p['titre'])>45 ? '…' : '' ?>
                         </a>
+                    </td>
+                    <td>
+                        <?php if (!empty($p['tag_name'])):
+                            $tagColor = preg_match('/^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)$/', $p['tag_color'] ?? '') ? $p['tag_color'] : '#6b8f3a';
+                        ?>
+                            <span class="forum-tag forum-tag-sm" style="background-color:<?= htmlspecialchars($tagColor) ?>">
+                                <?= htmlspecialchars($p['tag_name']) ?>
+                            </span>
+                        <?php else: ?>
+                            <span style="color:var(--text-light)">—</span>
+                        <?php endif; ?>
                     </td>
                     <td><?= htmlspecialchars($p['prenom'] . ' ' . $p['nom']) ?></td>
                     <td><span class="meta-chip"><i class="fas fa-comment"></i> <?= $p['nb_replies'] ?></span></td>

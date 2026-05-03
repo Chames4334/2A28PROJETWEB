@@ -71,6 +71,9 @@ function forumNav(string $side, string $active = '') {
             </div>
             <nav>
                 <div class="sb-section">Forum</div>
+                <a href="stats.php" class="<?= $active==='stats' ? 'active' : '' ?>">
+                    <i class="fas fa-chart-simple"></i> Statistiques
+                </a>
                 <a href="liste.php?tab=posts"     class="<?= ($active==='liste'&&$tab==='posts')     ? 'active' : '' ?>">
                     <i class="fas fa-file-alt"></i> Posts
                 </a>
@@ -82,6 +85,9 @@ function forumNav(string $side, string $active = '') {
                 </a>
                 <a href="reports.php" class="<?= $active==='reports' ? 'active' : '' ?>">
                     <i class="fas fa-flag"></i> Signalements
+                </a>
+                <a href="tags.php" class="<?= $active==='tags' ? 'active' : '' ?>">
+                    <i class="fas fa-tags"></i> Tags
                 </a>
                 <a href="ajout.php" class="<?= $active==='ajout' ? 'active' : '' ?>">
                     <i class="fas fa-plus-circle"></i> Nouveau Post

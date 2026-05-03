@@ -92,6 +92,13 @@ foreach ($replies as $r) {
                 <i class="fas fa-thumbtack"></i> Post épinglé
             </span>
         <?php endif; ?>
+        <?php if (!empty($post['tag_name'])):
+            $tagColor = preg_match('/^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)$/', $post['tag_color'] ?? '') ? $post['tag_color'] : '#6b8f3a';
+        ?>
+            <span class="forum-tag" style="background-color:<?= htmlspecialchars($tagColor) ?>">
+                <i class="fas fa-tag"></i> <?= htmlspecialchars($post['tag_name']) ?>
+            </span>
+        <?php endif; ?>
 
         <h1><?= htmlspecialchars($post['titre']) ?></h1>
 

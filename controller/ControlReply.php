@@ -131,4 +131,20 @@ class ControlReply {
         $db = config::getConnexion();
         return $db->query("SELECT COUNT(*) FROM reply WHERE statut = 'actif'")->fetchColumn();
     }
+
+    public function getDailyReplyCounts($days = 14) {
+        $db = config::getConnexion();
+        $days = max(1, min(90, (int)$days));
+        try {
+            $sql = "
+                SELECT DATE(created_at) AS jour, COUNT(*) AS total
+                FROM reply
+                WHERE statut = 'actif'
+                AND created_at >= DATE_SUB(CURDATE(), INTERVAL " . ($days - 1) . " DAY)
+                GROUP BY DATE(created_at)
+                ORDER BY jour ASC
+            ";
+            return $db->query($sql)->fetchAll();
+        } catch (Exception $e) { die('Erreur: ' . $e->getMessage()); }
+    }
 }

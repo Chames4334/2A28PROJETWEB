@@ -76,6 +76,13 @@ $posts = $q ? $ctrl->searchPosts($q, $sort, $direction) : [];
             <?php endif; ?>
 
             <div class="post-title"><?= htmlspecialchars($post['titre']) ?></div>
+            <?php if (!empty($post['tag_name'])):
+                $tagColor = preg_match('/^(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)$/', $post['tag_color'] ?? '') ? $post['tag_color'] : '#6b8f3a';
+            ?>
+                <span class="forum-tag forum-tag-sm" style="background-color:<?= htmlspecialchars($tagColor) ?>">
+                    <i class="fas fa-tag"></i> <?= htmlspecialchars($post['tag_name']) ?>
+                </span>
+            <?php endif; ?>
             <div class="post-excerpt"><?= htmlspecialchars($post['contenu']) ?></div>
 
             <div class="post-meta">
