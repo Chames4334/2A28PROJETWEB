@@ -4,15 +4,16 @@ class Database {
     private $connection;
 
     private function __construct() {
-        $host = '127.0.0.1';
+        $host = 'localhost';
         $dbname = 'gestion_conges';
         $username = 'root';
         $password = '';
 
         try {
-            $this->connection = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+            $this->connection = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $this->connection->exec("SET NAMES utf8mb4");
         } catch (PDOException $e) {
             die('Erreur de connexion à la base de données : ' . $e->getMessage());
         }

@@ -2,123 +2,212 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Congés et traitements</title>
+    <title>Gestion des congés</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .traitement-cell {
+            max-width: 200px;
+            font-size: 0.9rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-approuve { background: #4caf50; color: white; }
+        .badge-refuse { background: #f44336; color: white; }
+        .badge-attente { background: #ff9800; color: white; }
+        .action-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #6FAF4C;
+        }
+    </style>
 </head>
 <body>
     <div class="page-shell modern-shell">
         <header class="page-header modern-header admin-tone">
             <div>
-                <p class="breadcrumb">Espace</p>
-                <h1>Congés et traitements</h1>
+                <p class="breadcrumb">Administration</p>
+                <h1>Gestion des congés</h1>
             </div>
             <div class="header-actions">
-                <a class="button button-primary" href="?action=traitementCreate">Ajouter traitement</a>
+                <a class="button button-primary" href="?action=calendarAdmin" style="background-color: #6b7d62; border-color: #6b7d62;">📅 Voir le Calendrier</a>
+                <a class="button button-primary" href="?action=create">Nouveau congé</a>
                 <a class="button button-secondary" href="?page=home">Accueil</a>
             </div>
         </header>
 
+        <!-- Statistiques -->
+        <div class="stats-summary">
+            <div class="stat-card">
+                <div class="stat-number"><?php echo $stats['total'] ?? 0; ?></div>
+                <div>Total congés</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><?php echo $stats['en_attente'] ?? 0; ?></div>
+                <div>En attente</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><?php echo $stats['approuve'] ?? 0; ?></div>
+                <div>Approuvés</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" style="color: #e74c3c;"><?php echo $stats['refuse'] ?? 0; ?></div>
+                <div>Refusés</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><?php echo $stats['traites'] ?? 0; ?></div>
+                <div>Traitements effectués</div>
+            </div>
+        </div>
+
+        <!-- Section Soldes & Graphique -->
+        <section class="content-card dual-section" style="margin-bottom: 24px;">
+            <div class="section-title-row">
+                <h2>Solde des employés</h2>
+            </div>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 300px;">
+                    <table class="table-list modern-table">
+                        <thead>
+                            <tr>
+                                <th>Employé</th>
+                                <th>Solde Total</th>
+                                <th>Jours Pris</th>
+                                <th>Solde Restant</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($employes as $emp): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($emp['prenom'] . ' ' . $emp['nom']); ?></td>
+                                <td><?php echo $emp['solde_total']; ?></td>
+                                <td><span class="pill tone-bad"><?php echo $emp['jours_pris']; ?></span></td>
+                                <td>
+                                    <?php if ($emp['solde_restant'] < 0): ?>
+                                        <span class="pill tone-bad"><strong><?php echo $emp['solde_restant']; ?></strong></span>
+                                    <?php else: ?>
+                                        <span class="pill tone-ok"><strong><?php echo $emp['solde_restant']; ?></strong></span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="flex: 1; min-width: 300px; height: 300px;">
+                    <canvas id="employesChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Formulaire de recherche -->
         <section class="content-card dual-section">
             <div class="section-title-row">
-                <h2>Gestion des congés</h2>
+                <h2>Liste des congés</h2>
                 <span class="badge-soft"><?php echo count($conges); ?> élément(s)</span>
             </div>
+            
             <form method="GET" class="toolbar-form">
                 <input type="hidden" name="action" value="adminIndex">
-                <input type="text" name="q_conge" placeholder="Recherche congé..." value="<?php echo htmlspecialchars($_GET['q_conge'] ?? ''); ?>">
-                <select name="sort_conge">
-                    <?php $sortConge = $_GET['sort_conge'] ?? 'date_demande'; ?>
-                    <option value="date_debut" <?php echo $sortConge === 'date_debut' ? 'selected' : ''; ?>>Date début</option>
-                    <option value="date_fin" <?php echo $sortConge === 'date_fin' ? 'selected' : ''; ?>>Date fin</option>
-                    <option value="type_conge" <?php echo $sortConge === 'type_conge' ? 'selected' : ''; ?>>Type</option>
-                    <option value="statut" <?php echo $sortConge === 'statut' ? 'selected' : ''; ?>>Statut</option>
+                <input type="text" name="q" placeholder="Rechercher congé..." value="<?php echo htmlspecialchars($_GET['q'] ?? ''); ?>">
+                <select name="sort">
+                    <?php $sort = $_GET['sort'] ?? 'date_demande'; ?>
+                    <option value="date_debut" <?php echo $sort === 'date_debut' ? 'selected' : ''; ?>>Date début</option>
+                    <option value="date_fin" <?php echo $sort === 'date_fin' ? 'selected' : ''; ?>>Date fin</option>
+                    <option value="type_conge" <?php echo $sort === 'type_conge' ? 'selected' : ''; ?>>Type</option>
+                    <option value="statut" <?php echo $sort === 'statut' ? 'selected' : ''; ?>>Statut</option>
+                    <option value="decision" <?php echo $sort === 'decision' ? 'selected' : ''; ?>>Décision</option>
                 </select>
-                <select name="dir_conge">
-                    <?php $dirConge = strtoupper($_GET['dir_conge'] ?? 'DESC'); ?>
-                    <option value="ASC" <?php echo $dirConge === 'ASC' ? 'selected' : ''; ?>>Asc</option>
-                    <option value="DESC" <?php echo $dirConge === 'DESC' ? 'selected' : ''; ?>>Desc</option>
+                <select name="dir">
+                    <?php $dir = strtoupper($_GET['dir'] ?? 'DESC'); ?>
+                    <option value="ASC" <?php echo $dir === 'ASC' ? 'selected' : ''; ?>>Asc</option>
+                    <option value="DESC" <?php echo $dir === 'DESC' ? 'selected' : ''; ?>>Desc</option>
                 </select>
                 <button class="button button-small" type="submit">Filtrer</button>
-                <a class="button button-small button-secondary" href="?action=congePdf&q=<?php echo urlencode($_GET['q_conge'] ?? ''); ?>&sort=<?php echo urlencode($_GET['sort_conge'] ?? 'date_demande'); ?>&dir=<?php echo urlencode($_GET['dir_conge'] ?? 'DESC'); ?>">PDF Congés</a>
+                <a class="button button-small button-secondary" href="?action=congePdf&q=<?php echo urlencode($_GET['q'] ?? ''); ?>&sort=<?php echo urlencode($_GET['sort'] ?? 'date_demande'); ?>&dir=<?php echo urlencode($_GET['dir'] ?? 'DESC'); ?>">Exporter PDF</a>
             </form>
 
             <table class="table-list modern-table">
                 <thead>
                     <tr>
-                        <th>Date début</th>
-                        <th>Date fin</th>
+                        <th>Dates</th>
                         <th>Type</th>
+                        <th>Motif</th>
                         <th>Statut</th>
+                        <th>Traitement</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($conges)): ?>
-                        <tr><td colspan="5">Aucun congé trouvé.</td></tr>
+                        <tr><td colspan="6">Aucun congé trouvé.</td></tr>
                     <?php else: ?>
                         <?php foreach ($conges as $conge): ?>
                             <tr>
-                                <td><?php echo $conge['date_debut']; ?></td>
-                                <td><?php echo $conge['date_fin']; ?></td>
-                                <td><?php echo htmlspecialchars($conge['type_conge']); ?></td>
-                                <td><?php echo htmlspecialchars($conge['statut']); ?></td>
-                                <td>
-                                    <a class="button button-small" href="?action=edit&id=<?php echo $conge['id_conge']; ?>">Modifier</a>
-                                    <a class="button button-small button-danger" href="?action=delete&id=<?php echo $conge['id_conge']; ?>" onclick="return confirm('Supprimer ce congé ?');">Supprimer</a>
+                                <td style="white-space: nowrap;">
+                                    <?php echo $conge['date_debut']; ?><br>
+                                    <span style="font-size: 0.8rem; color: #888;">au</span><br>
+                                    <?php echo $conge['date_fin']; ?>
                                 </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </section>
-
-        <section class="content-card dual-section">
-            <div class="section-title-row">
-                <h2>Gestion des traitements</h2>
-                <span class="badge-soft"><?php echo count($traitements); ?> élément(s)</span>
-            </div>
-            <form method="GET" class="toolbar-form">
-                <input type="hidden" name="action" value="adminIndex">
-                <input type="text" name="q_traitement" placeholder="Recherche traitement..." value="<?php echo htmlspecialchars($_GET['q_traitement'] ?? ''); ?>">
-                <select name="sort_traitement">
-                    <?php $sortTraitement = $_GET['sort_traitement'] ?? 'date_traitement'; ?>
-                    <option value="type_conge" <?php echo $sortTraitement === 'type_conge' ? 'selected' : ''; ?>>Type</option>
-                    <option value="date_traitement" <?php echo $sortTraitement === 'date_traitement' ? 'selected' : ''; ?>>Date</option>
-                    <option value="decision" <?php echo $sortTraitement === 'decision' ? 'selected' : ''; ?>>Décision</option>
-                </select>
-                <select name="dir_traitement">
-                    <?php $dirTraitement = strtoupper($_GET['dir_traitement'] ?? 'DESC'); ?>
-                    <option value="ASC" <?php echo $dirTraitement === 'ASC' ? 'selected' : ''; ?>>Asc</option>
-                    <option value="DESC" <?php echo $dirTraitement === 'DESC' ? 'selected' : ''; ?>>Desc</option>
-                </select>
-                <button class="button button-small" type="submit">Filtrer</button>
-                <a class="button button-small button-secondary" href="?action=traitementPdf&q=<?php echo urlencode($_GET['q_traitement'] ?? ''); ?>&sort=<?php echo urlencode($_GET['sort_traitement'] ?? 'date_traitement'); ?>&dir=<?php echo urlencode($_GET['dir_traitement'] ?? 'DESC'); ?>">PDF Traitements</a>
-            </form>
-
-            <table class="table-list modern-table">
-                <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>Date traitement</th>
-                        <th>Décision</th>
-                        <th>Commentaire</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (empty($traitements)): ?>
-                        <tr><td colspan="5">Aucun traitement trouvé.</td></tr>
-                    <?php else: ?>
-                        <?php foreach ($traitements as $t): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($t['type_conge']); ?></td>
-                                <td><?php echo $t['date_traitement']; ?></td>
-                                <td><?php echo htmlspecialchars($t['decision']); ?></td>
-                                <td><?php echo htmlspecialchars(substr($t['commentaire'] ?? '', 0, 35)); ?></td>
+                                <td><?php echo htmlspecialchars($conge['type_conge']); ?></td>
+                                <td><?php echo htmlspecialchars(substr($conge['motif'], 0, 50)); ?></td>
                                 <td>
-                                    <a class="button button-small" href="?action=traitementEdit&id=<?php echo $t['id_traitement']; ?>">Modifier</a>
-                                    <a class="button button-small button-danger" href="?action=traitementDelete&id=<?php echo $t['id_traitement']; ?>" onclick="return confirm('Supprimer ce traitement ?');">Supprimer</a>
+                                    <span class="badge badge-<?php 
+                                        echo $conge['statut'] === 'approuvé' ? 'approuve' : ($conge['statut'] === 'refusé' ? 'refuse' : 'attente'); 
+                                    ?>">
+                                        <?php echo htmlspecialchars($conge['statut']); ?>
+                                    </span>
+                                </td>
+                                <td class="traitement-cell">
+                                    <?php if (!empty($conge['date_traitement'])): ?>
+                                        <div><strong>Date:</strong> <?php echo $conge['date_traitement']; ?></div>
+                                        <div><strong>Décision:</strong> 
+                                            <span class="badge badge-<?php 
+                                                echo $conge['decision'] === 'approuvé' ? 'approuve' : ($conge['decision'] === 'refusé' ? 'refuse' : 'attente'); 
+                                            ?>">
+                                                <?php echo htmlspecialchars($conge['decision'] ?? 'N/A'); ?>
+                                            </span>
+                                        </div>
+                                        <?php if (!empty($conge['commentaire_traitement'])): ?>
+                                            <div><small><?php echo htmlspecialchars(substr($conge['commentaire_traitement'], 0, 40)); ?></small></div>
+                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        <span class="muted">Non traité</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                                        <a class="button button-small" href="?action=edit&id=<?php echo $conge['id_conge']; ?>" style="text-align: center; font-size: 0.75rem; padding: 4px;">Modifier</a>
+                                        <a class="button button-small button-secondary" href="?action=editTraitement&id=<?php echo $conge['id_conge']; ?>" style="text-align: center; font-size: 0.75rem; padding: 4px;">Traitement</a>
+                                        <a class="button button-small button-danger" href="?action=delete&id=<?php echo $conge['id_conge']; ?>" onclick="return confirm('Supprimer ce congé ?');" style="text-align: center; font-size: 0.75rem; padding: 4px;">Supprimer</a>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -128,8 +217,55 @@
         </section>
 
         <footer class="page-footer">
-            <a class="footer-link" href="?action=index">Voir l'autre espace</a>
+            <a class="footer-link" href="?page=frontoffice">Voir l'espace utilisateur</a>
         </footer>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var employesData = <?php 
+                $chartData = array_map(function($e) {
+                    return [
+                        'nom' => $e['prenom'] . ' ' . $e['nom'],
+                        'pris' => $e['jours_pris'],
+                        'restant' => $e['solde_restant']
+                    ];
+                }, $employes);
+                echo json_encode($chartData);
+            ?>;
+
+            var labels = employesData.map(e => e.nom);
+            var dataPris = employesData.map(e => e.pris);
+            var dataRestant = employesData.map(e => e.restant);
+
+            var ctx = document.getElementById('employesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Jours pris',
+                            data: dataPris,
+                            backgroundColor: '#e74c3c'
+                        },
+                        {
+                            label: 'Solde restant',
+                            data: dataRestant,
+                            backgroundColor: '#2ecc71'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true },
+                        y: { stacked: true, beginAtZero: true }
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

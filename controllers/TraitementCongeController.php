@@ -164,7 +164,9 @@ class TraitementCongeController {
 
             if (empty($errors)) {
                 if ($this->save($_POST, $id)) {
-                    header('Location: index.php?action=traitementAdminIndex');
+                    // Rediriger vers la page d'où on vient
+                    $redirect = isset($_GET['from']) && $_GET['from'] === 'admin' ? 'traitementAdminIndex' : 'traitementIndex';
+                    header('Location: index.php?action=' . $redirect);
                     exit;
                 }
                 $errors[] = 'Impossible de mettre à jour le traitement.';
@@ -176,7 +178,9 @@ class TraitementCongeController {
 
     public function deleteAction($id) {
         $this->delete($id);
-        header('Location: index.php?action=traitementAdminIndex');
+        // Rediriger vers la page d'où on vient
+        $redirect = isset($_GET['from']) && $_GET['from'] === 'admin' ? 'traitementAdminIndex' : 'traitementIndex';
+        header('Location: index.php?action=' . $redirect);
         exit;
     }
 

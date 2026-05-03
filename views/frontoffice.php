@@ -27,7 +27,7 @@
         <div class="links_area">
             <a href="?page=frontoffice">Accueil</a>
             <a href="?action=index">Mes Congés</a>
-            <a href="?action=traitementIndex">Traitements</a>
+            <a href="?action=calendarAdmin">Calendrier</a>
         </div>
         <a href="?page=home" class="header-btn">Déconnexion</a>
     </div>

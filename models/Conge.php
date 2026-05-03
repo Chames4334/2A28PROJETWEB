@@ -9,10 +9,10 @@ class Conge {
     private $statut;
     private $date_demande;
     private $id_employe;
-
-    // Constructeur
-    public function __construct() {
-    }
+    // Nouveaux champs de traitement
+    private $date_traitement;
+    private $decision;
+    private $commentaire_traitement;
 
     // Setters
     public function setIdConge($id_conge) {
@@ -47,6 +47,19 @@ class Conge {
         $this->id_employe = (int)$id_employe;
     }
 
+    // Nouveaux setters
+    public function setDateTraitement($date_traitement) {
+        $this->date_traitement = $date_traitement;
+    }
+
+    public function setDecision($decision) {
+        $this->decision = $decision;
+    }
+
+    public function setCommentaireTraitement($commentaire_traitement) {
+        $this->commentaire_traitement = $commentaire_traitement;
+    }
+
     // Getters
     public function getIdConge() {
         return $this->id_conge;
@@ -78,6 +91,19 @@ class Conge {
 
     public function getIdEmploye() {
         return $this->id_employe;
+    }
+
+    // Nouveaux getters
+    public function getDateTraitement() {
+        return $this->date_traitement;
+    }
+
+    public function getDecision() {
+        return $this->decision;
+    }
+
+    public function getCommentaireTraitement() {
+        return $this->commentaire_traitement;
     }
 }
 ?>
