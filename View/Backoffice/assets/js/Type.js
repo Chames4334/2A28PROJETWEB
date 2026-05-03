@@ -1,3 +1,25 @@
+const toggleBtn = document.getElementById("themeToggle");
+
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+    if (toggleBtn) toggleBtn.textContent = "Light Mode";
+}
+
+if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+
+        if (document.body.classList.contains("dark")) {
+            localStorage.setItem("theme", "dark");
+            toggleBtn.textContent = "Light Mode";
+        } else {
+            localStorage.setItem("theme", "light");
+            toggleBtn.textContent = "Dark Mode";
+        }
+    });
+}
+
+
 var timer;
  
 var rechercheInput = document.getElementById("recherche");
@@ -30,8 +52,8 @@ function sortTable(criterion) {
     var rows = Array.from(tbody.querySelectorAll("tr"));
  
     rows.sort(function(a, b) {
-        var aTitle = a.cells[1] ? a.cells[1].textContent.trim() : '';
-        var bTitle = b.cells[1] ? b.cells[1].textContent.trim() : '';
+        var aTitre = a.cells[1] ? a.cells[1].textContent.trim() : '';
+        var bTitre = b.cells[1] ? b.cells[1].textContent.trim() : '';
         var aDate  = a.cells[4] ? new Date(a.cells[4].textContent.trim()) : 0;
         var bDate  = b.cells[4] ? new Date(b.cells[4].textContent.trim()) : 0;
  

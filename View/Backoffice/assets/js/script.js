@@ -1,3 +1,36 @@
+const toggleBtn = document.getElementById("themeToggle");
+
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+    if (toggleBtn) toggleBtn.textContent = "Light Mode";
+}
+
+if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+
+        if (document.body.classList.contains("dark")) {
+            localStorage.setItem("theme", "dark");
+            toggleBtn.textContent = "Light Mode";
+        } else {
+            localStorage.setItem("theme", "light");
+            toggleBtn.textContent = "Dark Mode";
+        }
+    });
+}
+
+document.addEventListener("click", function(e) {
+    const row = e.target.closest(".clickable-row");
+
+    if (row) {
+        // Prevent clicks on buttons
+        if (e.target.closest("a")) return;
+
+        const id = row.getAttribute("data-id");
+        window.location.href = "./subscription.php?OffreID=" + id;
+    }
+});
+
 var timer;
  
 var rechercheInput = document.getElementById("recherche");
@@ -50,7 +83,7 @@ function sortTable(criterion) {
         tbody.appendChild(row);
     });
 }
- 
+
 if (triSelect) {
     triSelect.addEventListener("change", function() {
         sortTable(this.value);

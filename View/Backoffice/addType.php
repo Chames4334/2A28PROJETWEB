@@ -31,7 +31,7 @@
             $imageName = time() . '_' . $_FILES['image']['name'];
             move_uploaded_file($_FILES['image']['tmp_name'], __DIR__ . "/images/". $imageName);
         } else {
-            $imageName = "default.png";
+            $imageName = $_POST['old_image'] ?? "default.png";
         }
         $type=new AssuranceType(
             $_POST['Titre'],
@@ -39,7 +39,6 @@
             $imageName,
             new DateTime()
         );
-        /*$type->loadVariablesFromPost();*/
         if(!empty($_POST['TypeID']))
             $Cntrlt->updateType($type,$_POST['TypeID']);
         else
@@ -55,18 +54,15 @@
 
     $action = $_GET['action'] ?? 'list';
 
-    /*$editVariables = [];
-    if ($action === 'add' && !empty($_GET['TypeID'])) {
-        foreach ($type as $row) {
-            if ($row['TypeID'] == $_GET['TypeID'] && !empty($row['variables_json'])) {
-                $tmp = new AssuranceType('', '',"default.png", new DateTime(), []);
-                $tmp->loadVariablesFromJson($row['variables_json']);
-                $editVariables = $tmp->getVariables();
+    $t_edit = null;
+    if (isset($_GET['TypeID'])) {
+        foreach ($type as $t) {
+            if ($t['TypeID'] == $_GET['TypeID']) {
+                $t_edit = $t;
                 break;
             }
         }
-    }*/
-
+    }
 
 ?>
 <!DOCTYPE html>
@@ -74,8 +70,8 @@
     <head>
         <meta charset="UTF-8">
         <title>Types</title>
-        <link rel="stylesheet" href="./assets/css/font.css">
-        <script defer src="./assets/js/ScriptType.js"></script>
+        <link rel="stylesheet" href="./assets/css/front.css">
+        <script defer src="./assets/js/Type.js"></script>
         <style>
             .var-field-row {
                 display: flex;
@@ -118,7 +114,6 @@
                 <a href="#">Dashboard</a>
                 <a href="./addOffre.php">Offres</a>
                 <a href="./addType.php">Assurance Types</a>
-                <a href="./Subscription.php">subscriptions</a>
             </div>
             <div class="main">
                 <div class="topbar" style="font-size: larger;">
@@ -133,8 +128,9 @@
                                 ← Back
                             </a>
                         <?php } ?>
-                        <a class="btn-primary">Statestique</a>
+                        <a class="btn-primary" href="./Statistique.php?addType">Statestique</a>
                         <a class="btn-primary" href="../../View/FrontOffice/Finance.php">FrontOffice</a>
+                        <a id="themeToggle" class="btn-primary">Dark Mode</a>
                     </div>
                 </div>
                 <div class="content">
@@ -180,42 +176,21 @@
                     <?php } ?>
                     <?php if ($action == 'add') { ?>
                         <div class="card">
-                            <h1>Ajouter un Type</h1>
+                            <h1><?= $t_edit ? 'Modifier le Type' : 'Ajouter un Type' ?></h1>
                             <form method="post" enctype="multipart/form-data" class="form" onsubmit="return validerType()">
                                 <input type="hidden" name="TypeID" value="<?= $_GET['TypeID'] ?? '' ?>">
                                 <label>Titre:</label>
-                                <input type="text" id="Titre" name="Titre" placeholder="donner un Titre pour cet assurance">
+                                <input type="text" id="Titre" name="Titre" placeholder="donner un Titre pour cet assurance" value="<?= htmlspecialchars($t_edit['Titre'] ?? '') ?>">
                                 <label>Description:</label>
-                                <textarea id="Description" name="Description" cols="80" rows="5" placeholder="donner une description pour cet assurance"></textarea>
+                                <textarea id="Description" name="Description" cols="80" rows="5" placeholder="donner une description pour cet assurance"><?= htmlspecialchars($t_edit['Description'] ?? '') ?></textarea>
                                 <label>Select Photo</label>
                                 <div style="text-align: center; margin: 15px 0;">
                                     <label for="imageUpload" style="cursor: pointer;">
-                                        <img id="preview" src="<?= $defaultImage ?>" height="150" width="150" style="align-items: center;">
+                                        <img id="preview" src="<?= ($t_edit && !empty($t_edit['Image'])) ? './images/' . htmlspecialchars($t_edit['Image']) : $defaultImage ?>" height="150" width="150" style="align-items: center;">
                                     </label>
                                 </div>
                                 <input type="file" id="imageUpload" name="image" accept="image/*" style="border-radius: 10px; border: 2px solid #ccc; display:none;">
-                                <!--<div class="row">
-                                    <label>Nombre des variable dans ce type:</label>
-                                    <input type="number" id="nmbr" placeholder="ex: 2">
-                                    <button type="button" onclick="genererVariables()">click</button>
-                                </div>
-                                <div id="variables-container" style="margin-top: 10px;">
-                                    <?php /*
-                                    foreach ($editVariables as $idx => $v): ?>
-                                        <div class="var-field-row">
-                                            <label>Var <?= $idx + 1 ?>:</label>
-                                            <input type="text" name="var_name[]" value="<?= htmlspecialchars($v->getName()) ?>" placeholder="Nom de la variable">
-                                            <select name="var_type[]">
-                                                <?php foreach (['VARCHAR', 'INT', 'DATE'] as $opt): ?>
-                                                    <option value="<?= $opt ?>"
-                                                        <?= $v->getType() === $opt ? 'selected' : '' ?>>
-                                                        <?= $opt ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                    <?php endforeach; */?>
-                                </div>-->
+                                <input type="hidden" name="old_image" value="<?= htmlspecialchars($t_edit['Image'] ?? 'default.png') ?>">
                                 <button type="submit" value="Add Type">Submit</button>
                             </form>
                         </div>

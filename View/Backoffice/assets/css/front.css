@@ -11,6 +11,55 @@ body{
     color: #2E2E2E;
     background-color: whitesmoke;
 }
+body, .card, .topbar, .sidebar, input, select, .table tr {
+    transition: background 0.3s ease, color 0.3s ease;
+}
+body.dark {
+    background-color: #1f2937;
+    color: #f9fafb;
+}
+
+body.dark .topbar {
+    background: #111827;
+    border-bottom: 1px solid #374151;
+}
+
+body.dark .card {
+    background: #111827;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+body.dark .sidebar {
+    background: #0f172a;
+}
+
+body.dark .sidebar a {
+    color: #9ca3af;
+}
+
+body.dark .sidebar a:hover {
+    background: #1f2937;
+}
+
+body.dark .table thead tr th {
+    color: #9ca3af;
+    border-bottom: 1px solid #374151;
+}
+
+body.dark .table tbody tr {
+    border-bottom: 1px solid #374151;
+}
+
+body.dark .table tbody tr:hover {
+    background-color: #374151;
+}
+
+body.dark input,
+body.dark select {
+    background: #1f2937;
+    color: #f9fafb;
+    border: 1px solid #374151;
+}
 
 * {
     box-sizing: border-box;
@@ -30,6 +79,7 @@ body{
 
 .sidebar h2 {
     margin-bottom: 30px;
+    transition: all 0.2s ease;
 }
 
 .sidebar a {
@@ -41,6 +91,8 @@ body{
 }
 
 .sidebar a:hover {
+    background: #374151;
+    transform: translateX(5px);
     background: #374151;
 }
 
@@ -101,6 +153,18 @@ body{
 
 .table tbody tr {
     border-bottom: 1px solid #1f2937;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.table tbody tr:hover {
+    background-color: #f5f7fa;
+    transform: scale(1.01);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.table tbody tr:active {
+    transform: scale(0.98);
 }
 
 .table tbody td {
@@ -114,8 +178,18 @@ body{
     width: 1100px;
     border-radius: 10px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    animation: fadeInUp 0.4s ease;
 }
-
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 .card h1 {
     margin-bottom: 20px;
     font-size: 22px;
@@ -176,6 +250,7 @@ button {
 
 button:hover {
     background: rgb(82, 110, 27);
+    transform: translateY(-2px);
 }
 .btn-primary{
     color: olivedrab;
@@ -193,6 +268,19 @@ button:hover {
     font-size: 12px;
     font-weight: 700;
 }
+
+.link-btn:hover {
+    background: rgba(111, 143, 216, 0.2);
+    transform: scale(1.05);
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: olivedrab;
+    box-shadow: 0 0 0 3px rgba(107, 142, 35, 0.2);
+    transition: all 0.2s ease;
+}
+
 .link-btn.is-selected {
   border-color: rgba(92, 41, 26, 0.12);
   box-shadow: 0 10px 24px rgba(92, 41, 26, 0.12)
@@ -205,7 +293,14 @@ button:hover {
     padding: 3px 8px;
     border-radius: 4px;
     font-weight: 500;
+    animation: fadeIn 0.3s ease;
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .msg-error {
     color: #c0392b;
     background: #fdecea;

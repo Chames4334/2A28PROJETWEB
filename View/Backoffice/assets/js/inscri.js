@@ -32,8 +32,8 @@ function sortTable(criterion) {
     rows.sort(function(a, b) {
         var achoix = a.cells[1] ? a.cells[1].textContent.trim() : '';
         var bchoix = b.cells[1] ? b.cells[1].textContent.trim() : '';
-        var aDate  = a.cells[4] ? new Date(a.cells[4].textContent.trim()) : 0;
-        var bDate  = b.cells[4] ? new Date(b.cells[4].textContent.trim()) : 0;
+        var aDate  = a.cells[5] ? new Date(a.cells[5].textContent.trim()) : 0;
+        var bDate  = b.cells[5] ? new Date(b.cells[5].textContent.trim()) : 0;
  
         if (criterion === 'az')   return achoix.localeCompare(bchoix);
         if (criterion === 'za')   return bchoix.localeCompare(achoix);

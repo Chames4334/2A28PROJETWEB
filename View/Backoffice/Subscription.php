@@ -54,6 +54,15 @@
     $offre=$controlOffre->listeOffre('');
 
     $subscription=$CntrlInscri->listeInscription('');
+    $i_edit = null;
+    if (isset($_GET['InscriptionID'])) {
+        foreach ($subscription as $i) {
+            if ($i['InscriptionID'] == $_GET['InscriptionID']) {
+                $i_edit = $i;
+                break;
+            }
+        }
+    }
     $action = $_GET['action'] ?? 'list';
 
 ?>
@@ -62,8 +71,8 @@
     <head>
         <meta charset="UTF-8">
         <title>Subscription</title>
-        <link rel="stylesheet" href="./assets/css/font.css">
-        <script src="./assets/js/inscri.js"></script>
+        <link rel="stylesheet" href="./assets/css/front.css">
+        <script defer src="./assets/js/inscri.js"></script>
     </head>
     <body>
         <div class="layout">
@@ -73,7 +82,6 @@
                 <a href="#">Dashboard</a>
                 <a href="./addOffre.php">Offres</a>
                 <a href="./addType.php">Assurance Types</a>
-                <a href="./Subscription.php">subscriptions</a>
             </div>
             <div class="main">
                 <div class="topbar" style="font-size: larger;">
@@ -126,7 +134,7 @@
                                             <td><?= $s['Choix'] ?></td>
                                             <td><?= $s['Payment_status'] ?></td>
                                             <td><?= $s['Payment_method'] ?></td>
-                                            <td><?= $s['Montant_paye'] ?><p> DT</p></td>
+                                            <td><?= $s['Montant_paye'] ?> DT</td>
                                             <td><?= $s['date_souscription'] ?></td>
                                             <td><?= $s['date_expiration'] ?></td>
                                             <td><?= $s['Created_AT'] ?></td>
@@ -144,35 +152,38 @@
                     <?php } ?>
                     <?php if($action=='add'){ ?>
                         <div class="card">
-                            <h1>Ajouter un Abonnement</h1>
+                            <h1><?= $i_edit ? 'Modifier un Abonnement' : 'Ajouter un Abonnement' ?></h1>
                             <form method="post" enctype="multipart/form-data" class="form" onsubmit="return validerInscription()">
                                 <input type="hidden" name="InscriptionID" value="<?= $_GET['InscriptionID'] ?? '' ?>">
                                 <label>methode de payment:</label>
                                 <select id="Payment_method" name="Payment_method">
                                     <option value="">--Veuillez choisir la methode de payment--</option>
-                                    <option value="Carte">Carte</option>
-                                    <option>Virement</option>
-                                    <option>Cheque</option>
-                                    <option>Especes</option>
+                                    <?php foreach (['Carte', 'Virement', 'Cheque', 'Especes'] as $m) { ?>
+                                        <option value="<?= $m ?>" <?= ($i_edit && $i_edit['Payment_method'] == $m) ? 'selected' : '' ?>>
+                                            <?= $m ?>
+                                        </option>
+                                    <?php } ?>
                                 </select>
                                 <label>Date de souscription:</label>
-                                <input type="date" name="date_souscription">
+                                <input type="date" name="date_souscription" value="<?= htmlspecialchars($i_edit['date_souscription'] ?? '') ?>">
                                 <label>Date d'expiration:</label>
-                                <input type="date" name="date_expiration">
+                                <input type="date" name="date_expiration" value="<?= htmlspecialchars($i_edit['date_expiration'] ?? '') ?>">
                                 <label>Status du payment:</label>
-                                <select id="Payment_status" name="Payment_status">
-                                    <option>Pending</option>
-                                    <option>Paid</option>
-                                    <option>Failed</option>
-                                    <option>Refunded</option>
+                                <select id="Payment_status" name="Payment_status" >
+                                    <?php foreach (['Pending', 'Paid', 'Failed', 'Refunded'] as $ps) { ?>
+                                        <option value="<?= $ps ?>" <?= ($i_edit && $i_edit['Payment_status'] == $ps) ? 'selected' : '' ?>>
+                                            <?= $ps ?>
+                                        </option>
+                                    <?php } ?>
                                 </select>
                                 <label>Montant paye:</label>
-                                <input type="number" id="Montant_paye" name="Montant_paye">
+                                <input type="number" id="Montant_paye" name="Montant_paye" value="<?= htmlspecialchars($i_edit['Montant_paye'] ?? '') ?>">
                                 <label>Choisir un offre</label>
                                 <select id="Choix" name="Choix">
                                     <option value="">--Veuillez choisir une offre--</option>
                                     <?php foreach($offre as $o){ ?>
-                                        <option value="<?= htmlspecialchars($o['Title']) ?>">
+                                        <option value="<?= htmlspecialchars($o['Title']) ?>"
+                                            <?= ($i_edit && $i_edit['Choix'] == $o['Title']) ? 'selected' : '' ?>>
                                             <?= htmlspecialchars($o['Title']) ?>
                                         </option>
                                     <?php } ?>

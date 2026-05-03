@@ -276,8 +276,110 @@ form {
     width: 100%;
 }
 
+.ai-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+.ai-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: rgba(0,0,0,0.12);
+    text-transform: uppercase;
+}
+.ai-summary {
+    font-size: 0.82rem;
+    opacity: 0.9;
+    margin-bottom: 0.7rem;
+}
+.ai-score-bar {
+    height: 4px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 10px;
+    margin: 6px 0 10px;
+    overflow: hidden;
+}
+.ai-score-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: olivedrab;
+    transition: width 0.6s ease;
+}
+.rejected .ai-score-fill { background: #b11e1e; }
+.review   .ai-score-fill { background: #c89600; }
+
+.ai-checks {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.76rem;
+    padding: 4px 8px;
+    background: rgba(255,255,255,0.35);
+    border-radius: 6px;
+}
+.check-row .ck-field {
+    font-weight: 700;
+    min-width: 110px;
+    flex-shrink: 0;
+}
+.check-row .ck-msg { opacity: 0.85; }
+
+.ai-refus-main {
+    margin-top: 8px;
+    padding: 6px 10px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Spinner overlay — même style que les floating shapes */
+#ai-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 14px;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+}
+#ai-overlay.active { display: flex; }
+.ai-spinner {
+    width: 44px; height: 44px;
+    border: 3px solid rgba(255,255,255,0.2);
+    border-top-color: olivedrab;
+    border-radius: 50%;
+    animation: aiSpin 0.8s linear infinite;
+}
+@keyframes aiSpin { to { transform: rotate(360deg); } }
+.ai-overlay-label {
+    background: rgba(107,142,35,0.25);
+    border: 1px solid olivedrab;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+}
+
 .form select {
-    grid-column: 1 / -1;   /* select spans full width */
+    grid-column: 1 / -1;
     width: 100%;
     padding: 10px 14px;
     border-radius: 8px;

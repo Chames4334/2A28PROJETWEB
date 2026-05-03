@@ -8,11 +8,11 @@
         $offre=$of->listeOffre($search);
         $i = 1;
         foreach ($offre as $o) { ?>
-            <tr>
+            <tr data-id="<?= $o['OffreID'] ?>" class="clickable-row">
                 <td class="row-number"><?= $i++ ?></td>
                 <td><?= htmlspecialchars($o['Title']) ?></td>
                 <td><?= htmlspecialchars($o['Type']) ?></td>
-                <td><?= htmlspecialchars($o['Prix_mensuel']) ?> <label>DT</label></td>
+                <td><?= htmlspecialchars($o['Prix_mensuel']) ?> DT</td>
                 <td><?= htmlspecialchars($o['Date_Debut']) ?></td>
                 <td><?= htmlspecialchars($o['Date_Fin']) ?></td>
                 <td>
@@ -72,8 +72,8 @@
     <head>
         <meta charset="UTF-8">
         <title>Offres</title>
-        <link rel="stylesheet" href="./assets/css/font.css">
-        <script src="./assets/js/scripting.js" defer></script>
+        <link rel="stylesheet" href="./assets/css/front.css">
+        <script src="./assets/js/script.js" defer></script>
     </head>
     <body>
         <div class="layout">
@@ -83,7 +83,6 @@
                 <a href="#">Dashboard</a>
                 <a href="#">Offres</a>
                 <a href="./addType.php">Assurance Types</a>
-                <a href="./Subscription.php">subscriptions</a>
             </div>
             <div class="main">
                 <div class="topbar" style="font-size: larger;">
@@ -100,6 +99,7 @@
                         <?php } ?>
                         <a class="btn-primary">Statestique</a>
                         <a class="btn-primary" href="../FrontOffice/Finance.php">FrontOffice</a>
+                        <a id="themeToggle" class="btn-primary">Dark Mode</a>
                     </div>
                 </div>
                 <div class="content">
@@ -129,12 +129,12 @@
                                 <tbody>
                                     <?php $i = 1; 
                                     foreach ($offre as $o) { ?>
-                                        <tr>
+                                        <tr data-id="<?= $o['OffreID'] ?>" class="clickable-row">
                                             <td class="row-number"><?= $i++ ?></td>
 
                                             <td><?= $o['Title'] ?></td>
                                             <td><?= $o['Type'] ?></td>
-                                            <td><?= $o['Prix_mensuel'] ?><label>DT</label></td>
+                                            <td><?= $o['Prix_mensuel'] ?> DT</td>
                                             <td><?= $o['Date_Debut'] ?></td>
                                             <td><?= $o['Date_Fin'] ?></td>
                                             <td>
@@ -143,10 +143,10 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <a class="link-btn" href="addOffre.php?action=add&OffreID=<?= $o['OffreID'] ?>" onclick="return confirm('Update this offre?')">Edit</a>
+                                                <a class="link-btn" href="addOffre.php?action=add&OffreID=<?= $o['OffreID'] ?>" onclick="event.stopPropagation(); return confirm('Update this offre?')">Edit</a>
                                             </td>
                                             <td>
-                                                <a class="link-btn" href="addOffre.php?delete=<?= $o['OffreID'] ?>" onclick="return confirm('Delete this offre?')">Delete</a>
+                                                <a class="link-btn" href="addOffre.php?delete=<?= $o['OffreID'] ?>" onclick="event.stopPropagation(); return confirm('Delete this offre?')">Delete</a>
                                             </td>
                                         </tr>
                                     <?php } ?>
@@ -156,14 +156,14 @@
                     <?php } ?>
                     <?php if ($action == 'add') { ?>
                         <div class="card">
-                        <h1>Ajouter un Offre</h1>
+                        <h1><?= $o_edit ? 'Modifier l\'Offre' : 'Ajouter un Offre' ?></h1>
                             <form method="post" class="form" onsubmit="return validerFormulaire()" novalidate>
                                 <label>Choisir le type d'offre:</label>
                                 <select id="Type" name="Type">
                                     <option value="">--Veuillez choisir une option--</option>
                                     <?php foreach($types as $t){ ?>
-                                        <option value="<?= htmlspecialchars($t['Type']) ?>">
-                                            <?= ($o_edit && $o_edit['Type'] == $t['Type']) ? 'selected' : '' ?>
+                                        <option value="<?= htmlspecialchars($t['Type']) ?>"
+                                            <?= ($o_edit && $o_edit['Type'] == $t['Type']) ? 'selected' : '' ?>>
                                             <?= htmlspecialchars($t['Type']) ?>
                                         </option>
                                     <?php } ?>
@@ -171,22 +171,24 @@
                                 <input type="hidden" name="OffreID" value="<?= $_GET['OffreID'] ?? '' ?>">
                                 <br><br>
                                 <label>Title:</label>
-                                <input type="text" id="Title" name="Title" placeholder="donner votre title">
+                                <input type="text" id="Title" name="Title" placeholder="donner votre title" value="<?= htmlspecialchars($o_edit['Title'] ?? '') ?>">
                                 <br><br>
                                 <label>Prix mensuel:</label>
-                                <input type="text" placeholder="donner votre prix mensuel" id="Prix_mensuel" name="Prix_mensuel">
+                                <input type="text" placeholder="donner votre prix mensuel" id="Prix_mensuel" name="Prix_mensuel" value="<?= htmlspecialchars($o_edit['Prix_mensuel'] ?? '') ?>">
                                 <br><br>
                                 <label>Date début:</label>
-                                <input type="date" name="Date_Debut">
+                                <input type="date" name="Date_Debut" value="<?= htmlspecialchars($o_edit['Date_Debut'] ?? '') ?>">
                                 <br><br>
                                 <label>Date fin:</label>
-                                <input type="date" name="Date_Fin">
+                                <input type="date" name="Date_Fin" value="<?= htmlspecialchars($o_edit['Date_Fin'] ?? '') ?>">
                                 <br><br>
                                 <label>Status:</label>
                                 <select name="Status">
-                                    <option>active</option>
-                                    <option>inactive</option>
-                                    <option>archived</option>
+                                    <?php foreach (['active', 'inactive', 'archived'] as $s) { ?>
+                                        <option value="<?= $s ?>" <?= ($o_edit && $o_edit['Status'] == $s) ? 'selected' : '' ?>>
+                                            <?= $s ?>
+                                        </option>
+                                    <?php } ?>
                                 </select>
                                 <br><br>
                                 <button type="submit" value="Add Offre">Submit</button>

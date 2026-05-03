@@ -2,7 +2,7 @@
     include "C:/xampp/htdocs/GreenSecure/Controller/ControlTypes.php";
 
     $cntrlF=new ControlTypes();
-    $Finance=$cntrlF->listeType();
+    $Finance=$cntrlF->listeType('');
 ?>
 
 <!DOCTYPE html>
