@@ -395,10 +395,13 @@ class CongeController {
         $soldeInsuffisant = ($joursDemandes > $employeInfo['solde_restant']);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
             $decision = $_POST['decision'] ?? 'en_attente';
             
-            if ($soldeInsuffisant) {
+            // Sécurité : Forcer le refus si solde insuffisant, peu importe le POST
+            if ($soldeInsuffisant && $decision === 'approuvé') {
                 $decision = 'refusé';
+                $_POST['commentaire_traitement'] = ($_POST['commentaire_traitement'] ?? '') . " (Refus automatique : Solde insuffisant)";
             }
 
             $traitementData = [
@@ -408,8 +411,24 @@ class CongeController {
             ];
             
             if ($this->updateTraitement($id, $traitementData)) {
+                if ($isAjax) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => true, 
+                        'id' => $id, 
+                        'statut' => $decision,
+                        'message' => 'Traitement mis à jour avec succès.'
+                    ]);
+                    exit;
+                }
                 $redirect = isset($_GET['from']) && $_GET['from'] === 'admin' ? 'adminIndex' : 'index';
                 header('Location: index.php?action=' . $redirect);
+                exit;
+            }
+
+            if ($isAjax) {
+                header('Content-Type: application/json', true, 400);
+                echo json_encode(['success' => false, 'message' => 'Erreur lors de la mise à jour.']);
                 exit;
             }
             $errors[] = 'Impossible de mettre à jour le traitement.';

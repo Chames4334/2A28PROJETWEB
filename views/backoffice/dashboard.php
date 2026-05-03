@@ -170,7 +170,7 @@
                         <tr><td colspan="6">Aucun congé trouvé.</td></tr>
                     <?php else: ?>
                         <?php foreach ($conges as $conge): ?>
-                            <tr>
+                            <tr id="row-conge-<?php echo $conge['id_conge']; ?>">
                                 <td style="white-space: nowrap;">
                                     <?php echo $conge['date_debut']; ?><br>
                                     <span style="font-size: 0.8rem; color: #888;">au</span><br>
@@ -178,9 +178,9 @@
                                 </td>
                                 <td><?php echo htmlspecialchars($conge['type_conge']); ?></td>
                                 <td><?php echo htmlspecialchars(substr($conge['motif'], 0, 50)); ?></td>
-                                <td>
-                                    <span class="badge badge-<?php 
-                                        echo $conge['statut'] === 'approuvé' ? 'approuve' : ($conge['statut'] === 'refusé' ? 'refuse' : 'attente'); 
+                                <td id="status-container-<?php echo $conge['id_conge']; ?>">
+                                    <span class="pill <?php 
+                                        echo $conge['statut'] === 'approuvé' ? 'tone-ok' : ($conge['statut'] === 'refusé' ? 'tone-bad' : 'tone-warn'); 
                                     ?>">
                                         <?php echo htmlspecialchars($conge['statut']); ?>
                                     </span>
@@ -204,6 +204,12 @@
                                 </td>
                                 <td>
                                     <div style="display: flex; flex-direction: column; gap: 6px;">
+                                        <?php if ($conge['statut'] === 'en_attente'): ?>
+                                            <div style="display: flex; gap: 4px;">
+                                                <button class="button button-small" onclick="quickUpdate(<?php echo $conge['id_conge']; ?>, 'approuvé')" title="Approuver rapidement" style="padding: 4px 8px; flex: 1;">✅</button>
+                                                <button class="button button-small button-danger" onclick="quickUpdate(<?php echo $conge['id_conge']; ?>, 'refusé')" title="Refuser rapidement" style="padding: 4px 8px; flex: 1;">❌</button>
+                                            </div>
+                                        <?php endif; ?>
                                         <a class="button button-small" href="?action=edit&id=<?php echo $conge['id_conge']; ?>" style="text-align: center; font-size: 0.75rem; padding: 4px;">Modifier</a>
                                         <a class="button button-small button-secondary" href="?action=editTraitement&id=<?php echo $conge['id_conge']; ?>" style="text-align: center; font-size: 0.75rem; padding: 4px;">Traitement</a>
                                         <a class="button button-small button-danger" href="?action=delete&id=<?php echo $conge['id_conge']; ?>" onclick="return confirm('Supprimer ce congé ?');" style="text-align: center; font-size: 0.75rem; padding: 4px;">Supprimer</a>
@@ -266,6 +272,48 @@
                 }
             });
         });
+    </script>
+    <script>
+        function quickUpdate(id, decision) {
+            if (!confirm("Confirmer la décision : " + decision + " ?")) return;
+
+            const formData = new FormData();
+            formData.append('decision', decision);
+            formData.append('date_traitement', new Date().toISOString().split('T')[0]);
+            formData.append('commentaire_traitement', 'Traité via action rapide.');
+
+            fetch('?action=editTraitement&id=' + id, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const container = document.getElementById('status-container-' + id);
+                    const pill = container.querySelector('.pill');
+                    
+                    // Mise à jour de la couleur et du texte
+                    pill.textContent = data.statut;
+                    pill.className = 'pill ' + (data.statut === 'approuvé' ? 'tone-ok status-updated-ok' : 'tone-bad status-updated-bad');
+                    
+                    // Retirer les boutons d'action rapide
+                    const row = document.getElementById('row-conge-' + id);
+                    const quickActions = row.querySelector('div[style*="display: flex; gap: 4px;"]');
+                    if (quickActions) quickActions.remove();
+                    
+                    console.log('Update success for ID ' + id);
+                } else {
+                    alert('Erreur : ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Une erreur est survenue lors du traitement.');
+            });
+        }
     </script>
 </body>
 </html>
