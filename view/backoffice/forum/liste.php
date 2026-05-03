@@ -103,7 +103,7 @@ $stats = [
                 <thead>
                     <tr>
                         <th>#</th><th>Titre</th><th>Auteur</th>
-                        <th>Réponses</th><th>Réactions</th>
+                        <th>Réponses</th><th>Réactions</th><th>Signalements</th>
                         <th>Statut</th><th>Date</th><th>Actions</th>
                     </tr>
                 </thead>
@@ -126,6 +126,15 @@ $stats = [
                     <td>
                         <span class="meta-chip like"><i class="fas fa-thumbs-up"></i> <?= $p['nb_likes'] ?></span>
                         <span class="meta-chip dislike"><i class="fas fa-thumbs-down"></i> <?= $p['nb_dislikes'] ?></span>
+                    </td>
+                    <td>
+                        <?php if ($p['nb_reports'] > 0): ?>
+                            <a href="report_detail.php?type=post&id=<?= $p['id'] ?>" class="meta-chip" style="text-decoration:none">
+                                <i class="fas fa-flag"></i> <?= $p['nb_reports'] ?>
+                            </a>
+                        <?php else: ?>
+                            <span class="meta-chip"><i class="fas fa-flag"></i> 0</span>
+                        <?php endif; ?>
                     </td>
                     <td><span class="badge badge-<?= $p['statut'] ?>"><?= ucfirst($p['statut']) ?></span></td>
                     <td><?= date('d/m/Y', strtotime($p['created_at'])) ?></td>
@@ -170,7 +179,7 @@ $stats = [
                 <thead>
                     <tr>
                         <th>#</th><th>Contenu</th><th>Auteur</th>
-                        <th>Post</th><th>Imbriqué</th>
+                        <th>Post</th><th>Imbriqué</th><th>Signalements</th>
                         <th>Statut</th><th>Date</th><th>Actions</th>
                     </tr>
                 </thead>
@@ -191,6 +200,15 @@ $stats = [
                             <span class="badge badge-masque">↳ #<?= $r['parent_reply_id'] ?></span>
                         <?php else: ?>
                             <span style="color:var(--text-light)">—</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <?php if ($r['nb_reports'] > 0): ?>
+                            <a href="report_detail.php?type=reply&id=<?= $r['id'] ?>" class="meta-chip" style="text-decoration:none">
+                                <i class="fas fa-flag"></i> <?= $r['nb_reports'] ?>
+                            </a>
+                        <?php else: ?>
+                            <span class="meta-chip"><i class="fas fa-flag"></i> 0</span>
                         <?php endif; ?>
                     </td>
                     <td><span class="badge badge-<?= $r['statut'] ?>"><?= ucfirst($r['statut']) ?></span></td>

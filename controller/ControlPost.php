@@ -67,12 +67,43 @@ class ControlPost {
                        u.nom, u.prenom,
                        (SELECT COUNT(*) FROM reply    r  WHERE r.post_id  = p.id)                                  AS nb_replies,
                        (SELECT COUNT(*) FROM reaction rc WHERE rc.post_id = p.id AND rc.type_reaction = 'like')    AS nb_likes,
-                       (SELECT COUNT(*) FROM reaction rc WHERE rc.post_id = p.id AND rc.type_reaction = 'dislike') AS nb_dislikes
+                       (SELECT COUNT(*) FROM reaction rc WHERE rc.post_id = p.id AND rc.type_reaction = 'dislike') AS nb_dislikes,
+                       (SELECT COUNT(*) FROM report   rp WHERE rp.post_id = p.id)                                  AS nb_reports
                 FROM post p
                 LEFT JOIN users u ON u.id = p.user_id
                 ORDER BY p.is_pinned DESC, p.created_at DESC
             ";
             return $db->query($sql);
+        } catch (Exception $e) { die('Erreur: ' . $e->getMessage()); }
+    }
+
+    public function getForumUserById($id) {
+        $db = config::getConnexion();
+        try {
+            $req = $db->prepare("SELECT id, nom, prenom, email, created_at FROM users WHERE id = :id");
+            $req->execute(['id' => $id]);
+            return $req->fetch();
+        } catch (Exception $e) { die('Erreur: ' . $e->getMessage()); }
+    }
+
+    public function getPostsByUser($user_id, $sort = 'recent') {
+        $db = config::getConnexion();
+        try {
+            $orderBy = $sort === 'likes' ? 'nb_likes DESC, p.created_at DESC' : 'p.created_at DESC';
+            $sql = "
+                SELECT p.*,
+                       u.nom, u.prenom,
+                       (SELECT COUNT(*) FROM reply    r  WHERE r.post_id  = p.id AND r.statut = 'actif')       AS nb_replies,
+                       (SELECT COUNT(*) FROM reaction rc WHERE rc.post_id = p.id AND rc.type_reaction = 'like')    AS nb_likes,
+                       (SELECT COUNT(*) FROM reaction rc WHERE rc.post_id = p.id AND rc.type_reaction = 'dislike') AS nb_dislikes
+                FROM post p
+                LEFT JOIN users u ON u.id = p.user_id
+                WHERE p.user_id = :user_id AND p.statut != 'supprime'
+                ORDER BY $orderBy
+            ";
+            $req = $db->prepare($sql);
+            $req->execute(['user_id' => $user_id]);
+            return $req->fetchAll();
         } catch (Exception $e) { die('Erreur: ' . $e->getMessage()); }
     }
 

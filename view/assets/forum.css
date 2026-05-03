@@ -109,6 +109,8 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text-
 .post-card .post-excerpt { color:var(--text-mid); font-size:.93rem; line-height:1.6; margin-bottom:14px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 .post-meta { display:flex; align-items:center; gap:18px; font-size:.83rem; color:var(--text-light); flex-wrap:wrap; }
 .post-meta .author { display:flex; align-items:center; gap:6px; font-weight:600; color:var(--text-mid); }
+.profile-link { color:inherit; text-decoration:none; }
+.profile-link:hover { color:var(--green-main); text-decoration:underline; }
 .avatar { width:30px; height:30px; border-radius:50%; background:var(--green-main); color:var(--white); display:inline-flex; align-items:center; justify-content:center; font-size:.72rem; font-weight:700; flex-shrink:0; }
 .avatar-lg { width:44px; height:44px; font-size:1rem; }
 .meta-chip { display:inline-flex; align-items:center; gap:5px; background:var(--green-pale); padding:3px 10px; border-radius:20px; color:var(--text-mid); }

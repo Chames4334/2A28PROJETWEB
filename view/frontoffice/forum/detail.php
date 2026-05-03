@@ -100,7 +100,11 @@ foreach ($replies as $r) {
                 <span class="avatar avatar-lg">
                     <?= strtoupper(substr($post['prenom'],0,1).substr($post['nom'],0,1)) ?>
                 </span>
-                <strong><?= htmlspecialchars($post['prenom'] . ' ' . $post['nom']) ?></strong>
+                <strong>
+                    <a href="/view/frontoffice/forum/profile.php?user_id=<?= $post['user_id'] ?>" class="profile-link">
+                        <?= htmlspecialchars($post['prenom'] . ' ' . $post['nom']) ?>
+                    </a>
+                </strong>
             </span>
             <span class="meta-chip">
                 <i class="fas fa-calendar-alt"></i>
@@ -174,7 +178,9 @@ foreach ($replies as $r) {
         <div class="reply-item" id="reply-<?= $r['id'] ?>">
             <div class="reply-header">
                 <span class="avatar"><?= $initR ?></span>
-                <span class="reply-author"><?= htmlspecialchars($r['prenom'] . ' ' . $r['nom']) ?></span>
+                <a class="reply-author profile-link" href="/view/frontoffice/forum/profile.php?user_id=<?= $r['user_id'] ?>">
+                    <?= htmlspecialchars($r['prenom'] . ' ' . $r['nom']) ?>
+                </a>
                 <span class="reply-date">
                     <i class="fas fa-clock"></i>
                     <?= date('d/m/Y H:i', strtotime($r['created_at'])) ?>
@@ -253,7 +259,9 @@ foreach ($replies as $r) {
                 <div class="reply-item nested" id="reply-<?= $nr['id'] ?>">
                     <div class="reply-header">
                         <span class="avatar"><?= $initN ?></span>
-                        <span class="reply-author"><?= htmlspecialchars($nr['prenom'] . ' ' . $nr['nom']) ?></span>
+                        <a class="reply-author profile-link" href="/view/frontoffice/forum/profile.php?user_id=<?= $nr['user_id'] ?>">
+                            <?= htmlspecialchars($nr['prenom'] . ' ' . $nr['nom']) ?>
+                        </a>
                         <span class="reply-date"><?= date('d/m/Y H:i', strtotime($nr['created_at'])) ?></span>
                     </div>
                     <div class="reply-text"><?= htmlspecialchars($nr['contenu']) ?></div>

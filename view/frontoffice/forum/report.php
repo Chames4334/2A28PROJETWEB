@@ -24,8 +24,11 @@ if ($post_id && $target_id && in_array($target_type, ['post', 'reply'], true) &&
         $target_type === 'reply' ? $target_id : null
     );
     $ctrl = new ControlReport();
-    $ctrl->addReport($report);
-    $_SESSION['success'] = "Signalement envoye.";
+    if ($ctrl->addReport($report)) {
+        $_SESSION['success'] = "Signalement envoye.";
+    } else {
+        $_SESSION['success'] = "Vous avez deja signale ce contenu.";
+    }
 }
 
 $anchor = $target_type === 'reply' ? '#reply-' . $target_id : '#post-top';

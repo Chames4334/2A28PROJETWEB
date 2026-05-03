@@ -5,9 +5,27 @@ include_once __DIR__ . '/../model/Report.php';
 
 class ControlReport {
 
+    public function hasUserReported($user_id, $post_id = null, $reply_id = null) {
+        $db = config::getConnexion();
+        try {
+            if ($post_id) {
+                $req = $db->prepare("SELECT COUNT(*) FROM report WHERE reporter_id = :u AND post_id = :p");
+                $req->execute(['u' => $user_id, 'p' => $post_id]);
+            } else {
+                $req = $db->prepare("SELECT COUNT(*) FROM report WHERE reporter_id = :u AND reply_id = :r");
+                $req->execute(['u' => $user_id, 'r' => $reply_id]);
+            }
+            return $req->fetchColumn() > 0;
+        } catch (Exception $e) { die('Erreur: ' . $e->getMessage()); }
+    }
+
     public function addReport($report) {
         $db = config::getConnexion();
         try {
+            if ($this->hasUserReported($report->getReporterId(), $report->getPostId(), $report->getReplyId())) {
+                return false;
+            }
+
             $sql = "INSERT INTO report (reporter_id, post_id, reply_id, raison, statut)
                     VALUES (:reporter_id, :post_id, :reply_id, :raison, :statut)";
             $req = $db->prepare($sql);

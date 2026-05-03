@@ -83,7 +83,7 @@ $posts = $ctrl->listePosts($sort, $direction);
             <div class="post-meta">
                 <span class="author">
                     <span class="avatar"><?= $initiales ?></span>
-                    <?= htmlspecialchars($post['prenom'] . ' ' . $post['nom']) ?>
+                    <span class="profile-link"><?= htmlspecialchars($post['prenom'] . ' ' . $post['nom']) ?></span>
                 </span>
                 <span class="meta-chip">
                     <i class="fas fa-calendar-alt"></i>
