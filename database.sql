@@ -3,13 +3,14 @@ CREATE TABLE IF NOT EXISTS `Employe` (
     `id_employe` INT AUTO_INCREMENT PRIMARY KEY,
     `nom` VARCHAR(50) NOT NULL,
     `prenom` VARCHAR(50) NOT NULL,
+    `email` VARCHAR(100) NULL,
     `solde_total` INT DEFAULT 30
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT IGNORE INTO `Employe` (`id_employe`, `nom`, `prenom`, `solde_total`) VALUES
-(1, 'Doe', 'John', 30),
-(2, 'Smith', 'Jane', 30),
-(3, 'Martin', 'Paul', 30);
+INSERT IGNORE INTO `Employe` (`id_employe`, `nom`, `prenom`, `email`, `solde_total`) VALUES
+(1, 'Doe', 'John', 'john.doe@example.com', 30),
+(2, 'Smith', 'Jane', 'jane.smith@example.com', 30),
+(3, 'Martin', 'Paul', 'paul.martin@example.com', 30);
 
 -- Nouvelle structure de la table CONGE avec champs de traitement intégrés
 CREATE TABLE IF NOT EXISTS `Conge` (

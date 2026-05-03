@@ -151,7 +151,9 @@
                     <option value="DESC" <?php echo $dir === 'DESC' ? 'selected' : ''; ?>>Desc</option>
                 </select>
                 <button class="button button-small" type="submit">Filtrer</button>
-                <a class="button button-small button-secondary" href="?action=congePdf&q=<?php echo urlencode($_GET['q'] ?? ''); ?>&sort=<?php echo urlencode($_GET['sort'] ?? 'date_demande'); ?>&dir=<?php echo urlencode($_GET['dir'] ?? 'DESC'); ?>">Exporter PDF</a>
+                <a class="button button-small button-pdf" href="?action=congePdf&q=<?php echo urlencode($_GET['q'] ?? ''); ?>&sort=<?php echo urlencode($_GET['sort'] ?? 'date_demande'); ?>&dir=<?php echo urlencode($_GET['dir'] ?? 'DESC'); ?>">
+                    <span class="icon">📄</span> Télécharger PDF
+                </a>
             </form>
 
             <table class="table-list modern-table">

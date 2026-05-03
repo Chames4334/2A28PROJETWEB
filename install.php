@@ -7,6 +7,39 @@ try {
     $pdo->exec("CREATE DATABASE IF NOT EXISTS gestion_conges");
     $pdo->exec("USE gestion_conges");
     
+    $pdo->exec("CREATE TABLE IF NOT EXISTS Employe (
+        id_employe INT AUTO_INCREMENT PRIMARY KEY,
+        nom VARCHAR(50) NOT NULL,
+        prenom VARCHAR(50) NOT NULL,
+        solde_total INT DEFAULT 30
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+    
+    // Migration : Ajouter la colonne email si elle n'existe pas
+    try {
+        $pdo->exec("ALTER TABLE Employe ADD COLUMN email VARCHAR(100) NULL AFTER prenom");
+        echo "✅ Colonne 'email' ajoutée à la table Employe<br>";
+        
+        // Mettre à jour avec des données fictives pour le test
+        $pdo->exec("UPDATE Employe SET email = 'john.doe@example.com' WHERE id_employe = 1");
+        $pdo->exec("UPDATE Employe SET email = 'jane.smith@example.com' WHERE id_employe = 2");
+        $pdo->exec("UPDATE Employe SET email = 'paul.martin@example.com' WHERE id_employe = 3");
+    } catch(PDOException $e) {
+        if(strpos($e->getMessage(), 'Duplicate column') === false) {
+            throw $e;
+        }
+    }
+    echo "✅ Table 'Employe' opérationnelle.<br>";
+
+    // 3. Insérer des employés de test si vide
+    $check = $pdo->query("SELECT COUNT(*) FROM Employe")->fetchColumn();
+    if ($check == 0) {
+        $pdo->exec("INSERT INTO Employe (nom, prenom, email, solde_total) VALUES 
+            ('Doe', 'John', 'john.doe@example.com', 30),
+            ('Smith', 'Jane', 'jane.smith@example.com', 30),
+            ('Martin', 'Paul', 'paul.martin@example.com', 30)");
+        echo "✅ Données de test insérées dans 'Employe'.<br>";
+    }
+
     // Ajouter les colonnes manquantes à la table Conge
     try {
         $pdo->exec("ALTER TABLE Conge ADD COLUMN date_traitement DATE NULL");

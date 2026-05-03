@@ -540,68 +540,85 @@ class CongeController {
         ];
         $conges = $this->all($filters);
 
-        $lines = ["Liste des congés et leurs traitements"];
-        $lines[] = "------------------------------";
+        $data = [];
         foreach ($conges as $c) {
-            $decision = $c['decision'] ?? 'Non traité';
-            $lines[] = sprintf(
-                "%s -> %s | %s | Statut: %s | Décision: %s",
-                $c['date_debut'],
-                $c['date_fin'],
-                $c['type_conge'],
-                $c['statut'],
-                $decision
-            );
+            $data[] = [
+                'periode' => $c['date_debut'] . ' au ' . $c['date_fin'],
+                'type'    => $c['type_conge'],
+                'motif'   => $c['motif'],
+                'statut'  => $c['statut']
+            ];
         }
 
-        $this->outputSimplePdf('conges.pdf', $lines);
+        $this->outputProfessionalPdf('Rapport_Conges_' . date('Y-m-d') . '.pdf', $data);
     }
 
-    private function outputSimplePdf($fileName, $lines) {
-        $y = 800;
-        $text = "BT\n/F1 12 Tf\n50 $y Td\n";
-        $first = true;
-
-        foreach ($lines as $line) {
-            $safe = str_replace(['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $line);
-            if ($first) {
-                $text .= "($safe) Tj\n";
-                $first = false;
-            } else {
-                $text .= "0 -18 Td\n($safe) Tj\n";
-            }
-        }
-        $text .= "ET";
-
+    private function outputProfessionalPdf($fileName, $rows) {
         $pdfBody = "%PDF-1.4\n";
         $objects = [];
-
+        
+        // Construction du contenu graphique et texte
+        $content = "q\n"; 
+        // 1. Bandeau d'en-tête (Couleur GreenSecure)
+        $content .= "0.42 0.49 0.38 rg\n"; // RGB pour #6b7d62
+        $content .= "0 780 595 62 re f\n";
+        $content .= "Q\n";
+        
+        // 2. Texte de l'en-tête
+        $content .= "BT\n/F1 18 Tf\n1 1 1 rg\n50 815 Td\n(GreenSecure - Rapport de Gestion des Conges) Tj\nET\n";
+        $content .= "BT\n/F1 10 Tf\n1 1 1 rg\n50 795 Td\n(Genere le : " . date('d/m/Y H:i') . ") Tj\nET\n";
+        
+        // 3. Titres du tableau
+        $y = 750;
+        $content .= "BT\n/F1 12 Tf\n0 0 0 rg\n50 $y Td\n(PERIODE) Tj\n150 0 Td\n(TYPE) Tj\n150 0 Td\n(MOTIF) Tj\n150 0 Td\n(STATUT) Tj\nET\n";
+        
+        $content .= "0 0 0 RG\n0.5 w\n50 " . ($y - 5) . " m 550 " . ($y - 5) . " l S\n";
+        
+        // 4. Données du tableau
+        $y -= 25;
+        foreach ($rows as $row) {
+            if ($y < 50) break; // Simple gestion de fin de page
+            
+            $content .= "BT\n/F1 10 Tf\n50 $y Td\n(" . $this->pdfSafe($row['periode']) . ") Tj\n";
+            $content .= "150 0 Td\n(" . $this->pdfSafe($row['type']) . ") Tj\n";
+            $content .= "150 0 Td\n(" . $this->pdfSafe($row['motif']) . ") Tj\n";
+            $content .= "150 0 Td\n(" . $this->pdfSafe($row['statut']) . ") Tj\nET\n";
+            
+            $y -= 20;
+        }
+        
         $objects[] = "1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n";
         $objects[] = "2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n";
         $objects[] = "3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >> endobj\n";
         $objects[] = "4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj\n";
-        $objects[] = "5 0 obj << /Length " . strlen($text) . " >> stream\n" . $text . "\nendstream endobj\n";
-
+        $objects[] = "5 0 obj << /Length " . strlen($content) . " >> stream\n" . $content . "\nendstream endobj\n";
+        
+        $pdfContent = $pdfBody;
         $offsets = [0];
         foreach ($objects as $obj) {
-            $offsets[] = strlen($pdfBody);
-            $pdfBody .= $obj;
+            $offsets[] = strlen($pdfContent);
+            $pdfContent .= $obj;
         }
-
-        $xrefPos = strlen($pdfBody);
-        $pdfBody .= "xref\n0 " . (count($objects) + 1) . "\n";
-        $pdfBody .= "0000000000 65535 f \n";
+        
+        $xrefPos = strlen($pdfContent);
+        $pdfContent .= "xref\n0 " . (count($objects) + 1) . "\n";
+        $pdfContent .= "0000000000 65535 f \n";
         for ($i = 1; $i <= count($objects); $i++) {
-            $pdfBody .= sprintf("%010d 00000 n \n", $offsets[$i]);
+            $pdfContent .= sprintf("%010d 00000 n \n", $offsets[$i]);
         }
-        $pdfBody .= "trailer << /Size " . (count($objects) + 1) . " /Root 1 0 R >>\n";
-        $pdfBody .= "startxref\n$xrefPos\n%%EOF";
-
+        $pdfContent .= "trailer << /Size " . (count($objects) + 1) . " /Root 1 0 R >>\n";
+        $pdfContent .= "startxref\n$xrefPos\n%%EOF";
+        
         header('Content-Type: application/pdf');
         header('Content-Disposition: attachment; filename="' . $fileName . '"');
-        header('Content-Length: ' . strlen($pdfBody));
-        echo $pdfBody;
+        header('Content-Length: ' . strlen($pdfContent));
+        echo $pdfContent;
         exit;
     }
+
+    private function pdfSafe($str) {
+        return str_replace(['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $str);
+    }
+
 }
 ?>
