@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label><i class="fas fa-thumbtack"></i> Options</label>
                         <label style="display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer;font-weight:500">
-                            <input type="checkbox" name="is_pinned" value="1"
+                            <input type="checkbox" name="is_pinned" value="1" style="width:auto;"
                                    <?= (isset($_POST['is_pinned']) ? (bool)$_POST['is_pinned'] : (bool)$post['is_pinned']) ? 'checked' : '' ?>>
                             Épingler ce post en haut du forum
                         </label>
