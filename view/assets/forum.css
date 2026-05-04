@@ -136,6 +136,13 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text-
 .chart-toggle span { width:10px; height:10px; border-radius:50%; display:inline-block; }
 .chart-panel canvas { display:block; width:100%; height:280px; }
 
+/* AI SCORE */
+.score-wrap { min-width:105px; max-width:130px; }
+.score-bar { height:6px; border-radius:20px; background:#eef2e7; overflow:hidden; border:1px solid #dde8c8; margin-top:4px; }
+.score-fill { height:100%; border-radius:20px; background:#8a9e6a; }
+.score-label { display:block; font-size:.78rem; font-weight:700; color:var(--text-mid); line-height:1.1; }
+.score-empty { color:var(--text-light); font-size:.82rem; }
+
 /* STATUS BADGES */
 .badge { display:inline-block; padding:3px 12px; border-radius:20px; font-size:.78rem; font-weight:600; }
 .badge-actif    { background:#e8f5e9; color:#2e7d32; }
@@ -267,6 +274,14 @@ tbody td { padding:12px 16px; vertical-align:middle; }
 .sidebar nav a.active { background:rgba(255,255,255,.12); color:var(--white); border-left-color:var(--green-light); }
 .sidebar nav .sb-section { padding:14px 22px 4px; font-size:.72rem; text-transform:uppercase; letter-spacing:1px; opacity:.45; }
 .bo-main { flex:1; padding:32px; overflow-y:auto; }
+.sb-dropdown { margin:0; }
+.sb-dropdown summary { display:flex; align-items:center; gap:12px; padding:12px 22px; color:rgba(255,255,255,.75); font-weight:500; font-size:.93rem; cursor:pointer; border-left:3px solid transparent; list-style:none; transition:.18s; }
+.sb-dropdown summary::-webkit-details-marker { display:none; }
+.sb-dropdown summary::after { content:'\f107'; font-family:'Font Awesome 6 Free'; font-weight:900; margin-left:auto; font-size:.72rem; opacity:.65; transition:.18s; }
+.sb-dropdown[open] summary { background:rgba(255,255,255,.08); color:var(--white); }
+.sb-dropdown[open] summary::after { transform:rotate(180deg); }
+.sb-dropdown summary:hover { background:rgba(255,255,255,.08); color:var(--white); }
+.sb-dropdown a { padding-left:38px !important; font-size:.88rem !important; background:rgba(0,0,0,.08); }
 
 /* FORUM SECTION TITLE */
 .section-title { font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--green-dark); margin-bottom:20px; display:flex; align-items:center; gap:10px; }
@@ -359,3 +374,12 @@ tbody td { padding:12px 16px; vertical-align:middle; }
     border-left: 3px solid transparent;
 }
 .sb-logout:hover { background: rgba(255,80,80,.12) !important; color: #ff5252 !important; }
+
+nav details{
+    align-items: center;
+    text-decoration: none;
+    color: rgba(255,255,255,.75);
+    font-weight: 500;
+    font-size: .93rem;
+    transition: .18s;
+}

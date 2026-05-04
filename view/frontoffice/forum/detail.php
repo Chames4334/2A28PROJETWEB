@@ -12,7 +12,10 @@ $reactionCtrl = new ControlReaction();
 
 $id   = intval($_GET['id'] ?? 0);
 $post = $postCtrl->getPostById($id);
-if (!$post || $post['statut'] === 'supprime') { header('Location: /view/frontoffice/forum/liste.php'); exit; }
+$isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
+if (!$post || $post['statut'] === 'supprime' || ($post['statut'] === 'masque' && !$isAdmin)) {
+    header('Location: /view/frontoffice/forum/liste.php'); exit;
+}
 
 // ── Handle reply submit ──────────────────────────────────────
 $replyError = '';
@@ -25,7 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'reply
         $replyError = "La réponse doit contenir au moins 3 caractères.";
     } else {
         $reply = new Reply($id, $_SESSION['user_id'], $contenu, $parent_reply_id);
-        $replyCtrl->addReply($reply);
+        $replyId = $replyCtrl->addReply($reply);
+        $createdReply = $replyCtrl->getReplyById($replyId);
+        if ($createdReply && $createdReply['statut'] === 'masque') {
+            header("Location: moderation_notice.php?type=reply&post_id=$id"); exit;
+        }
         $_SESSION['success'] = "Réponse ajoutée !";
         header("Location: detail.php?id=$id#replies"); exit;
     }
@@ -70,7 +77,6 @@ foreach ($replies as $r) {
     <a href="/view/frontoffice/forum/liste.php"><i class="fas fa-arrow-left"></i> Retour au forum</a>
     <?php
     // Admin quick-link to backoffice edit
-    $isAdmin = isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
     if ($isAdmin): ?>
         <a href="/view/backoffice/forum/modifier.php?id=<?= $id ?>" style="margin-left:auto" class="btn btn-secondary btn-sm">
             <i class="fas fa-cogs"></i> Gérer ce post (Back Office)

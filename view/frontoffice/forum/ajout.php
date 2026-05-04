@@ -24,7 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors)) {
         $post = new Post($_SESSION['user_id'], $titre, $contenu, 0, 'actif', $tag_id);
-        $ctrl->addPost($post);
+        $postId = $ctrl->addPost($post);
+        $createdPost = $ctrl->getPostById($postId);
+        if ($createdPost && $createdPost['statut'] === 'masque') {
+            header('Location: moderation_notice.php?type=post'); exit;
+        }
         $_SESSION['success'] = "Votre post a été publié avec succès !";
         header('Location: liste.php'); exit;
     } else {

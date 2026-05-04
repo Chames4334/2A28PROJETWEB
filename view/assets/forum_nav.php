@@ -86,6 +86,15 @@ function forumNav(string $side, string $active = '') {
                 <a href="reports.php" class="<?= $active==='reports' ? 'active' : '' ?>">
                     <i class="fas fa-flag"></i> Signalements
                 </a>
+                <details class="sb-dropdown" <?= in_array($active, ['scores','moderation'], true) ? 'open' : '' ?>>
+                    <summary><i class="fas fa-shield-halved"></i> Scores IA</summary>
+                    <a href="scores.php" class="<?= $active==='scores' ? 'active' : '' ?>">
+                        <i class="fas fa-list-check"></i> Scores
+                    </a>
+                    <a href="moderation.php" class="<?= $active==='moderation' ? 'active' : '' ?>">
+                        <i class="fas fa-triangle-exclamation"></i> Modération
+                    </a>
+                </details>
                 <a href="tags.php" class="<?= $active==='tags' ? 'active' : '' ?>">
                     <i class="fas fa-tags"></i> Tags
                 </a>

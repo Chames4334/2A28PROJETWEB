@@ -2,6 +2,7 @@
 // controller/ControlPost.php
 include_once __DIR__ . '/../config.php';
 include_once __DIR__ . '/../model/Post.php';
+include_once __DIR__ . '/ControlAI.php';
 
 class ControlPost {
 
@@ -83,7 +84,7 @@ class ControlPost {
                 FROM post p
                 LEFT JOIN users u ON u.id = p.user_id
                 $tagJoin
-                WHERE p.statut != 'supprime'
+                WHERE p.statut = 'actif'
                 ORDER BY $orderBy
             ";
             return $db->query($sql);
@@ -106,7 +107,7 @@ class ControlPost {
                 FROM post p
                 LEFT JOIN users u ON u.id = p.user_id
                 $tagJoin
-                WHERE p.statut != 'supprime'
+                WHERE p.statut = 'actif'
                 AND (p.titre LIKE ? OR p.contenu LIKE ?)
                 ORDER BY $orderBy
             ";
@@ -163,7 +164,7 @@ class ControlPost {
                 FROM post p
                 LEFT JOIN users u ON u.id = p.user_id
                 $tagJoin
-                WHERE p.user_id = :user_id AND p.statut != 'supprime'
+                WHERE p.user_id = :user_id AND p.statut = 'actif'
                 ORDER BY $orderBy
             ";
             $req = $db->prepare($sql);
@@ -214,7 +215,9 @@ class ControlPost {
             ];
             if ($this->tagSystemReady()) $params['tag_id'] = $post->getTagId();
             $req->execute($params);
-            return $db->lastInsertId();
+            $postId = $db->lastInsertId();
+            (new ControlAI())->scorePost($postId, $post->getTitre(), $post->getContenu());
+            return $postId;
         } catch (Exception $e) { die('Erreur: ' . $e->getMessage()); }
     }
 

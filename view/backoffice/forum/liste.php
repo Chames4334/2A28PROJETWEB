@@ -25,6 +25,15 @@ $stats = [
     'masked'   => $postCtrl->countPostsByStatut('masque'),
     'pinned'   => $postCtrl->countPostsByStatut('actif'),
 ];
+
+function renderAiScoreBar($score) {
+    if ($score === null || $score === '') {
+        return '<span class="score-empty">—</span>';
+    }
+    $score = max(0, min(100, (int)$score));
+    $color = 'hsl(' . round($score * 1.2) . ', 65%, 42%)';
+    return '<div class="score-wrap"><span class="score-label">' . $score . '/100</span><div class="score-bar"><div class="score-fill" style="width:100%;background:' . $color . '"></div></div></div>';
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -103,7 +112,7 @@ $stats = [
                 <thead>
                     <tr>
                         <th>#</th><th>Titre</th><th>Tag</th><th>Auteur</th>
-                        <th>Réponses</th><th>Réactions</th><th>Signalements</th>
+                        <th>Réponses</th><th>Réactions</th><th>Score IA</th><th>Signalements</th>
                         <th>Statut</th><th>Date</th><th>Actions</th>
                     </tr>
                 </thead>
@@ -138,6 +147,7 @@ $stats = [
                         <span class="meta-chip like"><i class="fas fa-thumbs-up"></i> <?= $p['nb_likes'] ?></span>
                         <span class="meta-chip dislike"><i class="fas fa-thumbs-down"></i> <?= $p['nb_dislikes'] ?></span>
                     </td>
+                    <td><?= renderAiScoreBar($p['ai_score'] ?? null) ?></td>
                     <td>
                         <?php if ($p['nb_reports'] > 0): ?>
                             <a href="report_detail.php?type=post&id=<?= $p['id'] ?>" class="meta-chip" style="text-decoration:none">
@@ -190,7 +200,7 @@ $stats = [
                 <thead>
                     <tr>
                         <th>#</th><th>Contenu</th><th>Auteur</th>
-                        <th>Post</th><th>Imbriqué</th><th>Signalements</th>
+                        <th>Post</th><th>Imbriqué</th><th>Score IA</th><th>Signalements</th>
                         <th>Statut</th><th>Date</th><th>Actions</th>
                     </tr>
                 </thead>
@@ -213,6 +223,7 @@ $stats = [
                             <span style="color:var(--text-light)">—</span>
                         <?php endif; ?>
                     </td>
+                    <td><?= renderAiScoreBar($r['ai_score'] ?? null) ?></td>
                     <td>
                         <?php if ($r['nb_reports'] > 0): ?>
                             <a href="report_detail.php?type=reply&id=<?= $r['id'] ?>" class="meta-chip" style="text-decoration:none">

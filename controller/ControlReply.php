@@ -2,6 +2,7 @@
 // controller/ControlReply.php
 include_once __DIR__ . '/../config.php';
 include_once __DIR__ . '/../model/Reply.php';
+include_once __DIR__ . '/ControlAI.php';
 
 class ControlReply {
 
@@ -54,7 +55,7 @@ class ControlReply {
                 FROM reply r
                 LEFT JOIN users u ON u.id = r.user_id
                 LEFT JOIN post  p ON p.id = r.post_id
-                WHERE r.user_id = :user_id AND r.statut != 'supprime'
+                WHERE r.user_id = :user_id AND r.statut = 'actif'
                 ORDER BY $orderBy
             ";
             $req = $db->prepare($sql);
@@ -91,7 +92,9 @@ class ControlReply {
                 'contenu'         => $reply->getContenu(),
                 'statut'          => $reply->getStatut(),
             ]);
-            return $db->lastInsertId();
+            $replyId = $db->lastInsertId();
+            (new ControlAI())->scoreReply($replyId, $reply->getContenu());
+            return $replyId;
         } catch (Exception $e) { die('Erreur: ' . $e->getMessage()); }
     }
 
