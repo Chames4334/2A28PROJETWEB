@@ -216,9 +216,29 @@ class ControlPost {
             if ($this->tagSystemReady()) $params['tag_id'] = $post->getTagId();
             $req->execute($params);
             $postId = $db->lastInsertId();
-            (new ControlAI())->scorePost($postId, $post->getTitre(), $post->getContenu());
+            $aiCtrl = new ControlAI();
+            $score = $aiCtrl->scorePost($postId, $post->getTitre(), $post->getContenu());
+            if ($score !== null && $score > ControlAI::LOW_SCORE_THRESHOLD && $post->getStatut() === 'actif') {
+                $this->addAutoResponderReply($postId, $aiCtrl, $post->getTitre(), $post->getContenu());
+            }
             return $postId;
         } catch (Exception $e) { die('Erreur: ' . $e->getMessage()); }
+    }
+
+    private function addAutoResponderReply($postId, $aiCtrl, $title, $content) {
+        $reply = $aiCtrl->generateAutoReply($title, $content);
+        if (!$reply) return false;
+
+        $db = config::getConnexion();
+        $req = $db->prepare("
+            INSERT INTO reply (post_id, user_id, parent_reply_id, contenu, statut)
+            VALUES (:post_id, :user_id, NULL, :contenu, 'actif')
+        ");
+        return $req->execute([
+            'post_id' => $postId,
+            'user_id' => ControlAI::AUTO_RESPONDER_USER_ID,
+            'contenu' => $reply,
+        ]);
     }
 
     public function updatePost($post, $id) {

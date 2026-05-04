@@ -56,7 +56,7 @@ $items = $ctrl->getReportedTargets($q, $types, $sort);
                     <option value="recent" <?= $sort === 'recent' ? 'selected' : '' ?>>Plus recents</option>
                     <option value="most_reported" <?= $sort === 'most_reported' ? 'selected' : '' ?>>Plus signales</option>
                 </select>
-                <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-filter"></i> Filtrer</button>
+                <button type="submit" class="btn btn-primary btn-sm">Filtrer</button>
             </div>
         </form>
 

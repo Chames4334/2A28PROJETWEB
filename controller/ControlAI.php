@@ -5,6 +5,7 @@ include_once __DIR__ . '/../config.php';
 class ControlAI {
     const MODEL = 'gemini-2.5-flash-lite';
     const LOW_SCORE_THRESHOLD = 40;
+    const AUTO_RESPONDER_USER_ID = 2;
 
     private function tableColumnExists($table, $column) {
         $db = config::getConnexion();
@@ -47,6 +48,56 @@ class ControlAI {
     public function scoreContent($type, $title, $content) {
         $result = $this->debugScoreContent($type, $title, $content);
         return $result['score'];
+    }
+
+    private function autoResponderPromptPath() {
+        return dirname(__DIR__) . '/ai_responder_prompt.txt';
+    }
+
+    public function defaultAutoResponderPrompt() {
+        return "Tu es un modérateur du forum Green Assurance. Réponds brièvement au post si tu peux aider, avec un ton calme et utile. Termine toujours par un rappel court invitant l'utilisateur à respecter les règles du forum. Ne donne pas de conseil dangereux, illégal, médical ou financier personnalisé.";
+    }
+
+    public function getAutoResponderPrompt() {
+        $path = $this->autoResponderPromptPath();
+        if (is_file($path)) {
+            $prompt = trim((string)file_get_contents($path));
+            if ($prompt !== '') return $prompt;
+        }
+        return $this->defaultAutoResponderPrompt();
+    }
+
+    public function updateAutoResponderPrompt($prompt) {
+        $prompt = trim($prompt);
+        if ($prompt === '') $prompt = $this->defaultAutoResponderPrompt();
+        return file_put_contents($this->autoResponderPromptPath(), $prompt) !== false;
+    }
+
+    public function generateAutoReply($title, $content) {
+        $apiKey = $this->getApiKey();
+        if (!$apiKey) return null;
+
+        $prompt = $this->getAutoResponderPrompt()
+            . "\n\nPost a moderer :\n"
+            . "Titre : " . $title . "\n"
+            . "Contenu : " . $content . "\n\n"
+            . "Retourne uniquement la reponse a publier, en 2 a 4 phrases maximum.";
+
+        foreach ([true, false] as $useSafetySettings) {
+            $attempt = $this->callGemini($prompt, false, $useSafetySettings, 180);
+            $reply = $this->cleanAutoReply($attempt['response_text'] ?? '');
+            if ($reply !== '') return $reply;
+        }
+
+        return null;
+    }
+
+    private function cleanAutoReply($text) {
+        $text = trim(strip_tags((string)$text));
+        $text = preg_replace('/^```(?:text)?|```$/m', '', $text);
+        $text = preg_replace('/\s+/', ' ', trim($text));
+        if ($text === '') return '';
+        return mb_substr($text, 0, 700);
     }
 
     public function debugScoreContent($type, $title, $content) {
@@ -98,14 +149,14 @@ class ControlAI {
             . "Content: " . $content;
     }
 
-    private function callGemini($prompt, $jsonMode, $useSafetySettings = true) {
+    private function callGemini($prompt, $jsonMode, $useSafetySettings = true, $maxOutputTokens = 32) {
         $request = [
             'contents' => [[
                 'parts' => [['text' => $prompt]]
             ]],
             'generationConfig' => [
                 'temperature' => 0,
-                'maxOutputTokens' => 32,
+                'maxOutputTokens' => $maxOutputTokens,
                 'responseMimeType' => $jsonMode ? 'application/json' : 'text/plain',
             ],
         ];

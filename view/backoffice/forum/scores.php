@@ -55,7 +55,7 @@ function renderAiScoreBar($score) {
                     <option value="asc" <?= $sort === 'asc' ? 'selected' : '' ?>>Score ascendant</option>
                     <option value="desc" <?= $sort === 'desc' ? 'selected' : '' ?>>Score descendant</option>
                 </select>
-                <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filtrer</button>
+                <button type="submit" class="btn btn-primary">Filtrer</button>
             </div>
         </form>
 

@@ -42,6 +42,24 @@ class ControlReply {
         } catch (Exception $e) { die('Erreur: ' . $e->getMessage()); }
     }
 
+    public function getAutoResponderReplies() {
+        $db = config::getConnexion();
+        try {
+            $sql = "
+                SELECT r.*,
+                       p.titre AS post_titre,
+                       p.statut AS post_statut
+                FROM reply r
+                LEFT JOIN post p ON p.id = r.post_id
+                WHERE r.user_id = :user_id
+                ORDER BY r.created_at DESC
+            ";
+            $req = $db->prepare($sql);
+            $req->execute(['user_id' => ControlAI::AUTO_RESPONDER_USER_ID]);
+            return $req->fetchAll();
+        } catch (Exception $e) { die('Erreur: ' . $e->getMessage()); }
+    }
+
     public function getRepliesByUser($user_id, $sort = 'recent') {
         $db = config::getConnexion();
         try {

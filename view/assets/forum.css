@@ -124,6 +124,9 @@ body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text-
 .inline-tag-form input[type="text"] { width:190px; padding:8px 10px; border:2px solid #dde8c8; border-radius:var(--radius-sm); font-family:inherit; background:var(--bg); }
 .inline-tag-form input[type="color"] { width:48px; height:36px; padding:3px; border:2px solid #dde8c8; border-radius:var(--radius-sm); background:var(--white); }
 .inline-tag-form .error-msg { color:var(--danger); font-size:.78rem; width:100%; }
+.ai-reply-form { display:grid; gap:8px; min-width:260px; }
+.ai-reply-form textarea { width:100%; min-height:72px; resize:vertical; padding:9px 11px; border:2px solid #dde8c8; border-radius:var(--radius-sm); font-family:inherit; background:var(--bg); color:var(--text-dark); }
+.ai-reply-form textarea:focus { outline:none; border-color:var(--green-main); background:var(--white); }
 
 /* CHARTS */
 .chart-grid { display:grid; grid-template-columns:1fr; gap:22px; }
