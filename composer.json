@@ -1,0 +1,7 @@
+{
+    "require": {
+        "twilio/sdk": "^8.11",
+        "dompdf/dompdf": "*",
+        "phpmailer/phpmailer": "^7.0"
+    }
+}

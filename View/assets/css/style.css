@@ -1,0 +1,320 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:
+        radial-gradient(circle at 12% 18%, rgba(111, 175, 76, 0.34), transparent 24%),
+        radial-gradient(circle at 82% 16%, rgba(255, 255, 255, 0.22), transparent 18%),
+        radial-gradient(circle at 70% 78%, rgba(166, 124, 82, 0.30), transparent 24%),
+        radial-gradient(circle at 25% 82%, rgba(111, 175, 76, 0.18), transparent 20%),
+        linear-gradient(135deg, #6faf4c 0%, #ffffff 48%, #a67c52 100%);
+    background-size: 140% 140%;
+    animation: adminAurora 18s ease-in-out infinite alternate;
+    min-height: 100vh;
+    padding: 12px;
+    color: #e8ecff;
+}
+
+@keyframes adminAurora {
+    0% {
+        background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 50% 50%;
+    }
+    50% {
+        background-position: 12% 8%, 88% 18%, 78% 90%, 8% 84%, 50% 50%;
+    }
+    100% {
+        background-position: 20% 14%, 74% 8%, 92% 76%, 18% 96%, 50% 50%;
+    }
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    background: rgba(86, 69, 52, 0.58);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 24px 70px rgba(166,124,82,0.24);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(166, 124, 82, 0.22);
+}
+
+h1 {
+    color: #f4f7ff;
+    margin-bottom: 20px;
+    font-size: 2em;
+    border-left: 5px solid #6faf4c;
+    padding-left: 15px;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.filters {
+    background: rgba(111, 175, 76, 0.18);
+    padding: 20px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(166, 124, 82, 0.18);
+}
+
+.search-input {
+    padding: 10px;
+    width: 300px;
+    border: 1px solid rgba(166, 124, 82, 0.24);
+    border-radius: 14px;
+    font-size: 14px;
+    background: rgba(166, 124, 82, 0.18);
+    color: #eef2ff;
+}
+
+.action-buttons {
+    margin-bottom: 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn,
+.btn-view,
+.btn-edit,
+.btn-delete,
+button,
+input[type="submit"],
+input[type="button"] {
+    padding: 11px 22px;
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 999px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease, background 0.25s ease;
+    box-shadow: 0 12px 30px rgba(166, 124, 82, 0.20);
+    backdrop-filter: blur(12px);
+}
+
+.btn:hover,
+.btn-view:hover,
+.btn-edit:hover,
+.btn-delete:hover,
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 18px 34px rgba(166, 124, 82, 0.28);
+    filter: saturate(1.06);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6faf4c 0%, #a67c52 100%);
+    color: white;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #6FAF4C 0%, #89C56B 100%);
+    color: white;
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #a67c52 0%, #6faf4c 100%);
+    color: white;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #ffe082 0%, #f7b733 100%);
+    color: #333;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #A67C52 0%, #6FAF4C 100%);
+    color: white;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    box-shadow: 0 18px 38px rgba(166, 124, 82, 0.18);
+    background: transparent;
+    border: 1px solid rgba(166, 124, 82, 0.28);
+    border-radius: 22px;
+    overflow: hidden;
+    backdrop-filter: blur(4px);
+}
+
+.data-table thead {
+    background: linear-gradient(135deg, rgba(111, 175, 76, 0.62) 0%, rgba(166, 124, 82, 0.78) 100%);
+    color: #ffffff;
+}
+
+.data-table th,
+.data-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(166, 124, 82, 0.20);
+    color: #fffdf8;
+}
+
+.data-table th {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.data-table tbody tr:hover {
+    background: rgba(166, 124, 82, 0.18);
+}
+
+.data-table tbody tr:nth-child(odd) {
+    background: rgba(111, 175, 76, 0.22);
+}
+
+.data-table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.28);
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-soumis {
+    background: #ffc107;
+    color: #333;
+}
+
+.status-en_cours {
+    background: #a67c52;
+    color: white;
+}
+
+.status-accepte {
+    background: #28a745;
+    color: white;
+}
+
+.status-refuse {
+    background: #dc3545;
+    color: white;
+}
+
+.status-clos {
+    background: #6c757d;
+    color: white;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-view, .btn-edit, .btn-delete {
+    padding: 9px 16px;
+    text-decoration: none;
+    border-radius: 999px;
+    font-size: 12px;
+}
+
+.btn-view {
+    background: linear-gradient(135deg, #a67c52 0%, #6faf4c 100%);
+    color: white;
+}
+
+.btn-edit {
+    background: linear-gradient(135deg, #6FAF4C 0%, #A67C52 100%);
+    color: white;
+}
+
+.btn-delete {
+    background: linear-gradient(135deg, #A67C52 0%, #8E5F37 100%);
+    color: white;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #dde5ff;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(166, 124, 82, 0.24);
+    border-radius: 14px;
+    font-size: 14px;
+    background: rgba(166, 124, 82, 0.18);
+    color: #f1f4ff;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.detail-card {
+    background: rgba(255, 255, 255, 0.20);
+    border-radius: 18px;
+    padding: 20px;
+    margin: 20px 0;
+    box-shadow: 0 16px 32px rgba(0,0,0,0.18);
+    border: 1px solid rgba(166, 124, 82, 0.20);
+}
+
+.detail-card p {
+    padding: 10px;
+    border-bottom: 1px solid rgba(166, 124, 82, 0.20);
+    color: #fffdf8;
+}
+
+.detail-card p:last-child {
+    border-bottom: none;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        max-width: 100%;
+        padding: 15px;
+    }
+    
+    .data-table {
+        font-size: 12px;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 8px;
+    }
+    
+    .search-input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .actions {
+        flex-direction: column;
+    }
+}
