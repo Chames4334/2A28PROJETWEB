@@ -23,6 +23,10 @@ class ConstatController {
             $this->model->create($_POST);
             $_SESSION['success'] = "Déclaration enregistrée avec succès.";
             header('Location: index.php?action=home');
+            // À placer au début de la méthode soumettre()
+if (empty($_POST['nom']) || empty($_POST['prenom'])) {
+    die("Erreur : le nom et le prénom sont obligatoires.");
+}
             exit;
         }
     }

@@ -51,7 +51,7 @@ if ($action == 'save_declaration' && $_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt2->bindParam(":message_admin", $message);
         $stmt2->execute();
         
-        header("Location: index.php?action=historique&success=1");
+        header("Location: /gs_assurance/index.php?action=demandes&success=1");
         exit();
     }
 }
@@ -108,7 +108,7 @@ if ($action == 'update_declaration' && $_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt2->bindParam(":message_admin", $message);
         $stmt2->execute();
         
-        header("Location: index.php?action=historique&update=1");
+        header("Location: /gs_assurance/index.php?action=demandes&update=1");
         exit();
     }
 }
@@ -126,7 +126,7 @@ if ($action == 'delete_declaration') {
         $stmt->bindParam(":id", $id);
         $stmt->execute();
         
-        header("Location: index.php?action=historique&delete=1");
+        header("Location: /gs_assurance/index.php?action=demandes&delete=1");
         exit();
     }
 }

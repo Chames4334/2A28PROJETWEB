@@ -56,12 +56,15 @@ $gouvernorats = $stmtGouv->fetchAll(PDO::FETCH_COLUMN);
             if (choix && choix.value === 'atelier') {
                 atelierDiv.classList.add('active');
                 remboursementDiv.classList.remove('active');
+                var hidden = document.getElementById('type_reponse_id'); if(hidden) hidden.value = '2';
             } else if (choix && choix.value === 'remboursement') {
                 remboursementDiv.classList.add('active');
                 atelierDiv.classList.remove('active');
+                var hidden = document.getElementById('type_reponse_id'); if(hidden) hidden.value = '1';
             } else {
                 atelierDiv.classList.remove('active');
                 remboursementDiv.classList.remove('active');
+                var hidden = document.getElementById('type_reponse_id'); if(hidden) hidden.value = '';
             }
         }
         
@@ -121,7 +124,7 @@ $gouvernorats = $stmtGouv->fetchAll(PDO::FETCH_COLUMN);
     <div class="container">
         <h1>📝 Nouvelle déclaration de sinistre</h1>
         
-        <form method="POST" action="index.php?action=store_demande">
+        <form method="POST" action="index.php?action=save_declaration">
             <div class="row-2">
                 <div class="form-group"><label>Nom *</label><input type="text" name="nom" required></div>
                 <div class="form-group"><label>Prénom *</label><input type="text" name="prenom" required></div>
@@ -164,7 +167,7 @@ $gouvernorats = $stmtGouv->fetchAll(PDO::FETCH_COLUMN);
                         <option value="">-- Sélectionnez d'abord un gouvernorat --</option>
                     </select>
                 </div>
-                <input type="hidden" name="type_reponse_id" value="2">
+                
             </div>
             
             <div id="remboursement_section" class="choice-field">
@@ -172,8 +175,10 @@ $gouvernorats = $stmtGouv->fetchAll(PDO::FETCH_COLUMN);
                     <label>💰 Montant estimé (TND)</label>
                     <input type="number" step="0.01" name="montant" placeholder="Ex: 1500.00">
                 </div>
-                <input type="hidden" name="type_reponse_id" value="1">
+                
             </div>
+            
+            <input type="hidden" name="type_reponse_id" id="type_reponse_id" value="">
             
             <div class="form-group"><label>💬 Message complémentaire</label><textarea name="message_reponse" rows="3"></textarea></div>
             
@@ -186,6 +191,6 @@ $gouvernorats = $stmtGouv->fetchAll(PDO::FETCH_COLUMN);
         <p><a href="mailto:contact@asassurance.tn">contact@asassurance.tn</a></p>
     </div>
 
-    <?php include _DIR_ . '/../../View/chatbot/index.php'; ?>
+    <?php include __DIR__ . '/../../View/chatbot/index.php'; ?>
 </body>
 </html>
