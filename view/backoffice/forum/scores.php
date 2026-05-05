@@ -27,7 +27,7 @@ function renderAiScoreBar($score) {
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Scores IA - Back Office Green Assurance</title>
+    <title>AI Spam Score - Back Office Green Assurance</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../../assets/forum.css">
 </head>
@@ -36,7 +36,7 @@ function renderAiScoreBar($score) {
     <?php forumNav('back', 'scores'); ?>
     <div class="bo-main">
         <div class="card-head">
-            <h2 class="section-title"><i class="fas fa-list-check"></i> Scores IA</h2>
+            <h2 class="section-title"><i class="fas fa-list-check"></i> AI Spam Score</h2>
             <a href="moderation.php" class="btn btn-secondary"><i class="fas fa-triangle-exclamation"></i> Modération</a>
         </div>
 

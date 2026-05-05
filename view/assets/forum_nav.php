@@ -87,7 +87,7 @@ function forumNav(string $side, string $active = '') {
                     <i class="fas fa-flag"></i> Signalements
                 </a>
                 <details class="sb-dropdown" <?= in_array($active, ['scores','moderation','autoresponder'], true) ? 'open' : '' ?>>
-                    <summary><i class="fas fa-shield-halved"></i> Scores IA</summary>
+                    <summary><i class="fas fa-shield-halved"></i> AI Spam Score</summary>
                     <a href="scores.php" class="<?= $active==='scores' ? 'active' : '' ?>">
                         <i class="fas fa-list-check"></i> Scores
                     </a>

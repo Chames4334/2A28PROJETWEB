@@ -112,7 +112,7 @@ function renderAiScoreBar($score) {
                 <thead>
                     <tr>
                         <th>#</th><th>Titre</th><th>Tag</th><th>Auteur</th>
-                        <th>Réponses</th><th>Réactions</th><th>Score IA</th><th>Signalements</th>
+                        <th>Réponses</th><th>Réactions</th><th>AI Fraud Score</th><th>Signalements</th>
                         <th>Statut</th><th>Date</th><th>Actions</th>
                     </tr>
                 </thead>
@@ -200,7 +200,7 @@ function renderAiScoreBar($score) {
                 <thead>
                     <tr>
                         <th>#</th><th>Contenu</th><th>Auteur</th>
-                        <th>Post</th><th>Imbriqué</th><th>Score IA</th><th>Signalements</th>
+                        <th>Post</th><th>Imbriqué</th><th>AI Fraud Score</th><th>Signalements</th>
                         <th>Statut</th><th>Date</th><th>Actions</th>
                     </tr>
                 </thead>

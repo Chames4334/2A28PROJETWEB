@@ -302,7 +302,7 @@ class ControlAI {
                 : "p.ai_score IS NOT NULL";
             $parts[] = "
                 SELECT 'post' AS target_type, p.id, p.id AS post_id, p.titre AS title, p.contenu AS content,
-                       p.ai_score, p.statut, p.created_at, u.nom, u.prenom
+                p.ai_score, p.statut, p.created_at, u.nom, u.prenom
                 FROM post p
                 LEFT JOIN users u ON u.id = p.user_id
                 WHERE $where

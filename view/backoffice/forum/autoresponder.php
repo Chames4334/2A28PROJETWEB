@@ -90,7 +90,7 @@ $replies = $replyCtrl->getAutoResponderReplies();
 
         <div class="card-head">
             <h2 class="section-title"><i class="fas fa-robot"></i> Auto-répondeur IA</h2>
-            <a href="scores.php" class="btn btn-secondary"><i class="fas fa-shield-halved"></i> Scores IA</a>
+            <a href="scores.php" class="btn btn-secondary"><i class="fas fa-shield-halved"></i> AI Spam Score</a>
         </div>
 
         <div class="form-card" style="max-width:920px;margin:0 0 28px">
