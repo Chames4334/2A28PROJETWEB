@@ -1,5 +1,5 @@
 <?php
-define('GROQ_API_KEY', 'ur secret api key');
+define('GROQ_API_KEY', '');
 define('GROQ_API_URL', 'https://api.groq.com/openai/v1/chat/completions');
 
 function callGroqAPI($userMessage) {

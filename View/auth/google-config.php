@@ -8,8 +8,8 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 
 // === REMPLACE PAR TES IDENTIFIANTS ===
-define('GOOGLE_CLIENT_ID', 'AA');
-define('GOOGLE_CLIENT_SECRET', 'AA');
+define('GOOGLE_CLIENT_ID', '');
+define('GOOGLE_CLIENT_SECRET', '');
 define('GOOGLE_REDIRECT_URI', 'http://localhost/green_assurance/view/auth/google-callback.php');
 
 function getGoogleClient() {
