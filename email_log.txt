@@ -1,0 +1,433 @@
+========================================
+TO: hasnichames70@gmail.com
+SUBJECT: Test - Green Assurance
+TIME: 2026-05-05 00:17:55
+MESSAGE:
+<h1>Test</h1><p>This is a test message.</p>
+========================================
+
+========================================
+TO: hasnichames70@gmail.com
+SUBJECT: Réinitialisation de votre mot de passe - Green Assurance
+TIME: 2026-05-05 00:18:01
+MESSAGE:
+
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: olivedrab; color: white; padding: 20px; text-align: center; }
+                .content { padding: 20px; background: #f9f9f9; }
+                .button { 
+                    display: inline-block; 
+                    padding: 12px 24px; 
+                    background: olivedrab; 
+                    color: white; 
+                    text-decoration: none; 
+                    border-radius: 5px;
+                    margin: 20px 0;
+                }
+                .footer { text-align: center; padding: 10px; font-size: 12px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h2>🌿 Green Assurance</h2>
+                </div>
+                <div class='content'>
+                    <h3>Bonjour chames hasni,</h3>
+                    <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
+                    <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>
+                    <div style='text-align: center;'>
+                        <a href='http://localhost/green_assurance/view/auth/reset_password.php?token=c38bbb56fb8f89c207b5c048b37200e4c692cbcbdcee6942dd39c0d1de47ded5' style='display: inline-block; padding: 12px 24px; background: olivedrab; color: white; text-decoration: none; border-radius: 5px;'>Réinitialiser mon mot de passe</a>
+                    </div>
+                    <p>Ou copiez ce lien dans votre navigateur :</p>
+                    <p style='background: #eee; padding: 10px; word-break: break-all;'>http://localhost/green_assurance/view/auth/reset_password.php?token=c38bbb56fb8f89c207b5c048b37200e4c692cbcbdcee6942dd39c0d1de47ded5</p>
+                    <p>Ce lien est valable pendant 1 heure.</p>
+                    <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+                </div>
+                <div class='footer'>
+                    <p>&copy; 2024 Green Assurance - Tous droits réservés</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        
+========================================
+
+========================================
+TO: hasnichames70@gmail.com
+SUBJECT: Réinitialisation de votre mot de passe - Green Assurance
+TIME: 2026-05-05 00:22:24
+MESSAGE:
+
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: olivedrab; color: white; padding: 20px; text-align: center; }
+                .content { padding: 20px; background: #f9f9f9; }
+                .button { 
+                    display: inline-block; 
+                    padding: 12px 24px; 
+                    background: olivedrab; 
+                    color: white; 
+                    text-decoration: none; 
+                    border-radius: 5px;
+                    margin: 20px 0;
+                }
+                .footer { text-align: center; padding: 10px; font-size: 12px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h2>🌿 Green Assurance</h2>
+                </div>
+                <div class='content'>
+                    <h3>Bonjour chames hasni,</h3>
+                    <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
+                    <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>
+                    <div style='text-align: center;'>
+                        <a href='http://localhost/green_assurance/view/auth/reset_password.php?token=96127d1a15f267db7bb054c675e410265b70d9bb0bb9a9e4863acae865036aa4' style='display: inline-block; padding: 12px 24px; background: olivedrab; color: white; text-decoration: none; border-radius: 5px;'>Réinitialiser mon mot de passe</a>
+                    </div>
+                    <p>Ou copiez ce lien dans votre navigateur :</p>
+                    <p style='background: #eee; padding: 10px; word-break: break-all;'>http://localhost/green_assurance/view/auth/reset_password.php?token=96127d1a15f267db7bb054c675e410265b70d9bb0bb9a9e4863acae865036aa4</p>
+                    <p>Ce lien est valable pendant 1 heure.</p>
+                    <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+                </div>
+                <div class='footer'>
+                    <p>&copy; 2024 Green Assurance - Tous droits réservés</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        
+========================================
+
+========================================
+TO: hasnichames70@gmail.com
+SUBJECT: Réinitialisation de votre mot de passe - Green Assurance
+TIME: 2026-05-05 00:22:43
+MESSAGE:
+
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: olivedrab; color: white; padding: 20px; text-align: center; }
+                .content { padding: 20px; background: #f9f9f9; }
+                .button { 
+                    display: inline-block; 
+                    padding: 12px 24px; 
+                    background: olivedrab; 
+                    color: white; 
+                    text-decoration: none; 
+                    border-radius: 5px;
+                    margin: 20px 0;
+                }
+                .footer { text-align: center; padding: 10px; font-size: 12px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h2>🌿 Green Assurance</h2>
+                </div>
+                <div class='content'>
+                    <h3>Bonjour chames hasni,</h3>
+                    <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
+                    <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>
+                    <div style='text-align: center;'>
+                        <a href='http://localhost/green_assurance/view/auth/reset_password.php?token=244971f4d443fc1e9fbb1bc6c218fe5db856f4588fa729eb98c0f1699ff1f84f' style='display: inline-block; padding: 12px 24px; background: olivedrab; color: white; text-decoration: none; border-radius: 5px;'>Réinitialiser mon mot de passe</a>
+                    </div>
+                    <p>Ou copiez ce lien dans votre navigateur :</p>
+                    <p style='background: #eee; padding: 10px; word-break: break-all;'>http://localhost/green_assurance/view/auth/reset_password.php?token=244971f4d443fc1e9fbb1bc6c218fe5db856f4588fa729eb98c0f1699ff1f84f</p>
+                    <p>Ce lien est valable pendant 1 heure.</p>
+                    <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+                </div>
+                <div class='footer'>
+                    <p>&copy; 2024 Green Assurance - Tous droits réservés</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        
+========================================
+
+========================================
+TO: hasnichames70@gmail.com
+SUBJECT: Réinitialisation de votre mot de passe - Green Assurance
+TIME: 2026-05-05 00:22:47
+MESSAGE:
+
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: olivedrab; color: white; padding: 20px; text-align: center; }
+                .content { padding: 20px; background: #f9f9f9; }
+                .button { 
+                    display: inline-block; 
+                    padding: 12px 24px; 
+                    background: olivedrab; 
+                    color: white; 
+                    text-decoration: none; 
+                    border-radius: 5px;
+                    margin: 20px 0;
+                }
+                .footer { text-align: center; padding: 10px; font-size: 12px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h2>🌿 Green Assurance</h2>
+                </div>
+                <div class='content'>
+                    <h3>Bonjour chames hasni,</h3>
+                    <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
+                    <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>
+                    <div style='text-align: center;'>
+                        <a href='http://localhost/green_assurance/view/auth/reset_password.php?token=e66a8039fe4ecdd3418f3150e79eb72b9131f543dd832ef3ccf372ce0c760f28' style='display: inline-block; padding: 12px 24px; background: olivedrab; color: white; text-decoration: none; border-radius: 5px;'>Réinitialiser mon mot de passe</a>
+                    </div>
+                    <p>Ou copiez ce lien dans votre navigateur :</p>
+                    <p style='background: #eee; padding: 10px; word-break: break-all;'>http://localhost/green_assurance/view/auth/reset_password.php?token=e66a8039fe4ecdd3418f3150e79eb72b9131f543dd832ef3ccf372ce0c760f28</p>
+                    <p>Ce lien est valable pendant 1 heure.</p>
+                    <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+                </div>
+                <div class='footer'>
+                    <p>&copy; 2024 Green Assurance - Tous droits réservés</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        
+========================================
+
+========================================
+TO: hasnichames70@gmail.com
+SUBJECT: Réinitialisation de votre mot de passe - Green Assurance
+TIME: 2026-05-05 00:23:22
+MESSAGE:
+
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: olivedrab; color: white; padding: 20px; text-align: center; }
+                .content { padding: 20px; background: #f9f9f9; }
+                .button { 
+                    display: inline-block; 
+                    padding: 12px 24px; 
+                    background: olivedrab; 
+                    color: white; 
+                    text-decoration: none; 
+                    border-radius: 5px;
+                    margin: 20px 0;
+                }
+                .footer { text-align: center; padding: 10px; font-size: 12px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h2>🌿 Green Assurance</h2>
+                </div>
+                <div class='content'>
+                    <h3>Bonjour chames hasni,</h3>
+                    <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
+                    <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>
+                    <div style='text-align: center;'>
+                        <a href='http://localhost/green_assurance/view/auth/reset_password.php?token=00c3d9400eb6922e9f68fb703ba39fc98b41428652ee2c4355d04ffb74074439' style='display: inline-block; padding: 12px 24px; background: olivedrab; color: white; text-decoration: none; border-radius: 5px;'>Réinitialiser mon mot de passe</a>
+                    </div>
+                    <p>Ou copiez ce lien dans votre navigateur :</p>
+                    <p style='background: #eee; padding: 10px; word-break: break-all;'>http://localhost/green_assurance/view/auth/reset_password.php?token=00c3d9400eb6922e9f68fb703ba39fc98b41428652ee2c4355d04ffb74074439</p>
+                    <p>Ce lien est valable pendant 1 heure.</p>
+                    <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+                </div>
+                <div class='footer'>
+                    <p>&copy; 2024 Green Assurance - Tous droits réservés</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        
+========================================
+
+========================================
+TO: hasnichames70@gmail.com
+SUBJECT: Réinitialisation de votre mot de passe - Green Assurance
+TIME: 2026-05-05 00:36:15
+MESSAGE:
+
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: olivedrab; color: white; padding: 20px; text-align: center; }
+                .content { padding: 20px; background: #f9f9f9; }
+                .button { 
+                    display: inline-block; 
+                    padding: 12px 24px; 
+                    background: olivedrab; 
+                    color: white; 
+                    text-decoration: none; 
+                    border-radius: 5px;
+                    margin: 20px 0;
+                }
+                .footer { text-align: center; padding: 10px; font-size: 12px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h2>🌿 Green Assurance</h2>
+                </div>
+                <div class='content'>
+                    <h3>Bonjour chames hasni,</h3>
+                    <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
+                    <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>
+                    <div style='text-align: center;'>
+                        <a href='http://localhost/green_assurance/view/auth/reset_password.php?token=a9b5487e8e7cb5a7e51de4f662e0ca2749bf5127d643cbb27fa8c1a811958fa5' style='display: inline-block; padding: 12px 24px; background: olivedrab; color: white; text-decoration: none; border-radius: 5px;'>Réinitialiser mon mot de passe</a>
+                    </div>
+                    <p>Ou copiez ce lien dans votre navigateur :</p>
+                    <p style='background: #eee; padding: 10px; word-break: break-all;'>http://localhost/green_assurance/view/auth/reset_password.php?token=a9b5487e8e7cb5a7e51de4f662e0ca2749bf5127d643cbb27fa8c1a811958fa5</p>
+                    <p>Ce lien est valable pendant 1 heure.</p>
+                    <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+                </div>
+                <div class='footer'>
+                    <p>&copy; 2024 Green Assurance - Tous droits réservés</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        
+========================================
+
+========================================
+TO: hasnichames70@gmail.com
+SUBJECT: ✅ Test - Green Assurance
+TIME: 2026-05-05 00:37:27
+MESSAGE:
+
+<html>
+<body>
+    <h2 style='color: green;'>Félicitations! 🎉</h2>
+    <p>Ton email fonctionne parfaitement!</p>
+    <p>Heure: 00:37:27</p>
+    <p>Maintenant, la fonction 'Mot de passe oublié' va fonctionner.</p>
+</body>
+</html>
+
+========================================
+
+========================================
+TO: hasnichames70@gmail.com
+SUBJECT: Réinitialisation de votre mot de passe - Green Assurance
+TIME: 2026-05-05 00:39:38
+MESSAGE:
+
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: olivedrab; color: white; padding: 20px; text-align: center; }
+                .content { padding: 20px; background: #f9f9f9; }
+                .button { 
+                    display: inline-block; 
+                    padding: 12px 24px; 
+                    background: olivedrab; 
+                    color: white; 
+                    text-decoration: none; 
+                    border-radius: 5px;
+                    margin: 20px 0;
+                }
+                .footer { text-align: center; padding: 10px; font-size: 12px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h2>🌿 Green Assurance</h2>
+                </div>
+                <div class='content'>
+                    <h3>Bonjour chames hasni,</h3>
+                    <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
+                    <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>
+                    <div style='text-align: center;'>
+                        <a href='http://localhost/green_assurance/view/auth/reset_password.php?token=6be121e56465f05f2df706e9d81e4276678f530e0671499e280479d03aff3dbd' style='display: inline-block; padding: 12px 24px; background: olivedrab; color: white; text-decoration: none; border-radius: 5px;'>Réinitialiser mon mot de passe</a>
+                    </div>
+                    <p>Ou copiez ce lien dans votre navigateur :</p>
+                    <p style='background: #eee; padding: 10px; word-break: break-all;'>http://localhost/green_assurance/view/auth/reset_password.php?token=6be121e56465f05f2df706e9d81e4276678f530e0671499e280479d03aff3dbd</p>
+                    <p>Ce lien est valable pendant 1 heure.</p>
+                    <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+                </div>
+                <div class='footer'>
+                    <p>&copy; 2024 Green Assurance - Tous droits réservés</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        
+========================================
+
+========================================
+TO: hasnichames70@gmail.com
+SUBJECT: Réinitialisation de votre mot de passe - Green Assurance
+TIME: 2026-05-05 00:39:48
+MESSAGE:
+
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; }
+                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                .header { background: olivedrab; color: white; padding: 20px; text-align: center; }
+                .content { padding: 20px; background: #f9f9f9; }
+                .button { 
+                    display: inline-block; 
+                    padding: 12px 24px; 
+                    background: olivedrab; 
+                    color: white; 
+                    text-decoration: none; 
+                    border-radius: 5px;
+                    margin: 20px 0;
+                }
+                .footer { text-align: center; padding: 10px; font-size: 12px; color: #666; }
+            </style>
+        </head>
+        <body>
+            <div class='container'>
+                <div class='header'>
+                    <h2>🌿 Green Assurance</h2>
+                </div>
+                <div class='content'>
+                    <h3>Bonjour chames hasni,</h3>
+                    <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
+                    <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>
+                    <div style='text-align: center;'>
+                        <a href='http://localhost/green_assurance/view/auth/reset_password.php?token=2c273f403b22c28152001e6b8b0c9a77379cfaea40bed1af3c69338a1de57d57' style='display: inline-block; padding: 12px 24px; background: olivedrab; color: white; text-decoration: none; border-radius: 5px;'>Réinitialiser mon mot de passe</a>
+                    </div>
+                    <p>Ou copiez ce lien dans votre navigateur :</p>
+                    <p style='background: #eee; padding: 10px; word-break: break-all;'>http://localhost/green_assurance/view/auth/reset_password.php?token=2c273f403b22c28152001e6b8b0c9a77379cfaea40bed1af3c69338a1de57d57</p>
+                    <p>Ce lien est valable pendant 1 heure.</p>
+                    <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+                </div>
+                <div class='footer'>
+                    <p>&copy; 2024 Green Assurance - Tous droits réservés</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        
+========================================
+

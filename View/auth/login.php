@@ -5,7 +5,11 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 if (isset($_SESSION['user_id'])) {
-    header('Location: ../backoffice/liste.php');
+    if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+        header('Location: ../backoffice/liste.php');
+    } else {
+        header('Location: ../frontoffice/accueil.php');
+    }
     exit;
 }
 
@@ -24,7 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $result = $ctrl->loginWithAttempts($email, $password);
         if ($result['success']) {
-            header('Location: ../backoffice/liste.php');
+            if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin') {
+                header('Location: ../backoffice/liste.php');
+            } else {
+                header('Location: ../frontoffice/accueil.php');
+            }
             exit;
         } else {
             $error = $result['error'];
@@ -321,6 +329,11 @@ $captcha_question = $ctrl->generateCaptcha();
 
             <input type="submit" class="btn" value="Se connecter">
         </form>
+
+        <!-- BOUTON GOOGLE AJOUTÉ ICI -->
+        <?php if (file_exists('google-login.php')): ?>
+            <?php include 'google-login.php'; ?>
+        <?php endif; ?>
 
         <p class="or">------ ou ------</p>
 

@@ -17,17 +17,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Email invalide";
     } else {
-        if ($ctrl->generateResetToken($email)) {
-            $message = "Un lien de réinitialisation a été généré.";
-            $resetLink = $_SESSION['reset_link'] ?? '';
+        if ($ctrl->generateAndSendResetToken($email)) {
+            $message = "Un email de réinitialisation a été généré.";
+            // The reset link will be displayed by the sendMail function
         } else {
-            $message = "Un email de réinitialisation vous a été envoyé (si l'email existe dans notre base).";
+            $message = "Si cet email existe dans notre base, vous recevrez un lien de réinitialisation.";
         }
     }
-}
-
-if (isset($_SESSION['reset_link'])) {
-    $resetLink = $_SESSION['reset_link'];
 }
 ?>
 
@@ -73,21 +69,6 @@ if (isset($_SESSION['reset_link'])) {
         .back-link { display: block; margin-top: 20px; color: olivedrab; text-decoration: none; }
         .alert-error { background: #ffe0e0; color: #cc0000; padding: 10px; border-radius: 5px; margin-bottom: 20px; }
         .alert-success { background: #e0ffe0; color: #006600; padding: 10px; border-radius: 5px; margin-bottom: 20px; }
-        .reset-link-box {
-            background: #f0f0f0;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            word-break: break-all;
-        }
-        .reset-link-box a {
-            color: olivedrab;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .reset-link-box a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
@@ -102,15 +83,6 @@ if (isset($_SESSION['reset_link'])) {
         
         <?php if ($message): ?>
             <div class="alert-success"><?= $message ?></div>
-        <?php endif; ?>
-        
-        <?php if ($resetLink): ?>
-            <div class="reset-link-box">
-                <i class="fas fa-link"></i> <strong>LIEN DE RÉINITIALISATION :</strong><br><br>
-                <a href="<?= $resetLink ?>" target="_blank"><?= $resetLink ?></a>
-                <br><br>
-                <small>Cliquez sur le lien ci-dessus pour réinitialiser votre mot de passe.</small>
-            </div>
         <?php endif; ?>
         
         <form method="POST" action="">
