@@ -317,39 +317,6 @@ class CongeController {
             }
         }
 
-        // Trouver des suggestions (blocs de 5 jours ouvrés consécutifs sans absence)
-        $suggestions = [];
-        $currentBlockStart = null;
-        $consecutiveDays = 0;
-
-        for ($i = 1; $i < 60; $i++) { // On commence demain
-            $d = clone $today;
-            $d->modify("+$i days");
-            $dateStr = $d->format('Y-m-d');
-            $dayOfWeek = (int)$d->format('N'); // 1 = Lundi, 7 = Dimanche
-
-            if ($dayOfWeek <= 5 && $workload[$dateStr] === 0) {
-                if ($consecutiveDays === 0) {
-                    $currentBlockStart = clone $d;
-                }
-                $consecutiveDays++;
-                
-                if ($consecutiveDays === 5) {
-                    $endBlock = clone $currentBlockStart;
-                    $endBlock->modify('+4 days');
-                    $suggestions[] = [
-                        'debut' => $currentBlockStart->format('Y-m-d'),
-                        'fin' => $endBlock->format('Y-m-d'),
-                        'label' => 'Semaine du ' . $currentBlockStart->format('d/m/Y')
-                    ];
-                    $consecutiveDays = 0; // Réinitialiser pour trouver d'autres blocs
-                    if (count($suggestions) >= 3) break; // 3 suggestions max
-                }
-            } else if ($dayOfWeek <= 5) {
-                $consecutiveDays = 0;
-            }
-        }
-
         $workloadJson = json_encode($workload);
 
         require __DIR__ . '/../views/frontoffice/create.php';
@@ -513,9 +480,38 @@ class CongeController {
             }
         }
 
+        // Ajouter les jours fériés 2025
+        $holidays = [
+            '2025-01-01' => 'Jour de l\'An',
+            '2025-04-21' => 'Lundi de Pâques',
+            '2025-05-01' => 'Fête du Travail',
+            '2025-05-08' => 'Victoire 1945',
+            '2025-05-29' => 'Ascension',
+            '2025-06-09' => 'Lundi de Pentecôte',
+            '2025-07-14' => 'Fête Nationale',
+            '2025-08-15' => 'Assomption',
+            '2025-11-01' => 'Toussaint',
+            '2025-11-11' => 'Armistice 1918',
+            '2025-12-25' => 'Noël'
+        ];
+
+        foreach ($holidays as $date => $label) {
+            $events[] = [
+                'title' => "🏖️ $label",
+                'start' => $date,
+                'allDay' => true,
+                'display' => 'background',
+                'color' => '#e9ecef'
+            ];
+        }
+
+        // Récupérer la configuration IA pour le seuil
+        $ai_config = require __DIR__ . '/../config/ai_config.php';
+        $seuil_critique = $ai_config['max_absents_per_team'] ?? 2;
+
         // Ajouter les événements de charge élevée
         foreach ($workload as $date => $count) {
-            if ($count >= 2) {
+            if ($count >= $seuil_critique) {
                 $events[] = [
                     'title' => "⚠️ $count Absents (Surcharge)",
                     'start' => $date,

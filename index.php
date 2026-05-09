@@ -11,6 +11,24 @@ if ($action) {
         case 'index':
             $controller->index();
             break;
+        case 'congePdf':
+            $controller->exportPdf();
+            break;
+        case 'ai_analyze':
+            require_once __DIR__ . '/controllers/AIController.php';
+            (new AIController())->analyze();
+            break;
+        case 'ai_suggestions':
+            require_once __DIR__ . '/controllers/AIController.php';
+            (new AIController())->getSmartSuggestions();
+            break;
+        case 'ai_calendar_analysis':
+            require_once __DIR__ . '/controllers/AIController.php';
+            (new AIController())->analyzeCalendar();
+            break;
+        case 'ai_report_view':
+            include 'views/backoffice/ai_report_view.php';
+            break;
         case 'create':
             $controller->create();
             break;
@@ -44,12 +62,7 @@ if ($action) {
         case 'calendarAdmin':
             $controller->calendarAdmin();
             break;
-        case 'congePdf':
-            $controller->exportPdf();
-            break;
-        default:
-            header('Location: index.php?page=home');
-            break;
+
     }
     exit;
 }

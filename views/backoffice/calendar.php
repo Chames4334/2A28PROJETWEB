@@ -70,21 +70,30 @@
                 <h1>Calendrier Global des Absences</h1>
             </div>
             <div class="header-actions">
+                <button type="button" id="btn-analyze-calendar" class="button button-primary" style="background: #556b44; margin-right: 10px;">
+                    ✨ Analyser ce mois par l'IA
+                </button>
                 <a class="button button-secondary" href="?action=adminIndex">Retour au Tableau de Bord</a>
             </div>
         </header>
 
-        <section class="calendar-container">
-            <div class="calendar-legend">
-                <div class="legend-item"><div class="legend-color" style="background: #2ca95a;"></div> Approuvé</div>
-                <div class="legend-item"><div class="legend-color" style="background: #f2994a;"></div> En attente</div>
-                <div class="legend-item"><div class="legend-color" style="background: #d9534f;"></div> Refusé</div>
-                <div class="legend-item"><div class="legend-color" style="background: #ffebee; border: 1px solid #c62828;"></div> ⚠️ Surcharge (> 2 absents)</div>
+        <section>
+            <div class="calendar-main">
+                <div class="calendar-legend">
+                    <div class="legend-item"><div class="legend-color" style="background: #2ca95a;"></div> Approuvé</div>
+                    <div class="legend-item"><div class="legend-color" style="background: #f2994a;"></div> En attente</div>
+                    <div class="legend-item"><div class="legend-color" style="background: #d9534f;"></div> Refusé</div>
+                    <div class="legend-item"><div class="legend-color" style="background: #e9ecef; border: 1px solid #adb5bd;"></div> 🏖️ Férié</div>
+                    <div class="legend-item"><div class="legend-color" style="background: #ffebee; border: 1px solid #c62828;"></div> ⚠️ Surcharge</div>
+                </div>
+                
+                <div id="calendar"></div>
             </div>
-            
-            <div id="calendar"></div>
         </section>
     </div>
+    
+    <!-- Le panneau latéral est supprimé car le rapport s'ouvre dans une nouvelle fenêtre -->
+    <script src="assets/js/ai_calendar.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

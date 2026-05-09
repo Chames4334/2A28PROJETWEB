@@ -40,109 +40,84 @@
             </div>
             <div class="admin-stats-overview">
                 <div>
-                    <span>Utilisateurs</span>
-                    <strong>2 543</strong>
+                    <span>Employés Actifs</span>
+                    <strong>42</strong>
                 </div>
                 <div>
                     <span>Demandes d&apos;absence</span>
-                    <strong>187</strong>
+                    <strong>18</strong>
                 </div>
                 <div>
                     <span>Congés en Attente</span>
-                    <strong>15</strong>
+                    <strong>3</strong>
                 </div>
                 <div>
-                    <span>Avis 4.2 ⭐</span>
+                    <span>Taux de Présence</span>
+                    <strong>94%</strong>
                 </div>
             </div>
         </header>
 
         <section class="panel-grid admin-grid">
-            <div class="panel panel-light">
-                <h3>Gestion des Utilisateurs</h3>
-                <div class="admin-actions">
-                    <button>Ajouter Utilisateur</button>
-                    <button>Modifier</button>
-                    <button>Supprimer</button>
-                </div>
-                <div class="action-row">
-                    <span>Paul Martin</span>
-                    <button>Approuver</button>
-                    <button>Refuser</button>
+            <div class="panel panel-light" style="border: 2px solid #6FAF4C; background: linear-gradient(145deg, #ffffff, #f0f7f0);">
+                <h3 style="color: #2d462f; display: flex; align-items: center; gap: 10px;">
+                    <span>✨</span> Assistant de Planification IA
+                </h3>
+                <p>Générez instantanément un rapport intelligent sur l'état du planning mensuel. L'algorithme détecte automatiquement les risques de sous-effectif et les périodes critiques.</p>
+                <div style="margin-top: 20px;">
+                    <a href="?action=ai_report_view" target="_blank" class="button button-primary" style="display: inline-block; text-decoration: none;">Générer le rapport mensuel</a>
                 </div>
             </div>
+
             <div class="panel panel-light">
                 <h3>Demandes de congés</h3>
-                <p>Suivez et gérez les congés du personnel.</p>
-                <a class="mini-link" href="?action=adminIndex">Ouvrir la liste</a>
-                <a class="mini-link" href="?action=adminIndex">Gérer les congés</a>
+                <p>Suivez et gérez les congés du personnel en attente d'approbation.</p>
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <a class="button button-secondary" style="text-decoration: none;" href="?action=adminIndex">Ouvrir la liste complète</a>
+                </div>
             </div>
 
             <div class="panel panel-light">
-                <h3>Traitement des Congés</h3>
-                <p>Approuvez ou refusez les demandes.</p>
-                <a class="mini-link" href="?action=traitementAdminIndex">Voir les traitements</a>
-                <a class="mini-link" href="?action=traitementCreate">Ajouter un traitement</a>
-            </div>
-
-            <div class="panel panel-light">
-                <div class="offer-list admin-list">
-                    <div>
-                        <span>Assurance Santé</span>
-                        <button>Éditer</button>
-                    </div>
-                    <div>
-                        <span>Assurance Auto</span>
-                        <button>Éditer</button>
-                    </div>
-                    <div>
-                        <span>Assurance Habitation</span>
-                        <button>Éditer</button>
-                    </div>
+                <h3>Gestion du Calendrier</h3>
+                <p>Visualisez la disponibilité globale de l'équipe sur le mois.</p>
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <a class="button button-secondary" style="text-decoration: none;" href="?action=calendarAdmin">Voir le calendrier</a>
                 </div>
             </div>
         </section>
 
         <section class="panel-grid admin-grid">
             <div class="panel panel-dark">
-                <h3>Demandes de Congés</h3>
+                <h3>Dernières Demandes en Attente</h3>
                 <div class="request-card">
                     <div>
                         <strong>Paul Martin</strong>
-                        <p>Congé du 05/08/2021 au 10/08/2021</p>
+                        <p>Congé payé du 05/08/2025 au 10/08/2025</p>
                     </div>
                     <div class="request-actions">
-                        <button>Approuver</button>
-                        <button>Refuser</button>
+                        <button style="background: #6FAF4C; border: none; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Approuver</button>
+                        <button style="background: transparent; border: 1px solid white; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Refuser</button>
+                    </div>
+                </div>
+                <div class="request-card" style="margin-top: 10px;">
+                    <div>
+                        <strong>Marie Dupont</strong>
+                        <p>Congé sans solde du 12/08/2025 au 14/08/2025</p>
+                    </div>
+                    <div class="request-actions">
+                        <button style="background: #6FAF4C; border: none; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Approuver</button>
+                        <button style="background: transparent; border: 1px solid white; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Refuser</button>
                     </div>
                 </div>
             </div>
 
             <div class="panel panel-dark">
-                <h3>Demandes d&apos;Offres</h3>
-                <div class="request-card">
+                <h3>Alertes Système</h3>
+                <div class="request-card" style="border-left: 4px solid #f2994a;">
                     <div>
-                        <strong>Un pondé de plus</strong>
-                        <p>Très satisfait du service !</p>
+                        <strong>Attention : Période estivale</strong>
+                        <p>Plusieurs employés ont posé des congés en août. Pensez à vérifier le rapport IA pour éviter le sous-effectif.</p>
                     </div>
-                    <div class="request-actions">
-                        <button>Répondre</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="panel panel-light">
-            <h3>Commentaires Clients</h3>
-            <div class="comment-list">
-                <div>
-                    <strong>Très satisfait du service !</strong>
-                    <span>Note : 5/5</span>
-                </div>
-                <div class="comment-pagination">
-                    <button>1</button>
-                    <button>2</button>
-                    <button>3</button>
                 </div>
             </div>
         </section>

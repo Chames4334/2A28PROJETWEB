@@ -1383,3 +1383,157 @@ textarea {
     margin-right: 8px;
     font-size: 1.1em;
 }
+
+/* ==========================================================================
+   AI DECISION SUPPORT STYLES
+   ========================================================================== */
+.suggestion-pill {
+    background: #fff;
+    border: 1px solid #6FAF4C;
+    color: #6FAF4C;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.suggestion-pill:hover {
+    background: #6FAF4C;
+    color: white;
+}
+
+
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #6b7d62;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   ADVANCED CALENDAR STYLES
+   ========================================================================== */
+.calendar-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+@media (max-width: 1100px) {
+    .calendar-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.calendar-main {
+    background: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+}
+
+.calendar-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ai-report-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    animation: slideUp 0.4s ease-out;
+}
+
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.verdict-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.verdict-tendu { background: #fff3e0; color: #e65100; }
+.verdict-critique { background: #ffebee; color: #c62828; }
+.verdict-favorable { background: #e8f5e9; color: #2e7d32; }
+
+.availability-meter {
+    margin: 15px 0;
+}
+
+.meter-bar {
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+#ai-availability-fill {
+    height: 100%;
+    background: #6FAF4C;
+    transition: width 1s ease-in-out;
+}
+
+.risks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.risk-item {
+    font-size: 0.8rem;
+    background: #fdf2f2;
+    padding: 10px;
+    border-radius: 8px;
+    border-left: 3px solid #d9534f;
+}
+
+.recommendation-box {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #555;
+    background: #f0f7f0;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.quick-info-card {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px dashed #ced4da;
+}
+
+.quick-info-card h4 {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.quick-info-card p {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
