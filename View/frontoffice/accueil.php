@@ -160,6 +160,22 @@ if (session_status() === PHP_SESSION_NONE) {
         .cta-section .btn-cta:hover {
             transform: scale(1.05);
         }
+        /* Style pour le bouton GreenBot */
+        .btn-greenbot {
+            background: #6c757d;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-greenbot:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
         @media (max-width: 1024px) {
             .services {
                 grid-template-columns: repeat(2, 1fr);
@@ -197,6 +213,8 @@ if (session_status() === PHP_SESSION_NONE) {
     </div>
     <a href="accueil.php"><i class="fas fa-home"></i> Accueil</a>
     <a href="#services"><i class="fas fa-shield-alt"></i> Nos assurances</a>
+    <!-- NOUVEAU BOUTON GREENBOT - CHATBOT -->
+    <a href="chatbot.php" class="btn-greenbot"><i class="fas fa-robot"></i> 💬 GreenBot</a>
     <?php if (isset($_SESSION['user_id'])): ?>
         <a href="../backoffice/liste.php"><i class="fas fa-users"></i> Administration</a>
         <a href="profil.php?id=<?= $_SESSION['user_id'] ?>"><i class="fas fa-user"></i> Mon Profil</a>

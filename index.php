@@ -1,58 +1,12 @@
 <?php
-// index.php - Point d'entrée unique (Routeur)
+// index.php - Point d'entrée unique
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/controller/UserController.php';
 
-// Initialisation du contrôleur
-$controller = new UserController($pdo);
-
-// Récupérer l'action
-$action = $_GET['action'] ?? 'list';
-$page = $_GET['page'] ?? 'backoffice';
-
-// =========================================================
-// ROUTES BACKOFFICE
-// =========================================================
-if ($page === 'backoffice') {
-    switch ($action) {
-        case 'list':
-            $controller->list();
-            break;
-        case 'create':
-            $controller->createForm();
-            break;
-        case 'store':
-            $controller->store();
-            break;
-        case 'edit':
-            $controller->editForm();
-            break;
-        case 'update':
-            $controller->update();
-            break;
-        case 'confirm-delete':
-            $controller->confirmDelete();
-            break;
-        case 'delete':
-            $controller->delete();
-            break;
-        default:
-            $controller->list();
-    }
+// Rediriger vers la page d'accueil frontoffice ou login
+if (isset($_SESSION['user_id'])) {
+    header('Location: view/frontoffice/accueil.php');
+} else {
+    header('Location: view/auth/login.php');
 }
-// =========================================================
-// ROUTES FRONTOFFICE
-// =========================================================
-elseif ($page === 'frontoffice') {
-    switch ($action) {
-        case 'profile':
-            $controller->profile();
-            break;
-        default:
-            $controller->profile();
-    }
-}
-// Par défaut -> backoffice
-else {
-    $controller->list();
-}
+exit;
+?>

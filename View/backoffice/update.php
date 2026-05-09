@@ -1,6 +1,23 @@
 <?php
 include_once '../../controller/ControlUser.php';
 $ctrl = new ControlUser();
+
+// Handle block/unblock actions
+if (isset($_GET['action'])) {
+    $action = $_GET['action'];
+    $userId = $_GET['id'] ?? 0;
+    
+    if ($action == 'block') {
+        $ctrl->blockUserByAdmin($userId);
+        $_SESSION['success'] = "Utilisateur bloqué avec succès";
+    } elseif ($action == 'unblock') {
+        $ctrl->unblockUserByAdmin($userId);
+        $_SESSION['success'] = "Utilisateur débloqué avec succès";
+    }
+    header('Location: liste.php');
+    exit;
+}
+
 $roles = $ctrl->getAllRoles();
 
 $id = $_GET['id'] ?? 0;
@@ -140,6 +157,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <span><?= ucfirst($role['nom']) ?></span>
                     </label>
                 <?php endforeach; ?>
+            </div>
+        </div>
+        
+        <!-- ADMIN BLOCK/UNBLOCK BUTTONS -->
+        <div class="form-group">
+            <label><i class="fas fa-gavel"></i> Actions Administrateur</label>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <?php if ($user['status'] == 'blocked'): ?>
+                    <a href="?action=unblock&id=<?= $id ?>" class="btn btn-success" style="background: green; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;" onclick="return confirm('Débloquer cet utilisateur ?')">
+                        <i class="fas fa-unlock"></i> Débloquer l'utilisateur
+                    </a>
+                <?php else: ?>
+                    <a href="?action=block&id=<?= $id ?>" class="btn btn-danger" style="background: orange; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;" onclick="return confirm('Bloquer cet utilisateur ?')">
+                        <i class="fas fa-lock"></i> Bloquer l'utilisateur
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
         

@@ -12,12 +12,17 @@ define('DB_PASS', '');
 define('BASE_URL', 'http://localhost/green_assurance/');
 define('BASE_PATH', dirname(__FILE__) . '/');
 
-// Configuration email (pour envoi de vérification)
-define('SMTP_FROM', 'noreply@greenassurance.com');
+// Configuration email (GMAIL SETTINGS)
+define('SMTP_FROM', 'hasnichames70@gmail.com');
+define('SMTP_FROM_NAME', 'Green Assurance');
+define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_PORT', 587);
+define('SMTP_USER', 'hasnichames70@gmail.com');
+define('SMTP_PASS', 'txzh lwod mpnc vmbb');  // ← Remplace par ton mot de passe
 
 // Limite tentatives login
 define('MAX_LOGIN_ATTEMPTS', 6);
-define('LOCKOUT_TIME', 15); // minutes
+define('LOCKOUT_TIME', 15);
 
 // Connexion PDO
 class config {
@@ -43,7 +48,6 @@ class config {
     }
 }
 
-// Fonctions d'auth
 function isLoggedIn() {
     return isset($_SESSION['user_id']);
 }
@@ -59,10 +63,36 @@ function requireLogin() {
     }
 }
 
-// Fonction d'envoi d'email
+// Fonction d'envoi d'email avec PHPMailer (VRAI EMAIL)
 function sendMail($to, $subject, $message) {
-    $headers = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-    $headers .= "From: " . SMTP_FROM . "\r\n";
-    return mail($to, $subject, $message, $headers);
+    require_once BASE_PATH . 'src/Exception.php';
+    require_once BASE_PATH . 'src/PHPMailer.php';
+    require_once BASE_PATH . 'src/SMTP.php';
+    
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+    
+    try {
+        $mail->isSMTP();
+        $mail->Host       = SMTP_HOST;
+        $mail->SMTPAuth   = true;
+        $mail->Username   = SMTP_USER;
+        $mail->Password   = SMTP_PASS;
+        $mail->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = SMTP_PORT;
+        
+        $mail->setFrom(SMTP_FROM, SMTP_FROM_NAME);
+        $mail->addAddress($to);
+        
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $message;
+        $mail->AltBody = strip_tags($message);
+        
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log("Email error: " . $mail->ErrorInfo);
+        return false;
+    }
 }
+?>
