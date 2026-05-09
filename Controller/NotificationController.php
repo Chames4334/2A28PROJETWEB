@@ -274,8 +274,8 @@ L'équipe AS Assurance";
 
     public function envoyerContactParTel($telephone, $emailDest, $type) {
         // ── Twilio credentials ─────────────────────────────────────────────────
-        $twilioSid   = 'AC9ce6e6e9ae86e6a5684c022eacc7bac3'; // <-- your Account SID
-        $twilioToken = 'b8b3a4055f12224f86d2358257efcec0';              // <-- your Auth Token
+        $twilioSid   = ''; // <-- your Account SID
+        $twilioToken = '';              // <-- your Auth Token
         $twilioFrom  = '+19785414678'; // <-- This is your official Twilio Phone Number!
         // ──────────────────────────────────────────────────────────────────────
 
