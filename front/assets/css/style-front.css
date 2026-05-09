@@ -1,0 +1,371 @@
+:root{
+    --c1: #6FAF4C; /* green */
+    --c2: #F2E7DA; /* cream */
+    --c3: #A67C52; /* brown */
+    --text-on-primary: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    color: var(--text-on-primary);
+    /* Animated 3-color gradient background (mountain palette) */
+    background: linear-gradient(120deg, var(--c1), var(--c2), var(--c3));
+    background-size: 300% 300%;
+    animation: gradientShift 12s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* legacy aurora removed in favor of three-color animated gradient */
+
+/* Header */
+.gs-header {
+    background: rgba(86, 69, 52, 0.68);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.22);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(166, 124, 82, 0.20);
+}
+
+.gs-header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.gs-logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #6FAF4C 0%, #A67C52 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-decoration: none;
+}
+
+.gs-logo span {
+    font-size: 0.8rem;
+    display: block;
+    color: #a9b4db;
+}
+
+.gs-nav {
+    display: flex;
+    gap: 2rem;
+}
+
+.gs-nav a {
+    text-decoration: none;
+    color: #e6ebff;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.gs-nav a:hover,
+.gs-nav a.is-active {
+    color: #6FAF4C;
+}
+
+.gs-btn-client {
+    background: linear-gradient(135deg, #34c759 0%, #1e9b47 100%);
+    color: white;
+    padding: 0.7rem 1.6rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease, background 0.25s ease;
+    box-shadow: 0 12px 30px rgba(166, 124, 82, 0.20);
+    border: 1px solid rgba(255,255,255,0.24);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.gs-btn-client:hover {
+    background: linear-gradient(135deg, #A67C52 0%, #6FAF4C 100%);
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 18px 34px rgba(166, 124, 82, 0.28);
+    filter: saturate(1.06);
+}
+
+/* Container */
+.container {
+    max-width: 100%;
+    margin: 2rem auto;
+    background: rgba(86, 69, 52, 0.58);
+    backdrop-filter: blur(16px);
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 24px 70px rgba(166,124,82,0.24);
+    border: 1px solid rgba(166, 124, 82, 0.22);
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #f4f7ff;
+}
+
+/* Formulaire */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #dde5ff;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid rgba(166, 124, 82, 0.24);
+    border-radius: 14px;
+    font-size: 14px;
+    transition: all 0.3s;
+    background: rgba(166, 124, 82, 0.18);
+    color: #f1f4ff;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #6FAF4C;
+    box-shadow: 0 0 0 3px rgba(111,175,76,0.1);
+}
+
+.row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Boutons */
+.btn, button, .btn-view, .btn-edit, .btn-delete {
+    padding: 11px 22px;
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 999px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    transition: transform 0.25s cubic-bezier(.2,.9,.2,1), box-shadow 0.25s ease, filter 0.25s ease, background 0.25s ease;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.12);
+    backdrop-filter: blur(8px);
+}
+
+.btn:hover, button:hover, .btn-view:hover, .btn-edit:hover, .btn-delete:hover {
+    transform: translateY(-6px) scale(1.02) rotate(-0.5deg);
+    box-shadow: 0 26px 48px rgba(0,0,0,0.18);
+    filter: saturate(1.08) brightness(1.02);
+}
+
+/* Ripple effect on click */
+.btn { position: relative; overflow: hidden; }
+.btn::after { content: ''; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; background: rgba(255,255,255,0.25); border-radius: 50%; transform: translate(-50%,-50%) scale(0); opacity: 0; pointer-events: none; }
+.btn:active::after { animation: ripple 0.6s ease-out; }
+@keyframes ripple { 0% { transform: translate(-50%,-50%) scale(0); opacity: 0.6; } 100% { transform: translate(-50%,-50%) scale(20); opacity: 0; } }
+
+.btn-primary, button[type="submit"] {
+    background: linear-gradient(90deg, var(--c1), var(--c2));
+    color: var(--text-on-primary);
+    border: none;
+}
+
+.btn-success {
+    background: linear-gradient(90deg, var(--c1), #89C56B);
+    color: var(--text-on-primary);
+}
+
+.btn-info {
+    background: linear-gradient(90deg, var(--c3), var(--c1));
+    color: var(--text-on-primary);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #ffe082 0%, #f7b733 100%);
+    color: #333;
+}
+
+.btn-secondary {
+    background: linear-gradient(90deg, var(--c3), var(--c2));
+    color: var(--text-on-primary);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #A67C52 0%, #8E5F37 100%);
+    color: white;
+}
+
+.btn-view {
+    background: linear-gradient(135deg, #a67c52 0%, #6faf4c 100%);
+    color: white;
+}
+
+.btn-edit {
+    background: linear-gradient(135deg, #6FAF4C 0%, #A67C52 100%);
+    color: white;
+}
+
+.btn-delete {
+    background: linear-gradient(90deg, #8E5F37, var(--c3));
+    color: var(--text-on-primary);
+}
+
+/* Tableau */
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    background: transparent;
+    border: 1px solid rgba(166, 124, 82, 0.28);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 18px 38px rgba(166, 124, 82, 0.18);
+    backdrop-filter: blur(4px);
+}
+
+.data-table thead {
+    background: linear-gradient(135deg, rgba(111, 175, 76, 0.62) 0%, rgba(166, 124, 82, 0.78) 100%);
+    color: #ffffff;
+}
+
+.data-table th,
+.data-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(166, 124, 82, 0.20);
+    color: #fffdf8;
+}
+
+.data-table th {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.data-table tbody tr:hover {
+    background: rgba(166, 124, 82, 0.18);
+}
+
+.data-table tbody tr:nth-child(odd) {
+    background: rgba(111, 175, 76, 0.22);
+}
+
+.data-table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.28);
+}
+
+/* Statuts */
+.status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-soumis { background: #ffc107; color: #333; }
+.status-en_cours { background: #a67c52; color: white; }
+.status-accepte { background: #28a745; color: white; }
+.status-refuse { background: #dc3545; color: white; }
+.status-clos { background: #6c757d; color: white; }
+
+/* Actions */
+.actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Footer */
+.gs-footer {
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    color: white;
+    margin-top: 2rem;
+    padding: 3rem 2rem 1rem;
+}
+
+.gs-footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.gs-footer a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+}
+
+.gs-footer a:hover {
+    color: #6FAF4C;
+}
+
+.gs-copy {
+    text-align: center;
+    padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .gs-header-inner {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .gs-nav {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .container {
+        margin: 1rem;
+        padding: 20px;
+    }
+    
+    .row-2 {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    
+    .data-table {
+        font-size: 12px;
+        display: block;
+        overflow-x: auto;
+    }
+    
+    th, td {
+        padding: 8px;
+    }
+}
