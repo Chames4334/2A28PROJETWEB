@@ -373,6 +373,6 @@ foreach ($months as $m) { $counts[] = isset($rows[$m]) ? (int)$rows[$m] : 0; }
         <p class="copyright">© <?php echo date('Y'); ?> AS ASSURANCE</p>
     </footer>
 
-    <?php include __DIR__ . '/../../View/chatbot/index.php'; ?>
+
 </body>
 </html>

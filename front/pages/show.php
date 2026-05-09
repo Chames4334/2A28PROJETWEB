@@ -56,6 +56,6 @@ $reponse = $stmt2->fetch(PDO::FETCH_ASSOC);
     <a href="index.php?action=historique" class="btn">← Retour</a>
 </div>
 
-<?php include __DIR__ . '/../../View/chatbot/index.php'; ?>
+
 </body>
 </html>

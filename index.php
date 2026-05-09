@@ -16,7 +16,6 @@ require_once ROOT_PATH . 'Controller/DemandeController.php';
 require_once ROOT_PATH . 'Controller/ReponseController.php';
 require_once ROOT_PATH . 'Controller/TypeReponseController.php';
 require_once ROOT_PATH . 'Controller/NotificationController.php';
-require_once ROOT_PATH . 'Controller/ChatbotController.php';
 require_once ROOT_PATH . 'Controller/PdfController.php';
 
 $database = new Database();
@@ -121,19 +120,13 @@ switch ($action) {
         break;
 
     // CHATBOT
-    case 'chatbot':
-        $controller = new ChatbotController($db);
         $controller->index();
         break;
-    case 'chatbot_send':
         header('Content-Type: application/json');
-        $controller = new ChatbotController($db);
         $controller->chat();
         exit();
         break;
-    case 'chatbot_clear':
         header('Content-Type: application/json');
-        $controller = new ChatbotController($db);
         $controller->clear();
         exit();
         break;

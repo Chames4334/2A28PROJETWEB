@@ -41,12 +41,17 @@ $gouvernorats = $stmtGouv->fetchAll(PDO::FETCH_COLUMN);
         .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .choice-field { display: none; padding: 15px; background: #f8f9fa; border-radius: 8px; margin-top: 10px; border-left: 4px solid #6FAF4C; }
         .choice-field.active { display: block; }
+        #accident-map { height: 200px; width: 100%; margin-top: 10px; border-radius: 8px; border: 2px solid #ddd; z-index: 1; }
+        #map-coords { margin-top: 6px; font-size: 0.85rem; color: #666; }
         button { background: #6FAF4C; color: white; padding: 14px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
         button:hover { background: #5d9a3f; transform: translateY(-2px); transition: all 0.3s; }
         .footer { background: rgba(0,0,0,0.7); color: white; text-align: center; padding: 2rem; margin-top: 2rem; }
         .footer a { color: #6FAF4C; text-decoration: none; }
         @media (max-width: 768px) { .row-2 { grid-template-columns: 1fr; } .header { flex-direction: column; text-align: center; } .nav { margin-top: 1rem; } }
     </style>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script>
         function toggleChoice() {
             var choix = document.querySelector('input[name="choix_reponse"]:checked');
@@ -97,14 +102,51 @@ $gouvernorats = $stmtGouv->fetchAll(PDO::FETCH_COLUMN);
                 gouvernorat.addEventListener('change', chargerAteliers);
             }
 
-            var lieuInput = document.querySelector('input[name="lieu_accident"]');
-            if(lieuInput) {
+            // Initialize Leaflet map
+            var defaultLat = 36.8065, defaultLng = 10.1815; // Tunis
+            var map = L.map('accident-map').setView([defaultLat, defaultLng], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">Contributeurs OpenStreetMap</a> ❤️ <a href="https://donate.openstreetmap.org">Faire un don</a>. Conditions d\'utilisation du site web et de l\'API'
+            }).addTo(map);
+
+            var marker = null;
+
+            function setMarker(lat, lng, address) {
+                if (marker) map.removeLayer(marker);
+                marker = L.marker([lat, lng]).addTo(map);
+                marker.bindPopup(address || 'Position sélectionnée').openPopup();
+                document.getElementById('latitude').value = lat;
+                document.getElementById('longitude').value = lng;
+                document.getElementById('map-coords').textContent = 'Lat: ' + lat.toFixed(6) + '  Lng: ' + lng.toFixed(6);
+            }
+
+            map.on('click', function(e) {
+                var lat = e.latlng.lat, lng = e.latlng.lng;
+                fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + lat + '&lon=' + lng)
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        var display = data.display_name || '';
+                        document.getElementById('lieu_accident').value = display;
+                        setMarker(lat, lng, display);
+                    }).catch(function() { setMarker(lat, lng, null); });
+            });
+
+            var lieuInput = document.getElementById('lieu_accident');
+            if (lieuInput) {
                 lieuInput.addEventListener('blur', function() {
                     var lieu = this.value;
-                    if(lieu.trim() !== '') {
-                        var iframe = document.getElementById('maps_preview');
-                        iframe.src = 'https://maps.google.com/maps?q=' + encodeURIComponent(lieu + ' Tunisie') + '&output=embed';
-                        iframe.style.display = 'block';
+                    if (lieu.trim() !== '') {
+                        fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(lieu))
+                            .then(function(r) { return r.json(); })
+                            .then(function(results) {
+                                if (results && results.length) {
+                                    var r0 = results[0];
+                                    var lat = parseFloat(r0.lat), lng = parseFloat(r0.lon);
+                                    setMarker(lat, lng, r0.display_name);
+                                    map.setView([lat, lng], 14);
+                                }
+                            }).catch(function() {});
                     }
                 });
             }
@@ -136,8 +178,11 @@ $gouvernorats = $stmtGouv->fetchAll(PDO::FETCH_COLUMN);
             <div class="row-2">
                 <div class="form-group">
                     <label>Lieu de l'accident *</label>
-                    <input type="text" name="lieu_accident" required placeholder="Ex: Tunis Centre">
-                    <iframe id="maps_preview" width="100%" height="200" style="border:0; margin-top:10px; border-radius:8px; display:none;" allowfullscreen="" loading="lazy"></iframe>
+                    <input type="text" id="lieu_accident" name="lieu_accident" required placeholder="Ex: Tunis Centre">
+                    <div id="accident-map"></div>
+                    <div id="map-coords"></div>
+                    <input type="hidden" id="latitude" name="latitude">
+                    <input type="hidden" id="longitude" name="longitude">
                 </div>
                 <div class="form-group"><label>Date de l'accident *</label><input type="date" name="date_accident" required></div>
             </div>
@@ -147,8 +192,9 @@ $gouvernorats = $stmtGouv->fetchAll(PDO::FETCH_COLUMN);
             <h3 style="color: #A67C52;">🎯 Choisissez votre type de réponse</h3>
             
             <div class="form-group">
-                <label style="margin-right: 20px;"><input type="radio" name="choix_reponse" value="atelier"> 🔧 Atelier / Réparation</label>
+                <label style="margin-right: 20px;"><input type="radio" name="choix_reponse" value="atelier" required> 🔧 Atelier / Réparation</label>
                 <label><input type="radio" name="choix_reponse" value="remboursement"> 💰 Remboursement</label>
+                <div id="choix-error" style="color:red; font-size:0.85rem; margin-top:5px; display:none;">Veuillez choisir un type de réponse.</div>
             </div>
             
             <div id="atelier_section" class="choice-field">
@@ -191,6 +237,6 @@ $gouvernorats = $stmtGouv->fetchAll(PDO::FETCH_COLUMN);
         <p><a href="mailto:contact@asassurance.tn">contact@asassurance.tn</a></p>
     </div>
 
-    <?php include __DIR__ . '/../../View/chatbot/index.php'; ?>
+
 </body>
 </html>

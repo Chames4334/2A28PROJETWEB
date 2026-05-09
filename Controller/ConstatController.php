@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../Model/ConstatModel.php';
 require_once __DIR__ . '/../Model/ReponseModel.php';
 require_once __DIR__ . '/../Model/AtelierModel.php';
+require_once '../Service/EmailService.php';
 
 class ConstatController {
     private $model;
@@ -24,11 +25,20 @@ class ConstatController {
             $_SESSION['success'] = "Déclaration enregistrée avec succès.";
             header('Location: index.php?action=home');
             // À placer au début de la méthode soumettre()
-if (empty($_POST['nom']) || empty($_POST['prenom'])) {
-    die("Erreur : le nom et le prénom sont obligatoires.");
-}
+
             exit;
         }
+        if ($this->model->create($data)) {
+    // Envoyer l'email de confirmation
+    EmailService::envoyerConfirmation(
+        $_POST['email'],
+        $_POST['nom'],
+        $_POST['prenom'],
+        $nouvel_id
+    );
+    header('Location: index.php?action=confirmation');
+    exit;
+}
     }
 
     public function historique() {

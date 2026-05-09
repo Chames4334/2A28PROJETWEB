@@ -32,28 +32,31 @@ if ($action == 'save_declaration' && $_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->bindParam(":date_accident", $_POST['date_accident']);
     $stmt->bindParam(":description", $_POST['description']);
     
-    if ($stmt->execute()) {
-        $demande_id = $db->lastInsertId();
-        
+   if ($stmt->execute()) {
+    $demande_id = $db->lastInsertId();
+    
+    // N'insérer dans reponse_constat que si un type de réponse a été choisi
+    if (!empty($_POST['type_reponse_id'])) {
         $query2 = "INSERT INTO reponse_constat 
                    SET demande_id=:demande_id, type_reponse_id=:type_reponse_id,
                        montant=:montant, id_atelier=:id_atelier, message_admin=:message_admin";
         $stmt2 = $db->prepare($query2);
         
-        $montant = !empty($_POST['montant']) ? $_POST['montant'] : null;
+        $montant    = !empty($_POST['montant'])    ? $_POST['montant']    : null;
         $id_atelier = !empty($_POST['id_atelier']) ? $_POST['id_atelier'] : null;
-        $message = isset($_POST['message_reponse']) ? $_POST['message_reponse'] : '';
+        $message    = isset($_POST['message_reponse']) ? $_POST['message_reponse'] : '';
         
-        $stmt2->bindParam(":demande_id", $demande_id);
-        $stmt2->bindParam(":type_reponse_id", $_POST['type_reponse_id']);
-        $stmt2->bindParam(":montant", $montant);
-        $stmt2->bindParam(":id_atelier", $id_atelier);
-        $stmt2->bindParam(":message_admin", $message);
+        $stmt2->bindValue(":demande_id",      $demande_id,                    PDO::PARAM_INT);
+        $stmt2->bindValue(":type_reponse_id", (int)$_POST['type_reponse_id'], PDO::PARAM_INT);
+        $stmt2->bindValue(":montant",         $montant,    $montant    !== null ? PDO::PARAM_STR : PDO::PARAM_NULL);
+        $stmt2->bindValue(":id_atelier",      $id_atelier, $id_atelier !== null ? PDO::PARAM_INT : PDO::PARAM_NULL);
+        $stmt2->bindValue(":message_admin",   $message,                       PDO::PARAM_STR);
         $stmt2->execute();
-        
-        header("Location: /gs_assurance/index.php?action=demandes&success=1");
-        exit();
     }
+    
+    header("Location: /gs_assurance/index.php?action=demandes&success=1");
+    exit();
+}
 }
 
 // UPDATE - Modifier une demande
@@ -102,10 +105,22 @@ if ($action == 'update_declaration' && $_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt2->bindParam(":demande_id", $_POST['id']);
         }
         
-        $stmt2->bindParam(":type_reponse_id", $_POST['type_reponse_id']);
-        $stmt2->bindParam(":montant", $montant);
-        $stmt2->bindParam(":id_atelier", $id_atelier);
-        $stmt2->bindParam(":message_admin", $message);
+        if (!empty($_POST['type_reponse_id'])) {
+            $stmt2->bindValue(":type_reponse_id", (int)$_POST['type_reponse_id'], PDO::PARAM_INT);
+        } else {
+            $stmt2->bindValue(":type_reponse_id", null, PDO::PARAM_NULL);
+        }
+        if ($montant !== null) {
+            $stmt2->bindValue(":montant", $montant);
+        } else {
+            $stmt2->bindValue(":montant", null, PDO::PARAM_NULL);
+        }
+        if (!empty($id_atelier)) {
+            $stmt2->bindValue(":id_atelier", (int)$id_atelier, PDO::PARAM_INT);
+        } else {
+            $stmt2->bindValue(":id_atelier", null, PDO::PARAM_NULL);
+        }
+        $stmt2->bindValue(":message_admin", $message, PDO::PARAM_STR);
         $stmt2->execute();
         
         header("Location: /gs_assurance/index.php?action=demandes&update=1");

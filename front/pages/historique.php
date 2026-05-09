@@ -67,6 +67,6 @@ $demandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <a href="declaration.php" class="btn">📝 Nouvelle déclaration</a>
     </div>
 </div>
-<?php include __DIR__ . '/../../View/chatbot/index.php'; ?>
+
 </body>
 </html>

@@ -22,7 +22,11 @@
         .error-message.show { display: block; }
         input.error, select.error, textarea.error { border-color: #dc3545; background-color: #fff8f8; }
         .success { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px; }
+        #accident-map { height: 200px; width: 100%; margin-top: 10px; border-radius: 8px; border: 2px solid #ddd; z-index: 1; }
+        #map-coords { margin-top: 6px; font-size: 0.85rem; color: #666; }
     </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 </head>
 <body>
 <div class="container">
@@ -73,6 +77,10 @@
             <div class="form-group">
                 <label>Lieu de l'accident <span class="required">*</span></label>
                 <input type="text" name="lieu_accident" id="lieu_accident" class="form-control" required placeholder="Adresse ou lieu précis">
+                <div id="accident-map"></div>
+                <div id="map-coords"></div>
+                <input type="hidden" id="latitude" name="latitude">
+                <input type="hidden" id="longitude" name="longitude">
                 <div id="lieu_error" class="error-message">Le lieu est requis</div>
             </div>
             <div class="form-group">
@@ -376,6 +384,49 @@
         }
         
         updateSubmitButton();
+
+        // === Leaflet Map ===
+        var map = L.map('accident-map').setView([36.8065, 10.1815], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">Contributeurs OpenStreetMap</a>'
+        }).addTo(map);
+
+        var marker = null;
+        function setMarker(lat, lng, address) {
+            if (marker) map.removeLayer(marker);
+            marker = L.marker([lat, lng]).addTo(map);
+            marker.bindPopup(address || 'Position sélectionnée').openPopup();
+            document.getElementById('latitude').value = lat;
+            document.getElementById('longitude').value = lng;
+            document.getElementById('map-coords').textContent = 'Lat: ' + lat.toFixed(6) + '  Lng: ' + lng.toFixed(6);
+        }
+
+        map.on('click', function(e) {
+            fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + e.latlng.lat + '&lon=' + e.latlng.lng)
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    document.getElementById('lieu_accident').value = data.display_name || '';
+                    setMarker(e.latlng.lat, e.latlng.lng, data.display_name);
+                }).catch(function() { setMarker(e.latlng.lat, e.latlng.lng, null); });
+        });
+
+        var lieuInput = document.getElementById('lieu_accident');
+        if (lieuInput) {
+            lieuInput.addEventListener('blur', function() {
+                if (this.value.trim() !== '') {
+                    fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(this.value))
+                        .then(function(r) { return r.json(); })
+                        .then(function(results) {
+                            if (results && results.length) {
+                                var r0 = results[0];
+                                setMarker(parseFloat(r0.lat), parseFloat(r0.lon), r0.display_name);
+                                map.setView([parseFloat(r0.lat), parseFloat(r0.lon)], 14);
+                            }
+                        }).catch(function() {});
+                }
+            });
+        }
     };
 
     // Types UI

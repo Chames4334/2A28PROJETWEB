@@ -220,7 +220,7 @@ function sendMessage() {
         formData.append('conversation_id', conversationId);
     }
     
-    fetch('index.php?action=chatbot_send', {
+    fetch('/gs_assurance/index.php?action=chatbot_send', {
         method: 'POST',
         body: formData
     })

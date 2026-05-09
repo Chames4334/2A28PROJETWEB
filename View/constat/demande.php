@@ -235,6 +235,80 @@
             .row { flex-direction: column; gap: 0; }
         }
     </style>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <style>
+        .location-wrapper {
+            position: relative;
+        }
+        .location-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .location-input-row input {
+            flex: 1;
+        }
+        #btn-geolocate {
+            background: #6FAF4C;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 14px;
+            cursor: pointer;
+            font-size: 1rem;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            transition: 0.2s;
+            height: 46px;
+        }
+        #btn-geolocate:hover { background: #5A9A3A; }
+        #btn-geolocate.loading { background: #A67C52; cursor: wait; }
+        #autocomplete-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 56px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            z-index: 9999;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+        .autocomplete-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .autocomplete-item:last-child { border-bottom: none; }
+        .autocomplete-item:hover { background: #f7f7f7; }
+        .autocomplete-item i { color: #6FAF4C; margin-top: 2px; flex-shrink: 0; }
+        #map {
+            height: 250px;
+            margin-top: 10px;
+            border-radius: 16px;
+            border: 2px solid #e0e0e0;
+            overflow: hidden;
+        }
+        #coords-display {
+            margin-top: 6px;
+            font-size: 0.82rem;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        #coords-display i { color: #6FAF4C; }
+    </style>
 </head>
 <body>
 
@@ -287,8 +361,23 @@
                 </div>
             </div>
             <div class="form-group">
-                <label>Lieu de l'accident *</label>
-                <input type="text" name="lieu_accident" required placeholder="Ex: Avenue Habib Bourguiba, Tunis">
+                <label><i class="fas fa-map-marker-alt" style="color:#6FAF4C;margin-right:5px;"></i>Lieu de l'accident *</label>
+                <div class="location-wrapper">
+                    <div class="location-input-row">
+                        <input id="lieu_accident" type="text" name="lieu_accident" required placeholder="Tapez une adresse ou utilisez votre position..." autocomplete="off">
+                        <button type="button" id="btn-geolocate" title="Utiliser ma position GPS">
+                            <i class="fas fa-crosshairs"></i> Ma position
+                        </button>
+                    </div>
+                    <div id="autocomplete-list" style="display:none;"></div>
+                </div>
+                <div id="map"></div>
+                <input type="hidden" id="lat" name="latitude">
+                <input type="hidden" id="lng" name="longitude">
+                <div id="coords-display" style="display:none;">
+                    <i class="fas fa-map-pin"></i>
+                    <span id="coords-text"></span>
+                </div>
             </div>
             <div class="row">
                 <div class="form-group">
@@ -339,5 +428,145 @@
         </div>
     </div>
 </footer>
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    var defaultLat = 36.8065, defaultLng = 10.1815; // Tunis
+    var map = L.map('map').setView([defaultLat, defaultLng], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    var marker = null;
+
+    function showCoords(lat, lng) {
+        var el = document.getElementById('coords-display');
+        var txt = document.getElementById('coords-text');
+        el.style.display = 'flex';
+        txt.textContent = 'Lat: ' + lat.toFixed(6) + '   Lng: ' + lng.toFixed(6);
+    }
+
+    function setMarker(lat, lng, address) {
+        if (marker) map.removeLayer(marker);
+        marker = L.marker([lat, lng]).addTo(map);
+        var popup = address ? address : 'Position sélectionnée';
+        marker.bindPopup(popup).openPopup();
+        document.getElementById('lat').value = lat;
+        document.getElementById('lng').value = lng;
+        showCoords(lat, lng);
+    }
+
+    // Click on map to set location
+    map.on('click', function(e){
+        var lat = e.latlng.lat, lng = e.latlng.lng;
+        fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + lat + '&lon=' + lng, {
+            headers: { 'Accept-Language': 'fr' }
+        })
+            .then(function(r){ return r.json(); })
+            .then(function(data){
+                var display = data.display_name || '';
+                document.getElementById('lieu_accident').value = display;
+                setMarker(lat, lng, display);
+                hideAutocomplete();
+            }).catch(function(){ setMarker(lat, lng, null); });
+    });
+
+    // Autocomplete
+    var addrInput = document.getElementById('lieu_accident');
+    var acList = document.getElementById('autocomplete-list');
+    var searchTimeout = null;
+
+    addrInput.addEventListener('input', function(){
+        clearTimeout(searchTimeout);
+        var q = this.value.trim();
+        if (q.length < 3) { hideAutocomplete(); return; }
+        searchTimeout = setTimeout(function(){
+            fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&q=' + encodeURIComponent(q) + '&limit=6&accept-language=fr', {
+                headers: { 'Accept-Language': 'fr' }
+            })
+                .then(function(r){ return r.json(); })
+                .then(function(results){
+                    showAutocomplete(results);
+                }).catch(function(){ hideAutocomplete(); });
+        }, 350);
+    });
+
+    function showAutocomplete(results) {
+        if (!results || !results.length) { hideAutocomplete(); return; }
+        acList.innerHTML = '';
+        results.forEach(function(r){
+            var item = document.createElement('div');
+            item.className = 'autocomplete-item';
+            var icon = r.type === 'road' ? 'fa-road' : (r.type === 'city' || r.type === 'town' ? 'fa-city' : 'fa-map-marker-alt');
+            item.innerHTML = '<i class="fas ' + icon + '"></i><span>' + r.display_name + '</span>';
+            item.addEventListener('mousedown', function(e){
+                e.preventDefault();
+                var lat = parseFloat(r.lat), lng = parseFloat(r.lon);
+                addrInput.value = r.display_name;
+                setMarker(lat, lng, r.display_name);
+                map.setView([lat, lng], 15);
+                hideAutocomplete();
+            });
+            acList.appendChild(item);
+        });
+        acList.style.display = 'block';
+    }
+
+    function hideAutocomplete() {
+        acList.style.display = 'none';
+    }
+
+    addrInput.addEventListener('blur', function(){ setTimeout(hideAutocomplete, 200); });
+    addrInput.addEventListener('keydown', function(e){ if(e.key === 'Escape') hideAutocomplete(); });
+
+    // Geolocation button
+    document.getElementById('btn-geolocate').addEventListener('click', function(){
+        if (!navigator.geolocation) {
+            alert('La géolocalisation n'est pas supportée par ce navigateur.');
+            return;
+        }
+        var btn = this;
+        btn.classList.add('loading');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Localisation...';
+        navigator.geolocation.getCurrentPosition(
+            function(pos){
+                var lat = pos.coords.latitude, lng = pos.coords.longitude;
+                map.setView([lat, lng], 16);
+                fetch('https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=' + lat + '&lon=' + lng, {
+                    headers: { 'Accept-Language': 'fr' }
+                })
+                    .then(function(r){ return r.json(); })
+                    .then(function(data){
+                        var display = data.display_name || 'Position GPS';
+                        addrInput.value = display;
+                        setMarker(lat, lng, display);
+                        btn.classList.remove('loading');
+                        btn.innerHTML = '<i class="fas fa-crosshairs"></i> Ma position';
+                    }).catch(function(){
+                        setMarker(lat, lng, 'Position GPS');
+                        btn.classList.remove('loading');
+                        btn.innerHTML = '<i class="fas fa-crosshairs"></i> Ma position';
+                    });
+            },
+            function(err){
+                alert('Impossible d'obtenir votre position. Veuillez activer la géolocalisation.');
+                btn.classList.remove('loading');
+                btn.innerHTML = '<i class="fas fa-crosshairs"></i> Ma position';
+            },
+            { timeout: 10000, enableHighAccuracy: true }
+        );
+    });
+
+    // Restore existing values
+    var existingLat = document.getElementById('lat').value;
+    var existingLng = document.getElementById('lng').value;
+    if (existingLat && existingLng) {
+        setMarker(parseFloat(existingLat), parseFloat(existingLng), document.getElementById('lieu_accident').value || null);
+        map.setView([parseFloat(existingLat), parseFloat(existingLng)], 14);
+    }
+});
+</script>
 </body>
 </html>

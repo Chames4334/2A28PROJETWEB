@@ -58,7 +58,6 @@
             color: #433108;
             box-shadow: 0 12px 30px rgba(247, 183, 51, 0.24);
         }
-        .btn-chatbot {
             background: linear-gradient(135deg, #6faf4c 0%, #ffffff 45%, #a67c52 100%);
             color: white;
         }
@@ -243,10 +242,41 @@ function envoyerNotification(type) {
         <a href="index.php?action=type_reponses&partial=1" class="btn btn-info open-reponses">💬 Réponses<?= htmlspecialchars($badge) ?></a>
         <a href="index.php?action=stats_type_reponse" class="btn btn-info">📊 Statistiques</a>
         <a href="javascript:void(0)" onclick="openContactModal()" class="btn btn-info">📱 Contacter</a>
-        <a href="index.php?action=chatbot" class="btn btn-chatbot">🤖 Chatbot</a>
     </div>
     
-    <table class="data-table">
+    <!-- Barre recherche + tri -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
+        <input type="text" id="searchInput" placeholder="Rechercher par nom..."
+            style="padding:9px 16px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;
+                   background:#fff;color:#333;min-width:220px;outline:none;
+                   transition:border-color 0.2s,box-shadow 0.2s;"
+            onfocus="this.style.borderColor='#6FAF4C';this.style.boxShadow='0 0 0 3px rgba(111,175,76,0.13)'"
+            onblur="this.style.borderColor='#ddd';this.style.boxShadow='none'">
+
+        <select id="sortSelect"
+            style="padding:9px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;
+                   background:#fff;color:#333;cursor:pointer;outline:none;
+                   transition:border-color 0.2s;">
+            <option value="">Trier par défaut</option>
+            <option value="nom_asc">Nom A→Z</option>
+            <option value="nom_desc">Nom Z→A</option>
+            <option value="date_asc">Date ↑</option>
+            <option value="date_desc">Date ↓</option>
+            <option value="lieu_asc">Lieu A→Z</option>
+        </select>
+
+        <button onclick="applySearchSort()"
+            style="padding:9px 20px;background:linear-gradient(135deg,#6FAF4C,#4d8a30);
+                   color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;
+                   cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+                   box-shadow:0 4px 14px rgba(111,175,76,0.32);transition:all 0.2s;">
+            🔍 Filtrer
+        </button>
+
+        <span id="resultCount" style="font-size:13px;color:#888;margin-left:4px;"></span>
+    </div>
+
+    <table class="data-table" id="demandeTable">
         <thead>
             <tr>
                 <th>Nom</th>
@@ -374,6 +404,69 @@ function enableModalAjaxHandlers(){
         window.open('index.php?action=show_demande&id=' + id, '_blank');
     }
 </script>
-<?php include ROOT_PATH . 'View/chatbot/index.php'; ?>
+
+<script>
+// ── Recherche + Tri tableau demandes ──
+function getRows() {
+    return Array.from(document.querySelectorAll('#demandeTable tbody tr'));
+}
+
+function applySearchSort() {
+    var search = document.getElementById('searchInput').value.trim().toLowerCase();
+    var sort   = document.getElementById('sortSelect').value;
+    var rows   = getRows();
+    var tbody  = document.querySelector('#demandeTable tbody');
+
+    // Filtrer
+    var visible = rows.filter(function(row) {
+        if (!search) return true;
+        var nom    = (row.cells[0] ? row.cells[0].textContent : '').toLowerCase();
+        var prenom = (row.cells[1] ? row.cells[1].textContent : '').toLowerCase();
+        var email  = (row.cells[2] ? row.cells[2].textContent : '').toLowerCase();
+        var lieu   = (row.cells[4] ? row.cells[4].textContent : '').toLowerCase();
+        return nom.includes(search) || prenom.includes(search) || email.includes(search) || lieu.includes(search);
+    });
+
+    var hidden = rows.filter(function(r) { return !visible.includes(r); });
+    hidden.forEach(function(r) { r.style.display = 'none'; });
+    visible.forEach(function(r) { r.style.display = ''; });
+
+    // Trier les visibles
+    if (sort) {
+        visible.sort(function(a, b) {
+            var va, vb;
+            if (sort === 'nom_asc' || sort === 'nom_desc') {
+                va = (a.cells[0] ? a.cells[0].textContent : '').trim().toLowerCase();
+                vb = (b.cells[0] ? b.cells[0].textContent : '').trim().toLowerCase();
+                return sort === 'nom_asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+            }
+            if (sort === 'date_asc' || sort === 'date_desc') {
+                va = a.cells[5] ? a.cells[5].textContent.trim() : '';
+                vb = b.cells[5] ? b.cells[5].textContent.trim() : '';
+                return sort === 'date_asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+            }
+            if (sort === 'lieu_asc') {
+                va = (a.cells[4] ? a.cells[4].textContent : '').trim().toLowerCase();
+                vb = (b.cells[4] ? b.cells[4].textContent : '').trim().toLowerCase();
+                return va.localeCompare(vb);
+            }
+            return 0;
+        });
+        visible.forEach(function(r) { tbody.appendChild(r); });
+    }
+
+    // Compteur
+    document.getElementById('resultCount').textContent =
+        visible.length + ' résultat' + (visible.length !== 1 ? 's' : '');
+}
+
+// Recherche en temps réel à la frappe
+document.getElementById('searchInput').addEventListener('input', applySearchSort);
+document.getElementById('sortSelect').addEventListener('change', applySearchSort);
+
+// Init compteur
+applySearchSort();
+</script>
+
 </body>
 </html>
