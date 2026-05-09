@@ -70,7 +70,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Types</title>
-        <link rel="stylesheet" href="./assets/css/front.css">
+        <link rel="stylesheet" href="./assets/css/font.css">
         <script defer src="./assets/js/Type.js"></script>
         <style>
             .var-field-row {
@@ -114,6 +114,7 @@
                 <a href="#">Dashboard</a>
                 <a href="./addOffre.php">Offres</a>
                 <a href="./addType.php">Assurance Types</a>
+                <a href="./Statistique.php">Statistique</a>
             </div>
             <div class="main">
                 <div class="topbar" style="font-size: larger;">
@@ -128,7 +129,7 @@
                                 ← Back
                             </a>
                         <?php } ?>
-                        <a class="btn-primary" href="./Statistique.php?addType">Statestique</a>
+                        <a href="export_PDF.php?type=Type" class="btn-primary">Export PDF</a>
                         <a class="btn-primary" href="../../View/FrontOffice/Finance.php">FrontOffice</a>
                         <a id="themeToggle" class="btn-primary">Dark Mode</a>
                     </div>

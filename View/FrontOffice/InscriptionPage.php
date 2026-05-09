@@ -43,7 +43,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Inscription</title>
-        <link rel="stylesheet" href="./assets/css/frontOffice.css">
+        <link rel="stylesheet" href="./assets/css/style.css">
         <script src="./assets/js/inscri.js" defer></script>
     </head>
     
@@ -86,20 +86,29 @@
         <div class="floating-shape shape4"></div>
         <div class="floating-shape shape5"></div>
         <div class="bord">
-            <div class="logo_area">
-                <img src="../images/logo.png" alt="logo" height="50" width="65">
+            <div class="bord-left">
+                <div class="logo_area">
+                    <img src="../images/logo.png" alt="logo" height="50" width="65">
+                </div>
+                <div class="slogon">
+                    <h1>GreenSecure</h1>
+                    <small>Assurance verte, avenir serein</small>
+                </div>
             </div>
-            <div class="slogon">
-                <h1>GreenSecure</h1>
-                <p>SLOGON</p>
+            <div class="bord-right">
+                <a href="accueil.php"><i class="fas fa-home"></i> Accueil</a>
+                <a href="#assurances"><i class="fas fa-shield-alt"></i> Nos assurances</a>
+                <!-- NOUVEAU BOUTON GREENBOT - CHATBOT -->
+                <a href="chatbot.php" class="btn-greenbot"><i class="fas fa-robot"></i> 💬 GreenBot</a>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <a href="../backoffice/liste.php"><i class="fas fa-users"></i> Administration</a>
+                    <a href="profil.php?id=<?= $_SESSION['user_id'] ?>"><i class="fas fa-user"></i> Mon Profil</a>
+                    <a href="../auth/logout.php" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                <?php else: ?>
+                    <a href="../auth/login.php" class="btn-nav-primary"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+                    <a href="../auth/register.php"><i class="fas fa-user-plus"></i> Inscription</a>
+                <?php endif; ?>
             </div>
-            <div class="links_area">
-                <a href="http://localhost/GreenSecure/View/Frontoffice/Finance.php">Offre</a>
-                <a href="#declaration">Declaration</a>
-                <a href="#contacts">Contact</a>
-                <a href="http://localhost/GreenSecure/View/Backoffice/addOffre.php">Managment</a>
-            </div>
-            <button type="button" name="sign-in">Sign up</button>
         </div>
         <div class="offre">
             <?php if($action=='list'){?>
@@ -213,27 +222,22 @@
                 }, 1200);
             }
             function arreterMessages() { clearInterval(loadingInterval); }
- 
-            // ── Soumission : validation client → AJAX vers ai_check.php ──
+
             async function lancerAnalyse(e) {
                 e.preventDefault();
- 
-                // 1. Validation côté client (inscri.js — inchangé)
+
                 const clientOk = validerFormulaire();
                 if (!clientOk) return false;
- 
-                // 2. Collecter les données du formulaire
+
                 const form = document.getElementById('inscription-form');
                 const data = {};
                 new FormData(form).forEach((v, k) => data[k] = v);
- 
-                // 3. Afficher spinner
+
                 document.getElementById('step-loading').style.display = 'block';
                 document.getElementById('step-result').style.display  = 'none';
                 document.getElementById('ai-overlay').classList.add('active');
                 demarrerMessages();
- 
-                // 4. Appel AJAX → ai_check.php
+
                 let result;
                 try {
                     const resp = await fetch('./ai_check.php', {
@@ -251,8 +255,7 @@
                 }
  
                 arreterMessages();
- 
-                // 5. Afficher résultat dans la modale
+
                 afficherResultat(result);
             }
  

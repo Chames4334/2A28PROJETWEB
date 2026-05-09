@@ -4,18 +4,21 @@
     include "C:/xampp/htdocs/GreenSecure/Controller/ControlOffre.php";
     include "C:/xampp/htdocs/GreenSecure/Controller/Controlnscription.php";
     
-    define('GEMINI_API_KEY', 'AIzaSyBC7Esdg_Wbo7POov0dCOfl5Pb2Oj6u14Y');
+    define('GEMINI_API_KEY','AIzaSyDhQcd9XHrcSR7xJ4QWC9Jjo7PN--qUVIM');
     
-    header('Content-Type: application/json');
+    header('Content-Type: application/json; charset=utf-8');
+
+    ini_set('display_errors', 0);
+    error_reporting(0);
     
     $d = json_decode(file_get_contents('php://input'), true);
     if (!$d) {
         echo json_encode([
-            'verdict' => 'REFUSÉ',
-            'résumé' => 'Données invalides.',
-            'checks' => []
-        ]); 
-        exit; 
+            'verdict'=>'REFUSÉ',
+            'résumé'=>'Données invalides.',
+            'checks'=>[],JSON_UNESCAPED_UNICODE
+        ]);
+        exit;
     }
     
     $today = date('Y-m-d');
@@ -52,35 +55,27 @@
     - ACCEPTÉ : toutes les données sont valides
     - REFUSÉ  : au moins une donnée est invalide ou manquante
     
-    Réponds UNIQUEMENT en JSON valide, sans texte avant/après:
-    {
-    "verdict": "ACCEPTÉ" | "REFUSÉ",
-    "score": <0-100>,
-    "résumé": "<1 phrase claire>",
-    "raison_refus": "<si REFUSÉ: raison principale, sinon null>",
-    "checks": [
-        {"champ": "<nom>", "statut": "ok"|"fail", "message": "<explication courte>"}
-    ]
-    }
+    Réponds avec UNIQUEMENT cet objet JSON, sans markdown ni texte autour:
+    {"verdict":"ACCEPTE ou REFUSE","score":90,"resume":"phrase","raison_refus":"raison ou null","checks":[{"champ":"nom","statut":"ok ou fail","message":"explication"}]}
     PROMPT;
 
-    $url = "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key="."AIzaSyBC7Esdg_Wbo7POov0dCOfl5Pb2Oj6u14Y";
-    
-    $data = [
-        "contents" => [[
-            "parts" => [
-                ["text" => $prompt]
-            ]
-        ]]
-    ];
+    $payload = json_encode([
+        "contents"=>[[
+            "parts"=>[["text"=>$prompt]]
+        ]],
+        "generationConfig"=>[
+            "temperature"=>0,
+        ]
+    ]);
+    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=".GEMINI_API_KEY;
     
     $ch = curl_init($url);
 
     curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST           => true,
-        CURLOPT_POSTFIELDS     => json_encode($data),
-        CURLOPT_HTTPHEADER     => [
+        CURLOPT_RETURNTRANSFER=>true,
+        CURLOPT_POST=> true,
+        CURLOPT_POSTFIELDS=>$payload,
+        CURLOPT_HTTPHEADER=>[
             'Content-Type: application/json'
         ],
         CURLOPT_TIMEOUT        => 20,
@@ -97,23 +92,55 @@
         exit;
     }
     
-    $res   = json_decode($response, true);
+    $res=json_decode($response, true);
+    if (isset($res['error'])) {
+        echo json_encode([
+            'verdict'=>'REFUSÉ',
+            'score'=>0,
+            'résumé'=>'Erreur API Gemini.',
+            'raison_refus'=> 'Code '.$res['error']['code'].': '. $res['error']['message'],
+            'checks'=>[]
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    if (empty($res['candidates'])) {
+        echo json_encode([
+            'verdict'=>'REFUSÉ',
+            'score'=>0,
+            'résumé'=>'Pas de réponse de Gemini.',
+            'raison_refus'=>'Réponse brute: '.substr($response, 0, 300),
+            'checks'=>[]
+        ], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
     $text   = $res['candidates'][0]['content']['parts'][0]['text'] ?? '';
-    $text   = preg_replace('/```json|```/', '', $text);
-    $result = json_decode(trim($text), true);
+
+    $text = trim($text);
+    $text = preg_replace('/^```json\s*/i', '', $text);
+    $text = preg_replace('/^```\s*/i', '', $text);
+    $text = preg_replace('/\s*```$/i', '', $text);
+    $text = trim($text);
+
+    if (preg_match('/\{.*\}/s', $text, $matches)) {
+        $text = $matches[0];
+    }
+    $result = json_decode($text, true);
     
     if (!$result || !isset($result['verdict'])) {
         echo json_encode([
-            'verdict' => 'REFUSÉ',
-            'score' => 0,
-            'résumé' => 'Réponse IA non analysable.', 
-            'raison_refus' => 'Erreur parsing', 
-            'checks' => []
+            'verdict'=>'REFUSÉ',
+            'score'=>0,
+            'résumé'=>'Réponse IA non analysable.', 
+            'raison_refus'=>'Brut reçu: '.substr($text, 0, 150), 
+            'checks'=>[]
         ]);
         exit;
     }
 
-    if ($result['verdict'] !== 'ACCEPTÉ') 
-        $result['verdict'] = 'REFUSÉ';
+    $v = strtoupper(trim($result['verdict']));
+    $result['verdict']=($v==='ACCEPTE'||$v==='ACCEPTÉ') ? 'ACCEPTÉ':'REFUSÉ';
+
+    if (!isset($result['résumé']) && isset($result['resume'])) 
+        $result['résumé']=$result['resume'];
     
-    echo json_encode($result);
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);

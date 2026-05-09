@@ -4,16 +4,6 @@
     include_once "C:/xampp/htdocs/GreenSecure/config.php";
 
     class Controlnscription{
-        /*private function mapType($type) {
-            switch ($type) {
-                case "INT":
-                    return "INT";
-                case "DATE":
-                    return "DATE";
-                default:
-                    return "VARCHAR(255)";
-            }
-        }*/
         public function listeInscription($txt){
             $db=config::getConnexion();
             try{
@@ -78,97 +68,15 @@
                 die('Erreur: '.$e->getMessage());
             }
         }
-        /*public function createInscriTable($variable,$table){
-            $db=config::getConnexion();
-            try {
-                $sql = "CREATE TABLE `$table` (";
-                $sql .= "`{$table}ID` INT PRIMARY KEY AUTO_INCREMENT,";
-
-                foreach ($variable as $var) {
-                    $name = $var['name'];
-                    $type = $this->mapType($var['type']);
-
-                    $sql .= "`$name` $type,";
-                }
-
-                $sql = rtrim($sql, ",");
-                $sql .= ")";
-
-                $db->exec($sql);
-                
-            } catch (Exception $e) {
-                die('Erreur:'.$e->getMessage());
-            }
-        }*/
-        /*public function addType($type){
+        public function listeInscriptionByOffre($titre) {
             $db = config::getConnexion();
-
             try {
-                // 1. Insert type
-                $sql = "INSERT INTO assurance_type (title, description)
-                        VALUES (:t, :d)";
-                $query = $db->prepare($sql);
-                $query->execute([
-                    't' => $type->getTitle(),
-                    'd' => $type->getDescription()
-                ]);
-
-                $type_id = $db->lastInsertId();
-
-                foreach ($type->getVariables() as $var) {
-                    $sqlVar = "INSERT INTO assurance_variable (type_id, name, type)
-                            VALUES (:type_id, :name, :type)";
-
-                    $q = $db->prepare($sqlVar);
-                    $q->execute([
-                        'type_id' => $type_id,
-                        'name' => $var['name'],
-                        'type' => $var['type']
-                    ]);
-                }
-                $this->createInscriTable(
-                    $type->getVariables(),
-                    "inscription_type_" . $type_id
-                );
-
+                $req = $db->prepare('SELECT * FROM inscription WHERE Choix = :titre');
+                $req->execute(['titre' => $titre]);
+                return $req->fetchAll(PDO::FETCH_ASSOC);
             } catch (Exception $e) {
-                die('Erreur:'.$e->getMessage());
+                die('Erreur: ' . $e->getMessage());
             }
         }
-        public function getVariablesByType($type_id){
-            $db = config::getConnexion();
-
-            $sql = "SELECT * FROM assurance_variable WHERE type_id = :id";
-            $q = $db->prepare($sql);
-            $q->execute(['id' => $type_id]);
-
-            return $q->fetchAll();
-        }
-        public function addInscription($type_id, $data){
-            $db = config::getConnexion();
-
-            try {
-                $table = "inscription_type_" . $type_id;
-
-                $columns = [];
-                $values = [];
-                $params = [];
-
-                foreach ($data as $key => $value) {
-                    $columns[] = "`$key`";
-                    $values[] = ":$key";
-                    $params[$key] = $value;
-                }
-
-                $sql = "INSERT INTO `$table` (" . implode(",", $columns) . ")
-                        VALUES (" . implode(",", $values) . ")";
-
-                $q = $db->prepare($sql);
-                $q->execute($params);
-
-            } catch (Exception $e) {
-                die('Erreur:'.$e->getMessage());
-            }
-        }*/
     }
 ?>

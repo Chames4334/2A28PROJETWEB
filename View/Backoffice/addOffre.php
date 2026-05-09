@@ -8,7 +8,7 @@
         $offre=$of->listeOffre($search);
         $i = 1;
         foreach ($offre as $o) { ?>
-            <tr data-id="<?= $o['OffreID'] ?>" class="clickable-row">
+            <tr data-id="<?= $o['OffreID'] ?>" class="clickable-row" onclick="window.location='Subscription.php?offre=<?= urlencode($o['Title']) ?>'">
                 <td class="row-number"><?= $i++ ?></td>
                 <td><?= htmlspecialchars($o['Title']) ?></td>
                 <td><?= htmlspecialchars($o['Type']) ?></td>
@@ -72,7 +72,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Offres</title>
-        <link rel="stylesheet" href="./assets/css/front.css">
+        <link rel="stylesheet" href="./assets/css/font.css">
         <script src="./assets/js/script.js" defer></script>
     </head>
     <body>
@@ -83,6 +83,7 @@
                 <a href="#">Dashboard</a>
                 <a href="#">Offres</a>
                 <a href="./addType.php">Assurance Types</a>
+                <a href="./Statistique.php">Statistique</a>
             </div>
             <div class="main">
                 <div class="topbar" style="font-size: larger;">
@@ -97,7 +98,7 @@
                                 ← Back
                             </a>
                         <?php } ?>
-                        <a class="btn-primary">Statestique</a>
+                        <a href="export_PDF.php?type=offre" class="btn-primary">Export PDF</a>
                         <a class="btn-primary" href="../FrontOffice/Finance.php">FrontOffice</a>
                         <a id="themeToggle" class="btn-primary">Dark Mode</a>
                     </div>
@@ -129,7 +130,7 @@
                                 <tbody>
                                     <?php $i = 1; 
                                     foreach ($offre as $o) { ?>
-                                        <tr data-id="<?= $o['OffreID'] ?>" class="clickable-row">
+                                        <tr data-id="<?= $o['OffreID'] ?>" class="clickable-row" onclick="window.location='Subscription.php?offre=<?= urlencode($o['Title'])?>'">
                                             <td class="row-number"><?= $i++ ?></td>
 
                                             <td><?= $o['Title'] ?></td>

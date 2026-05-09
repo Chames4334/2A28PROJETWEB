@@ -3,9 +3,22 @@
     include "C:/xampp/htdocs/GreenSecure/Controller/ControlOffre.php";
 
     $CntrlInscri=new Controlnscription();
+    $offreFiltree = $_GET['offre'] ?? null;
     if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
         $search = strtolower(trim($_GET['recherche'] ?? ''));
-        $inscri=$CntrlInscri->listeInscription($search);
+        if ($offreFiltree) {
+            $inscri = $CntrlInscri->listeInscriptionByOffre($offreFiltree);
+            if ($search) {
+                $inscri = array_filter($inscri, function($s) use ($search) {
+                    return str_contains(strtolower($s['Choix']), $search)
+                        || str_contains(strtolower($s['Payment_status']), $search)
+                        || str_contains(strtolower($s['Payment_method']), $search)
+                        || str_contains(strtolower($s['date_souscription']), $search);
+                });
+            }
+        } else {
+            $inscri = $CntrlInscri->listeInscription($search);
+        }
         $i = 1;
         foreach ($inscri as $s) { ?>
             <tr>
@@ -44,7 +57,8 @@
             $CntrlInscri->updateInscription($inscri,$_POST['InscriptionID']);
         else
             $CntrlInscri->addInscription($inscri);
-        header("location: Subscription.php");
+        $redirect = $offreFiltree ? "Subscription.php?offre=".urlencode($offreFiltree) : "Subscription.php";
+        header("location: $redirect");
     }
 
     if (isset($_GET['delete'])) {
@@ -53,16 +67,21 @@
     $controlOffre=new controlOffre();
     $offre=$controlOffre->listeOffre('');
 
-    $subscription=$CntrlInscri->listeInscription('');
+    if (!$offreFiltree) {
+        $subscription=$CntrlInscri->listeInscription('');
+    } else {
+        $subscription=$CntrlInscri->listeInscriptionByOffre($offreFiltree);
+    }
     $i_edit = null;
     if (isset($_GET['InscriptionID'])) {
-        foreach ($subscription as $i) {
-            if ($i['InscriptionID'] == $_GET['InscriptionID']) {
-                $i_edit = $i;
+        foreach ($CntrlInscri->listeInscription('') as $row) {
+            if ($row['InscriptionID'] == $_GET['InscriptionID']) {
+                $i_edit = $row;
                 break;
             }
         }
     }
+
     $action = $_GET['action'] ?? 'list';
 
 ?>
@@ -71,7 +90,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Subscription</title>
-        <link rel="stylesheet" href="./assets/css/front.css">
+        <link rel="stylesheet" href="./assets/css/font.css">
         <script defer src="./assets/js/inscri.js"></script>
     </head>
     <body>
@@ -82,10 +101,16 @@
                 <a href="#">Dashboard</a>
                 <a href="./addOffre.php">Offres</a>
                 <a href="./addType.php">Assurance Types</a>
+                <a href="./Statistique.php">Statistique</a>
             </div>
             <div class="main">
                 <div class="topbar" style="font-size: larger;">
-                    <h1>Abonnement</h1>
+                    <h1>
+                        Abonnement 
+                        <?php if ($offreFiltree): ?>
+                            <span style="font-size:0.6em; color:#888;">— Offre : <?= htmlspecialchars($offreFiltree) ?></span>
+                        <?php endif; ?>
+                    </h1>
                     <div  style="text-align: right;">
                         <?php if ($action == 'list') { ?>
                         <a href="Subscription.php?action=add" class="btn-primary">
@@ -96,6 +121,10 @@
                                 ← Back
                             </a>
                         <?php } ?>
+                        <?php if ($offreFiltree): ?>
+                            <a href="Subscription.php" class="btn-primary">Voir tout</a>
+                        <?php endif; ?>
+                        <a href="export_PDF.php?type=inscription" class="btn-primary">Export PDF</a>
                         <a class="btn-primary" href="../FrontOffice/Finance.php">
                             FrontOffice
                         </a>

@@ -1,5 +1,5 @@
 <?php
-    include "C:/xampp/htdocs/GreenSecure/Model/Variables.php";
+
     class AssuranceType{
         private string $Titre;
         private string $Description;
